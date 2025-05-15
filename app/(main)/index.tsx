@@ -1,13 +1,13 @@
-import { Link } from 'expo-router';
 import { Text, View } from 'react-native';
+import Header from './header';
 
 export default function Main() {
   return (
-    <View>
-      <Text className="text-blue-500">main</Text>
-      <Link href="/account">
-        <Text>account페이지</Text>
-      </Link>
+    <View className="bg-background flex h-screen flex-col">
+      <Header />
+      <View>
+        <Text>main</Text>
+      </View>
     </View>
   );
 }

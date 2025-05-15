@@ -4,7 +4,49 @@ module.exports = {
   content: ['./app/**/*.tsx', './components/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        background: '#ffffff',
+        foreground: '#1c1c1c',
+        primary: {
+          DEFAULT: '#1c1c1c',
+          foreground: '#f0f0f0',
+        },
+        secondary: {
+          DEFAULT: '#f1f5f9',
+          foreground: '#1c1c1c',
+        },
+        muted: {
+          DEFAULT: '#f1f5f9',
+          foreground: '#4b5563',
+        },
+        accent: {
+          DEFAULT: '#f1f5f9',
+          foreground: '#1c1c1c',
+        },
+        destructive: {
+          DEFAULT: '#ef4444',
+          foreground: '#f0f0f0',
+        },
+        border: '#e5e7eb',
+        input: '#e5e7eb',
+        ring: '#1c1c1c',
+      },
+      borderRadius: {
+        lg: 12,
+        md: 10,
+        sm: 8,
+      },
+      animation: {
+        'bounce-up-down': 'bounce-up-down 0.8s infinite',
+      },
+      keyframes: {
+        'bounce-up-down': {
+          '0%, 100%': { transform: [{ translateY: 0 }] },
+          '50%': { transform: [{ translateY: -8 }] },
+        },
+      },
+    },
   },
   plugins: [],
 };
