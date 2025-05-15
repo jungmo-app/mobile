@@ -5,6 +5,9 @@ module.exports = {
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
+      flexDirection: {
+        'row': 'row',
+      },
       colors: {
         background: '#ffffff',
         foreground: '#1c1c1c',
@@ -48,5 +51,14 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function({addComponents}) {
+      addComponents({
+        '.flex': {
+          display: 'flex',
+          flexDirection: 'row',
+        }
+      })
+    }
+  ],
 };
