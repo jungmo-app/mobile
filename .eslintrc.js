@@ -13,6 +13,7 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:prettier/recommended',
   ],
+  ignorePatterns: ['*.config.js', '.eslintrc.js'],
   plugins: ['react', 'react-hooks', 'import', 'unused-imports', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -67,5 +68,6 @@ module.exports = {
     ],
     'unused-imports/no-unused-imports': 'error',
     'import/order': 'off',
+    '@typescript-eslint/no-require-imports': 'off',
   },
 };

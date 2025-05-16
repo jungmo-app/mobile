@@ -1,13 +1,16 @@
-import { Link } from 'expo-router';
-import { Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import AppointmentCalendar from './appointmentCalendar';
+import AppointmentList from './appointmentList';
+import Header from './header';
 
 export default function Main() {
   return (
-    <View>
-      <Text className="text-blue-500">main</Text>
-      <Link href="/account">
-        <Text>account페이지</Text>
-      </Link>
+    <View className="flex h-screen flex-col bg-background" style={{ flexDirection: 'column' }}>
+      <Header />
+      <ScrollView className="flex flex-grow flex-col" contentContainerStyle={{ flexGrow: 1 }}>
+        <AppointmentCalendar />
+        <AppointmentList />
+      </ScrollView>
     </View>
   );
 }
