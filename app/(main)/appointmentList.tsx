@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import LoadingIcon from '@/components/ui/loadingIcon';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import { PlusCircle } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 import AppointmentCard from './appointmentCard';
@@ -115,14 +115,18 @@ export default function AppointmentList() {
             <AppointmentCard key={appointment.id} appointment={appointment} />
           ))}
           <View className="mb-2 mt-4">
-            <Link href="/account">
-              <Button variant="outline" size="none" className="w-full py-4" aria-label="일정 추기">
-                <View className="flex h-6 items-center gap-2">
-                  <PlusCircle width={16} height={16} color="blue" />
-                  <Text className="text-md text-black">새로운 일정을 추가해보세요</Text>
-                </View>
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="none"
+              className="w-full py-4"
+              aria-label="일정 추가"
+              onPress={() => router.push('/appointment/create')}
+            >
+              <View className="flex h-6 items-center gap-2">
+                <PlusCircle width={16} height={16} color="blue" />
+                <Text className="text-md text-black">새로운 일정을 추가해보세요</Text>
+              </View>
+            </Button>
           </View>
         </View>
       )}

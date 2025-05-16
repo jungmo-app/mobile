@@ -1,3 +1,5 @@
+import { createAppointmentSchema } from '@/schemas/appointment';
+import { z } from 'zod';
 import { UserDataResponse } from './user';
 
 export interface Location {
@@ -39,3 +41,5 @@ export interface DetailGatheringRespose {
   meetingLocation: Location;
   locations: Location[];
 }
+
+export type AppointmentFormDataType = z.infer<typeof createAppointmentSchema>;

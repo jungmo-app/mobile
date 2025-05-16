@@ -1,0 +1,35 @@
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { LucideFileTerminal } from 'lucide-react-native';
+import { Controller, useFormContext } from 'react-hook-form';
+import { Text, View } from 'react-native';
+
+export default function TitleInput() {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+  return (
+    <Card className="space-y-4 rounded-2xl bg-[#F7F7F7] p-4">
+      <View className="h-20 space-y-4">
+        <View className="flex mb-2 items-center gap-2">
+          <LucideFileTerminal size={14} color="gray" />
+          <Label>제목</Label>
+        </View>
+        <Controller
+          name="title"
+          control={control}
+          render={({ field }) => (
+            <Input
+              placeholder="일정 제목을 입력해주세요"
+              className={`${errors.title && 'border-red-500'} bg-background`}
+              {...field}
+            />
+          )}
+        />
+        {errors.title && <Text className="m-1 text-red-500">제목을 입력해주세요</Text>}
+      </View>
+    </Card>
+  );
+}
