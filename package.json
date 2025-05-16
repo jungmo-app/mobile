@@ -29,6 +29,7 @@
     "expo-system-ui": "~4.0.9",
     "expo-web-browser": "~14.0.2",
     "lucide-react-native": "^0.510.0",
+    "moti": "^0.30.0",
     "nativewind": "^4.1.23",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@types/react": "~18.3.12",
+    "babel-plugin-module-resolver": "^5.0.2",
     "eslint": "^8",
     "eslint-config-expo": "~8.0.1",
     "eslint-config-prettier": "^10.1.5",

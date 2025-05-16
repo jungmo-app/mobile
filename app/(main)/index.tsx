@@ -1,13 +1,15 @@
 import { ScrollView, View } from 'react-native';
 import AppointmentCalendar from './appointmentCalendar';
+import AppointmentList from './appointmentList';
 import Header from './header';
 
 export default function Main() {
   return (
-    <View className="bg-background flex h-screen flex-col" style={{ flexDirection: 'column' }}>
+    <View className="flex h-screen flex-col bg-background" style={{ flexDirection: 'column' }}>
       <Header />
-      <ScrollView>
+      <ScrollView className="flex flex-grow flex-col" contentContainerStyle={{ flexGrow: 1 }}>
         <AppointmentCalendar />
+        <AppointmentList />
       </ScrollView>
     </View>
   );

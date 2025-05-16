@@ -101,18 +101,19 @@ export default function Calendar({
           return (
             <Button
               variant="ghost"
-              className={`flex aspect-square flex-1 items-center justify-center border border-solid font-normal ${isSameDay(cellDate, date) ? 'border-gray-400' : 'border-transparent'} ${isSameDay(cellDate, currentDate) && selected === true && 'bg-black text-gray-100'}`}
-              style={{
-                backgroundColor: isSameDay(cellDate, currentDate) ? '#000' : '#fff',
-                borderColor: isSameDay(cellDate, date) ? '#9ca3af' : 'transparent',
-              }}
+              className={`flex aspect-square flex-1 items-center justify-center border border-solid font-normal ${isSameDay(cellDate, date) ? 'border-gray-400' : 'border-transparent'} m-1`}
+              size="none"
               onPress={() => onSelect?.(cellDate)}
             >
-              <Text
-                className={`rounded-md ${item.current !== 'current' && 'opacity-40'} ${item.id % 7 === 0 ? 'text-red-500' : item.id % 7 === 6 ? 'text-blue-500' : 'text-foreground'} ${isSameDay(cellDate, currentDate) && 'text-gray-100'}`}
+              <View
+                className={`flex m-1 size-11/12 items-center justify-center rounded-md ${isSameDay(cellDate, currentDate) && selected === true && 'bg-black text-gray-100'}`}
               >
-                {showAdjacentDays && item.day}
-              </Text>
+                <Text
+                  className={`rounded-md ${item.current !== 'current' && 'opacity-40'} ${item.id % 7 === 0 ? 'text-red-500' : item.id % 7 === 6 ? 'text-blue-500' : 'text-foreground'} ${isSameDay(cellDate, currentDate) && 'text-gray-100'}`}
+                >
+                  {showAdjacentDays && item.day}
+                </Text>
+              </View>
             </Button>
           );
         }}

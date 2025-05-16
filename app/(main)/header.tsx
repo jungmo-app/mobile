@@ -43,7 +43,7 @@ export default function Header() {
   };
 
   return (
-    <View className="bg-background flex h-14 items-center justify-between p-4">
+    <View className="flex h-14 items-center justify-between bg-background p-4">
       <View>
         <Button variant="ghost" size="icon" aria-label="계정 정보" onPress={() => router.push('/account')}>
           <User width={16} height={16} className="bg-transparent" color="black" />

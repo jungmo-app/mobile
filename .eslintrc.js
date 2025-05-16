@@ -67,5 +67,6 @@ module.exports = {
     ],
     'unused-imports/no-unused-imports': 'error',
     'import/order': 'off',
+    '@typescript-eslint/no-require-imports': 'off',
   },
 };

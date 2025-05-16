@@ -3,7 +3,7 @@ import React from 'react';
 import { Pressable, PressableProps, Text } from 'react-native';
 
 type Variant = 'default' | 'destructive' | 'outline' | 'ghost' | 'link';
-type Size = 'default' | 'sm' | 'lg' | 'icon';
+type Size = 'default' | 'sm' | 'lg' | 'icon' | 'none';
 
 interface ButtonProps extends PressableProps {
   title?: string;
@@ -24,6 +24,7 @@ const sizeClass: Record<Size, string> = {
   sm: 'h-9 px-3',
   lg: 'h-12 px-6',
   icon: 'h-10 w-10',
+  none: '',
 };
 
 export const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>(
