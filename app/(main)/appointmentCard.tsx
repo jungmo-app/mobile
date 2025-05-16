@@ -1,3 +1,4 @@
+import { useLocation } from '@/hooks/useQuery/useLocation';
 import { GatheringListResponse } from '@/types/gathering';
 import { Link } from 'expo-router';
 import { Image, Text, View } from 'react-native';
@@ -7,6 +8,7 @@ interface AppointmentCardProps {
 }
 
 export default function AppointmentCard({ appointment }: AppointmentCardProps) {
+  const { data: locationData } = useLocation(appointment.meetingLocation, ['name']);
   return (
     <Link href="/account">
       <View className="flex items-center gap-4 p-2">
@@ -30,7 +32,7 @@ export default function AppointmentCard({ appointment }: AppointmentCardProps) {
             className="truncate text-sm text-muted-foreground"
           >{`${appointment.startDate} ${appointment.startTime}`}</Text>
           <Text numberOfLines={1} ellipsizeMode="tail" className="block w-full truncate text-sm text-muted-foreground">
-            location
+            {locationData?.name ?? '장소를 불러올 수 없습니다'}
           </Text>
         </View>
       </View>
