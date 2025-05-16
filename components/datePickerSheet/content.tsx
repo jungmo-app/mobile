@@ -16,8 +16,8 @@ export default function Content({ value, onSelect }: ContentProps) {
   const isInitial = useRef<boolean>(true);
 
   const [dateList, setDateList] = useState<Date[]>(() =>
-    Array.from({ length: 7 }, (_, i) => {
-      const offset = i - 3;
+    Array.from({ length: 12 }, (_, i) => {
+      const offset = i - 5;
       return new Date(value.getFullYear(), value.getMonth() + offset, 1);
     })
   );
@@ -32,15 +32,15 @@ export default function Content({ value, onSelect }: ContentProps) {
     const windowHeight = layoutMeasurement.height;
     const contentHeight = contentSize.height;
 
-    if (offsetY < 150) {
+    if (offsetY < contentHeight * 0.2) {
       isLoadingTop.current = true;
       scrollHeight.current = contentHeight;
-      setDateList(prev => [...getPrevMonthDateList(prev[0], 5), ...prev]);
+      setDateList(prev => [...getPrevMonthDateList(prev[0], 12), ...prev]);
     }
 
-    if (offsetY + windowHeight >= contentHeight - 300) {
+    if (offsetY + windowHeight >= contentHeight * 0.8) {
       isLoadingBottom.current = true;
-      setDateList(prev => [...prev, ...getNextMonthDateList(prev[prev.length - 1], 5)]);
+      setDateList(prev => [...prev, ...getNextMonthDateList(prev[prev.length - 1], 12)]);
     }
   };
 
@@ -57,11 +57,9 @@ export default function Content({ value, onSelect }: ContentProps) {
           wrapperRef.current?.scrollTo({ y: h - scrollHeight.current, animated: false });
         }
 
-        setTimeout(() => {
-          isLoadingTop.current = false;
-          isLoadingBottom.current = false;
-          scrollHeight.current = 0;
-        }, 0);
+        isLoadingTop.current = false;
+        isLoadingBottom.current = false;
+        scrollHeight.current = 0;
       }}
     >
       {dateList.map(item => (

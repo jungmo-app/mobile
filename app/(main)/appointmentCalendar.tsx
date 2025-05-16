@@ -17,7 +17,5 @@ export default function AppointmentCalendar() {
     }
     setDate(value);
   };
-  return (
-    <Calendar showAdjacentDays selected date={date} className="my-3 h-[300px] gap-3 px-3" onSelect={handleClickDay} />
-  );
+  return <Calendar showAdjacentDays selected date={date} className="my-3 h-fit gap-3 px-3" onSelect={handleClickDay} />;
 }

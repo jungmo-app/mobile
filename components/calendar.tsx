@@ -1,7 +1,7 @@
 import { isSameDay } from '@/utils/date';
 import { cn } from '@/utils/style';
 import React, { useEffect, useMemo, useState } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { Button } from './ui/button';
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'] as const;
@@ -33,7 +33,7 @@ export default function Calendar({
 }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const calendarData: CellItem[] = useMemo(() => {
+  const calendarData: CellItem[][] = useMemo(() => {
     const year = date.getFullYear();
     const month = date.getMonth();
 
@@ -69,7 +69,14 @@ export default function Calendar({
       };
     });
 
-    return [...prev, ...current, ...next];
+    const flat = [...prev, ...current, ...next] as CellItem[];
+
+    return flat.reduce<CellItem[][]>((acc, i, idx) => {
+      if (idx % 7 === 0) {
+        acc.push(flat.slice(idx, idx + 7));
+      }
+      return acc;
+    }, []);
   }, [date]);
 
   useEffect(() => {
@@ -83,7 +90,7 @@ export default function Calendar({
   }, []);
 
   return (
-    <View className={cn('w-full px-4', className)}>
+    <View className={cn('flex flex-col px-4', className)}>
       <View className="mb-2 flex-row justify-between">
         {DAYS.map((day, idx) => (
           <Text
@@ -99,42 +106,45 @@ export default function Calendar({
           </Text>
         ))}
       </View>
-      <FlatList
-        scrollEnabled={false}
-        data={calendarData}
-        numColumns={7}
-        keyExtractor={item => item.id}
-        renderItem={({ item, index }) => {
-          const isToday = isSameDay(item.date, currentDate);
-          const isSelected =
-            (selected && isSameDay(item.date, date)) || (selectedDate && isSameDay(item.date, selectedDate));
-
-          return (
-            <Button
-              variant="ghost"
-              size="none"
-              className={cn(
-                'm-1 aspect-square flex-1 items-center justify-center border border-solid',
-                isSelected && item.current ? 'border-gray-400' : 'border-transparent'
-              )}
-              onPress={() => onSelect?.(item.date)}
-            >
-              <View className={cn('flex size-11/12 items-center justify-center rounded-md', isToday && 'bg-black')}>
-                <Text
+      <View className="flex flex-1 flex-col items-center">
+        {calendarData.map((week, i) => (
+          <View key={i} className="flex w-full items-center justify-between">
+            {week.map((item, idx) => (
+              <Button
+                key={idx}
+                variant="ghost"
+                size="none"
+                className={cn(
+                  'm-1 aspect-square flex-1 items-center justify-center border border-solid',
+                  ((selected && isSameDay(item.date, date)) || (selectedDate && isSameDay(item.date, selectedDate))) &&
+                    item.current
+                    ? 'border-gray-400'
+                    : 'border-transparent'
+                )}
+                onPress={() => onSelect?.(item.date)}
+              >
+                <View
                   className={cn(
-                    !item.current && 'opacity-40',
-                    index % 7 === 0 && 'text-red-500',
-                    index % 7 === 6 && 'text-blue-500',
-                    isToday && 'text-gray-100'
+                    'flex size-11/12 items-center justify-center rounded-md',
+                    isSameDay(item.date, currentDate) && 'bg-black'
                   )}
                 >
-                  {showAdjacentDays && item.date.getDate()}
-                </Text>
-              </View>
-            </Button>
-          );
-        }}
-      />
+                  <Text
+                    className={cn(
+                      !item.current && 'opacity-40',
+                      idx === 0 && 'text-red-500',
+                      idx === 6 && 'text-blue-500',
+                      isSameDay(item.date, currentDate) && 'text-gray-100'
+                    )}
+                  >
+                    {showAdjacentDays && item.date.getDate()}
+                  </Text>
+                </View>
+              </Button>
+            ))}
+          </View>
+        ))}
+      </View>
     </View>
   );
 }
