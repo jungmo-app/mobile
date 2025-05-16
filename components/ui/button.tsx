@@ -52,7 +52,7 @@ const sizeClass: Record<Size, string> = {
   none: '',
 };
 
-export const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>(
+const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>(
   ({ title, titleClassName, variant = 'default', size = 'default', className, disabled, children, ...props }, ref) => {
     return (
       <Pressable
@@ -79,3 +79,5 @@ export const Button = React.forwardRef<React.ElementRef<typeof Pressable>, Butto
 );
 
 Button.displayName = 'Button';
+
+export { Button };

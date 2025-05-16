@@ -1,5 +1,4 @@
-import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
+import { Card, Label } from '@/components/ui';
 import { MapPin } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 

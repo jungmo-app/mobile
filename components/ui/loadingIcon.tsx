@@ -1,7 +1,8 @@
 import { LoaderCircle } from 'lucide-react-native';
 import { MotiView } from 'moti';
 import { View } from 'react-native';
-export default function LoadingIcon() {
+
+const LoadingIcon = () => {
   return (
     <View className="flex items-center justify-center">
       <MotiView
@@ -13,4 +14,6 @@ export default function LoadingIcon() {
       </MotiView>
     </View>
   );
-}
+};
+
+export { LoadingIcon };

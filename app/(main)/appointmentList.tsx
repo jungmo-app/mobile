@@ -1,5 +1,4 @@
-import { Button } from '@/components/ui/button';
-import LoadingIcon from '@/components/ui/loadingIcon';
+import { Button, LoadingIcon } from '@/components/ui';
 import { router } from 'expo-router';
 import { PlusCircle } from 'lucide-react-native';
 import { Text, View } from 'react-native';

@@ -9,7 +9,7 @@ interface InputProps extends Omit<TextInputProps, 'onChange'> {
   onChange?: (value: string) => void;
 }
 
-export const Input = forwardRef<TextInput, InputProps>(
+const Input = forwardRef<TextInput, InputProps>(
   ({ className, error, clearError, onFocus, editable, onChange, ...props }, ref) => {
     return (
       <TextInput
@@ -34,3 +34,5 @@ export const Input = forwardRef<TextInput, InputProps>(
 );
 
 Input.displayName = 'Input';
+
+export { Input };

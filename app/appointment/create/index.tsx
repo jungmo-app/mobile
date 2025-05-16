@@ -1,16 +1,15 @@
 import AttendeeInput from '@/components/attendeeInput';
 import Header from '@/components/header';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 import { createAppointmentSchema } from '@/schemas/appointment';
 import { useDateStore } from '@/store/appointmentStore';
 import { AppointmentFormDataType } from '@/types/gathering';
 import { UserDataResponse } from '@/types/user';
 import { formattedDate } from '@/utils/date';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ScrollView } from 'moti';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import DateInput from './dateInput';
 import DescriptionInput from './descriptionInput';
 import PlaceInput from './placeInput';

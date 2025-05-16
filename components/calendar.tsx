@@ -4,8 +4,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { Button } from './ui/button';
 
+const DAYS = ['일', '월', '화', '수', '목', '금', '토'] as const;
+
 interface CalendarProps {
   date: Date;
+  selectedDate?: Date;
   fontSize?: number;
   showAdjacentDays?: boolean;
   selected?: boolean;
@@ -13,10 +16,15 @@ interface CalendarProps {
   className?: string;
 }
 
-const DAYS = ['일', '월', '화', '수', '목', '금', '토'] as const;
+interface CellItem {
+  id: string;
+  date: Date;
+  current: boolean;
+}
 
 export default function Calendar({
   date,
+  selectedDate,
   fontSize = 14,
   showAdjacentDays = false,
   onSelect,
@@ -25,53 +33,54 @@ export default function Calendar({
 }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const calendarData = useMemo(() => {
+  const calendarData: CellItem[] = useMemo(() => {
     const year = date.getFullYear();
     const month = date.getMonth();
 
-    const firstDayOfWeek = new Date(year, month, 1).getDay(); // 0 (일) ~ 6 (토)
-    const lastDate = new Date(year, month + 1, 0).getDate(); // 이번 달 총 일 수
+    const firstDayOfWeek = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
     const prevLastDate = new Date(year, month, 0).getDate();
-    const NextMonthDayOfWeek = new Date(year, month + 1, 1).getDay(); // 0 (일) ~ 6 (토)
+    const nextPad = (firstDayOfWeek + lastDate) % 7 === 0 ? 0 : 7 - ((firstDayOfWeek + lastDate) % 7);
 
-    const prevMonthDate = Array.from({ length: firstDayOfWeek }).map((_, idx) => ({
-      id: idx,
-      current: 'prev',
-      year,
-      month: month - 1,
-      day: prevLastDate - firstDayOfWeek + idx + 1,
-    }));
+    const prev = Array.from({ length: firstDayOfWeek }).map((_, idx) => {
+      const day = prevLastDate - firstDayOfWeek + idx + 1;
+      return {
+        id: `prev-${day}`,
+        date: new Date(year, month - 1, day),
+        current: false,
+      };
+    });
 
-    const currentMontDate = Array.from({ length: lastDate }).map((_, idx) => ({
-      id: firstDayOfWeek + idx,
-      current: 'current',
-      year,
-      month,
-      day: idx + 1,
-    }));
+    const current = Array.from({ length: lastDate }).map((_, idx) => {
+      const day = idx + 1;
+      return {
+        id: `curr-${day}`,
+        date: new Date(year, month, day),
+        current: true,
+      };
+    });
 
-    const nextMonthDate = Array.from({ length: (14 - NextMonthDayOfWeek) % 7 }).map((_, idx) => ({
-      id: firstDayOfWeek + lastDate + idx,
-      current: 'next',
-      year,
-      month: month + 1,
-      day: idx + 1,
-    }));
+    const next = Array.from({ length: nextPad }).map((_, idx) => {
+      const day = idx + 1;
+      return {
+        id: `next-${day}`,
+        date: new Date(year, month + 1, day),
+        current: false,
+      };
+    });
 
-    return [...prevMonthDate, ...currentMontDate, ...nextMonthDate];
+    return [...prev, ...current, ...next];
   }, [date]);
 
   useEffect(() => {
-    const nextMidnight = new Date(currentDate);
+    const now = new Date();
+    const nextMidnight = new Date(now);
     nextMidnight.setHours(24, 0, 0, 0);
-    const timeout = nextMidnight.getTime() - currentDate.getTime();
+    const timeout = nextMidnight.getTime() - now.getTime();
 
-    const timer = setTimeout(() => {
-      setCurrentDate(new Date());
-    }, timeout);
-
+    const timer = setTimeout(() => setCurrentDate(new Date()), timeout);
     return () => clearTimeout(timer);
-  }, [currentDate]);
+  }, []);
 
   return (
     <View className={cn('w-full px-4', className)}>
@@ -91,27 +100,35 @@ export default function Calendar({
         ))}
       </View>
       <FlatList
-        data={calendarData}
-        keyExtractor={item => `${item.current}-${item.day}`}
-        numColumns={7}
         scrollEnabled={false}
-        renderItem={({ item }) => {
-          const cellDate = new Date(item.year, item.month, item.day);
+        data={calendarData}
+        numColumns={7}
+        keyExtractor={item => item.id}
+        renderItem={({ item, index }) => {
+          const isToday = isSameDay(item.date, currentDate);
+          const isSelected =
+            (selected && isSameDay(item.date, date)) || (selectedDate && isSameDay(item.date, selectedDate));
 
           return (
             <Button
               variant="ghost"
-              className={`flex aspect-square flex-1 items-center justify-center border border-solid font-normal ${isSameDay(cellDate, date) ? 'border-gray-400' : 'border-transparent'} m-1`}
               size="none"
-              onPress={() => onSelect?.(cellDate)}
+              className={cn(
+                'm-1 aspect-square flex-1 items-center justify-center border border-solid',
+                isSelected && item.current ? 'border-gray-400' : 'border-transparent'
+              )}
+              onPress={() => onSelect?.(item.date)}
             >
-              <View
-                className={`flex m-1 size-11/12 items-center justify-center rounded-md ${isSameDay(cellDate, currentDate) && selected === true && 'bg-black text-gray-100'}`}
-              >
+              <View className={cn('flex size-11/12 items-center justify-center rounded-md', isToday && 'bg-black')}>
                 <Text
-                  className={`rounded-md ${item.current !== 'current' && 'opacity-40'} ${item.id % 7 === 0 ? 'text-red-500' : item.id % 7 === 6 ? 'text-blue-500' : 'text-foreground'} ${isSameDay(cellDate, currentDate) && 'text-gray-100'}`}
+                  className={cn(
+                    !item.current && 'opacity-40',
+                    index % 7 === 0 && 'text-red-500',
+                    index % 7 === 6 && 'text-blue-500',
+                    isToday && 'text-gray-100'
+                  )}
                 >
-                  {showAdjacentDays && item.day}
+                  {showAdjacentDays && item.date.getDate()}
                 </Text>
               </View>
             </Button>
