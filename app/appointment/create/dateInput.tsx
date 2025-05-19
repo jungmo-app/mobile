@@ -2,15 +2,19 @@ import DatePickerSheet from '@/components/datePickerSheet';
 import { Card, Label } from '@/components/ui';
 import { formattedDate } from '@/utils/date';
 import { Calendar } from 'lucide-react-native';
+import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { View } from 'react-native';
 
 export default function DateInput() {
   const { getValues, setValue } = useFormContext();
 
-  const handleChangeDate = (date: Date) => {
-    setValue('startDate', formattedDate(date));
-  };
+  const handleChangeDate = useCallback(
+    (date: Date) => {
+      setValue('startDate', formattedDate(date));
+    },
+    [setValue]
+  );
 
   /* const handleChangeTime = (time: Record<'hours' | 'minutes', number>) => {
     setValue('startTime', `${time.hours.toString().padStart(2, '0')}:${time.minutes.toString().padStart(2, '0')}`);
