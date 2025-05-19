@@ -7,7 +7,7 @@ const userDataResponseSchema = z.object({
   profileImage: z.string().nullable(),
 });
 
-const meetingLocationSchema = z.object({
+export const meetingLocationSchema = z.object({
   id: z.string().min(1),
   address: z.string(),
   name: z.string(),

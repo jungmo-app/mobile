@@ -1,6 +1,6 @@
 export interface Position {
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
 }
 
 export interface PlaceSearchResult {

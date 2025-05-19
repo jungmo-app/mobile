@@ -25,11 +25,11 @@ export default function DatePickerSheet({ value, onSelect, classNames }: DatePic
   );
 
   return (
-    <Sheet isOpen={isOpen} onOpenChange={setIsOpen}>
+    <Sheet isOpen={isOpen} className="flex-1" onOpenChange={setIsOpen}>
       <SheetTrigger>
         <Button
           variant="outline"
-          className={cn('w-fit justify-start px-4 py-2 text-left font-normal', classNames)}
+          className={cn('flex flex-1 px-4 py-2 font-normal', classNames)}
           size="none"
           aria-label="현재 날짜"
         >

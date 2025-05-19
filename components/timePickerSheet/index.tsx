@@ -29,7 +29,7 @@ export default function TimePickerSheet({ value, onSelect, classNames }: TimePic
   };
 
   return (
-    <Sheet className="w-full">
+    <Sheet className="flex-1">
       <SheetTrigger>
         <Button
           variant="outline"

@@ -27,14 +27,14 @@ export default function DescriptionInput() {
             <Input
               multiline
               placeholder="일정 제목을 입력해주세요"
-              className={`${errors.title && 'border-red-500'} min-h-32 bg-background`}
+              className={`${errors.description && 'border-red-500'} min-h-32 bg-background`}
               style={{ textAlignVertical: 'top', height: inputHeight }}
               onContentSizeChange={handleSizeChange}
               {...field}
             />
           )}
         />
-        {errors.title && <Text className="m-1 text-red-500">제목을 입력해주세요</Text>}
+        {errors.description && <Text className="m-1 text-red-500">제목을 입력해주세요</Text>}
       </View>
     </Card>
   );

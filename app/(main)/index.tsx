@@ -5,7 +5,7 @@ import Header from './header';
 
 export default function Main() {
   return (
-    <View className="flex h-screen flex-col bg-background" style={{ flexDirection: 'column' }}>
+    <View className="flex h-full flex-col bg-background" style={{ flexDirection: 'column' }}>
       <Header />
       <ScrollView className="flex flex-grow flex-col" contentContainerStyle={{ flexGrow: 1 }}>
         <AppointmentCalendar />

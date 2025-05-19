@@ -32,7 +32,7 @@ export default function DateInput() {
           <DatePickerSheet value={new Date(getValues('startDate'))} onSelect={handleChangeDate} />
           <TimePickerSheet
             value={getValues('startTime')}
-            classNames="w-1/2"
+            classNames="flex-1"
             onSelect={time =>
               setValue(
                 'startTime',
