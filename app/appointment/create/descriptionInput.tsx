@@ -15,7 +15,7 @@ export default function DescriptionInput() {
     setInputHeight(contentHeight);
   };
   return (
-    <Card className="flex min-h-48 flex-col rounded-2xl bg-[#F7F7F7] p-4">
+    <Card className="flex min-h-48 flex-col rounded-2xl p-4">
       <View className="space-y-4">
         <View className="flex mb-2 items-center gap-2">
           <Label>설명</Label>

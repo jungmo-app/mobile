@@ -1,4 +1,5 @@
 import DatePickerSheet from '@/components/datePickerSheet';
+import TimePickerSheet from '@/components/timePickerSheet';
 import { Card, Label } from '@/components/ui';
 import { formattedDate } from '@/utils/date';
 import { Calendar } from 'lucide-react-native';
@@ -21,17 +22,24 @@ export default function DateInput() {
   }; */
 
   return (
-    <Card className="space-y-4 rounded-2xl bg-[#F7F7F7] p-4">
+    <Card className="space-y-4 rounded-2xl p-4">
       <View className="space-y-4">
         <View className="flex mb-2 items-center gap-2">
           <Calendar size={14} color="gray" />
           <Label>날짜 및 시간</Label>
         </View>
-        <View className="flex items-center justify-center gap-4">
+        <View className="flex w-full items-center justify-between gap-4">
           <DatePickerSheet value={new Date(getValues('startDate'))} onSelect={handleChangeDate} />
-          {/* <View className="flex h-10 flex-1 items-center justify-center rounded-md border">
-            <Text>time</Text>
-          </View> */}
+          <TimePickerSheet
+            value={getValues('startTime')}
+            classNames="w-1/2"
+            onSelect={time =>
+              setValue(
+                'startTime',
+                `${time.hours.toString().padStart(2, '0')}:${time.minutes.toString().padStart(2, '0')}`
+              )
+            }
+          />
         </View>
       </View>
     </Card>

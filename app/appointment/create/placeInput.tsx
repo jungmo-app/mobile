@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 
 export default function PlaceInput() {
   return (
-    <Card className="space-y-4 rounded-2xl bg-[#F7F7F7] p-4">
+    <Card className="space-y-4 rounded-2xl p-4">
       <View className="space-y-4">
         <View className="flex mb-2 items-center gap-2">
           <MapPin size={14} color="gray" />

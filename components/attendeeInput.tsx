@@ -17,7 +17,7 @@ export default function AttendeeInput({ selectedAttendees }: AttendeeInputProps)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <Card className="relative space-y-4 rounded-2xl bg-[#F7F7F7] p-4">
+    <Card className="relative space-y-4 rounded-2xl p-4">
       <View className="space-y-4">
         <View className="flex mb-2 items-center gap-2">
           <User size={16} color="gray" />
