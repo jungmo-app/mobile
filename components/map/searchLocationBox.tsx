@@ -5,10 +5,14 @@ import { useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Pressable, Text, TextInput, View } from 'react-native';
 
-export default function SearchLocaitonBox() {
+interface SearchLocaitonBoxProps {
+  onSubmit: () => void;
+}
+
+export default function SearchLocaitonBox({ onSubmit }: SearchLocaitonBoxProps) {
   const inputRef = useRef<TextInput | null>(null);
 
-  const { control, setValue } = useFormContext();
+  const { control, setValue, handleSubmit } = useFormContext();
   const [suggestion, setSuggestion] = useState<string[]>(['test1', 'test2']);
 
   const handleClickSuggestion = (value: string) => {
@@ -29,6 +33,7 @@ export default function SearchLocaitonBox() {
             ref={mergeRefs(formRef, inputRef)}
             placeholder="장소를 입력해주세요"
             className="relative border bg-background pl-8"
+            onSubmitEditing={handleSubmit(onSubmit)}
             onChange={e => {
               onChange(e);
             }}

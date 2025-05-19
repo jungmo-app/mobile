@@ -16,12 +16,12 @@ type LocationInputProps = {
 
 export default function LocationInput({ value, onChange }: LocationInputProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState<Position>({ latitude: 37.5611628, longitude: 127.0225117 });
+  const [currentLocation, setCurrentLocation] = useState<Position | null>(null);
 
   const handleButtonClick = async () => {
+    setIsModalOpen(true);
     const location = await getCurrentPosition();
     setCurrentLocation(location);
-    setIsModalOpen(true);
   };
 
   const handleClose = () => {
@@ -35,10 +35,8 @@ export default function LocationInput({ value, onChange }: LocationInputProps) {
     await onChange({ id: value.place_id, address: value.formatted_address, name: value.name });
   }; */
 
-  console.log(isModalOpen, value.name);
-
   return (
-    <Sheet isOpen={isModalOpen}>
+    <Sheet isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
       <SheetTrigger>
         <Pressable className="w-full" onPress={handleButtonClick}>
           <View className="flex h-10 items-center rounded-md border border-gray-300 px-3">
@@ -48,8 +46,8 @@ export default function LocationInput({ value, onChange }: LocationInputProps) {
           </View>
         </Pressable>
       </SheetTrigger>
-      <SheetContent position="right" className="w-full p-0" size="100%">
-        <Map currentLocation={currentLocation} onClose={handleClose} />
+      <SheetContent position="right" className="flex h-full w-full p-0" size="100%">
+        <Map open={isModalOpen} currentLocation={currentLocation} onClose={handleClose} />
       </SheetContent>
     </Sheet>
   );
