@@ -1,9 +1,9 @@
+import AttendeeSelectModal from '@/components/modals/attendeeSelectModal';
 import { UserDataResponse } from '@/types/user';
 import { User } from 'lucide-react-native';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { Card } from './ui/card';
-import { Input } from './ui/input';
 import { Label } from './ui/label';
 
 type AttendeeInputProps = {
@@ -11,8 +11,12 @@ type AttendeeInputProps = {
   onAttendeesChange: (attendees: UserDataResponse[]) => void;
 };
 
-export default function AttendeeInput({ selectedAttendees }: AttendeeInputProps) {
+export default function AttendeeInput({ selectedAttendees, onAttendeesChange }: AttendeeInputProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleButtonClick = () => {
+    setIsModalOpen(true);
+  };
 
   return (
     <Card className="relative space-y-4 rounded-2xl p-4">
@@ -21,14 +25,17 @@ export default function AttendeeInput({ selectedAttendees }: AttendeeInputProps)
           <User size={16} color="gray" />
           <Label>참가자</Label>
         </View>
-        <Input
-          readOnly
-          placeholder="참석자를 선택해주세요"
-          value={selectedAttendees.map(user => user.userName).join(', ')}
-          className="cursor-pointer"
-          onFocus={() => setIsModalOpen(true)}
-        />
+        <Pressable className="w-full" onPress={handleButtonClick}>
+          <View className="flex h-10 items-center rounded-md border border-gray-300 px-3">
+            <Text className={`${selectedAttendees.length > 0 ? 'text-foreground' : 'text-gray-500'}`}>
+              {selectedAttendees.length > 0
+                ? selectedAttendees.map(user => user.userName).join(', ')
+                : '참석자를 선택해주세요'}
+            </Text>
+          </View>
+        </Pressable>
       </View>
+      <AttendeeSelectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={onAttendeesChange} />
     </Card>
   );
 }

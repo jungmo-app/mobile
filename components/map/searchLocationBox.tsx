@@ -3,7 +3,7 @@ import { useDebouncedValue } from '@/hooks/useDebounce';
 import { useSearchLocationKeyword } from '@/hooks/useQuery/useSearchLocationKeyword';
 import { mergeRefs } from '@/utils/mergeRefs';
 import { Search } from 'lucide-react-native';
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Pressable, TextInput, View } from 'react-native';
 import HighlightText from './highlightText';
@@ -14,18 +14,13 @@ interface SearchLocaitonBoxProps {
 
 export default function SearchLocaitonBox({ onSubmit }: SearchLocaitonBoxProps) {
   const inputRef = useRef<TextInput | null>(null);
-  const latestKeyword = useRef<string>('');
 
   const [isViewSuggestion, setIsViewSuggestion] = useState(false);
 
   const { control, setValue, handleSubmit, watch } = useFormContext();
   const inputValue = watch('inputValue') as string;
 
-  const handleDebounce = useCallback(() => {
-    latestKeyword.current = inputValue;
-  }, [inputValue]);
-
-  const { value: debouncedKeyword } = useDebouncedValue(inputValue, 200, handleDebounce);
+  const { value: debouncedKeyword } = useDebouncedValue(inputValue, 200);
   const { data: suggestions } = useSearchLocationKeyword(debouncedKeyword);
 
   const handleClickSuggestion = (value: string) => {
