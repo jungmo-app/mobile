@@ -2,7 +2,7 @@ import { Button, Sheet, SheetContent, SheetHeader, SheetTrigger } from '@/compon
 import { formattedDateKr } from '@/utils/date';
 import { cn } from '@/utils/style';
 import { useCallback, useState } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import Content from './content';
 
 interface DatePickerSheetProps {
@@ -40,7 +40,9 @@ export default function DatePickerSheet({ value, onSelect, classNames }: DatePic
         <SheetHeader>
           <Text className="text-3xl font-bold">날짜 선택</Text>
         </SheetHeader>
-        <Content value={currentDate} onSelect={handleSelectDay} />
+        <View className="size-full">
+          <Content value={currentDate} isOpen={isOpen} onSelect={handleSelectDay} />
+        </View>
       </SheetContent>
     </Sheet>
   );

@@ -112,3 +112,18 @@ export const getNextMonthDateList = (date: Date, n: number) => {
 
   return Array.from({ length: n }, (_, i) => new Date(currentYear, currentMonth + i + 1));
 };
+
+export const getWeekNum = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+
+  const firstWeekDay = firstDayOfMonth.getDay();
+  const totalDays = lastDayOfMonth.getDate();
+
+  const weeks = Math.ceil((totalDays + firstWeekDay) / 7);
+
+  return weeks;
+};

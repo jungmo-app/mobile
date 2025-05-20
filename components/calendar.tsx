@@ -1,7 +1,7 @@
 import { isSameDay } from '@/utils/date';
 import { cn } from '@/utils/style';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Text, View } from 'react-native';
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import { Button } from './ui/button';
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'] as const;
@@ -14,6 +14,7 @@ interface CalendarProps {
   selected?: boolean;
   onSelect?: (day: Date) => void;
   className?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
 interface CellItem {
@@ -30,6 +31,7 @@ export default function Calendar({
   onSelect,
   selected,
   className,
+  style,
 }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -90,7 +92,7 @@ export default function Calendar({
   }, []);
 
   return (
-    <View className={cn('flex flex-col px-4', className)}>
+    <View className={cn('px-4', className)} style={style}>
       <View className="mb-2 flex-row justify-between">
         {DAYS.map((day, idx) => (
           <Text

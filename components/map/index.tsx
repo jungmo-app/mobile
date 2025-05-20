@@ -6,9 +6,8 @@ import { formattedCoordinate, getRadiusFromZoom, isPointInSearchArea } from '@/u
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
+import { ActivityIndicator, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 import MapView from 'react-native-maps';
-import { LoadingIcon } from '../ui';
 import MapLoader from './mapLoader';
 import SearchLocaitonBox from './searchLocationBox';
 
@@ -87,7 +86,7 @@ export default function Map({ currentLocation, open, target, onClose, onSelect }
           </FormProvider>
         ) : (
           <View className="flex flex-1 items-center justify-center">
-            <LoadingIcon />
+            <ActivityIndicator size="large" color="blue" />
           </View>
         )}
       </View>

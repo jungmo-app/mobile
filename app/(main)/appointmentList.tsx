@@ -1,12 +1,13 @@
-import { Button, LoadingIcon } from '@/components/ui';
+import { Button } from '@/components/ui';
+import { GatheringListResponse } from '@/types/gathering';
 import { router } from 'expo-router';
 import { PlusCircle } from 'lucide-react-native';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import AppointmentCard from './appointmentCard';
 
 export default function AppointmentList() {
   const appointments = [
-    {
+    /* {
       id: 39,
       title:
         'Testafjaldfja;ldfkja;ldkjfal;kfdja;ldkfjl;asdkjflasjdfasdfhakdfhaldjhfkaljdhfklasjdhflkajhdfkaljfklahdfkaljdhflkajhflkasjhdflkajdhlkajf',
@@ -97,8 +98,8 @@ export default function AppointmentList() {
       endDate: '2025-05-01',
       startTime: '14:56',
       meetingLocation: 'ChIJqUYHUUqhfDURtZEZLcjny_0',
-    },
-  ];
+    }, */
+  ] as GatheringListResponse[];
   const isPending = false;
 
   return (
@@ -106,7 +107,7 @@ export default function AppointmentList() {
       <Text className="text-lg font-semibold">나의 일정 {!isPending && `${appointments?.length}개`}</Text>
       {isPending ? (
         <View className="flex h-full flex-1 items-center justify-center">
-          <LoadingIcon />
+          <ActivityIndicator size="large" color="blue" />
         </View>
       ) : (
         <View className="flex flex-col gap-4">

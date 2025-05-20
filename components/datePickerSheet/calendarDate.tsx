@@ -6,13 +6,15 @@ interface CalendarDateProps {
   item: Date;
   value: Date;
   onSelect: (date: Date) => void;
+  height: number;
 }
 
-const CalendarDate = memo(({ item, value, onSelect }: CalendarDateProps) => {
+const CalendarDate = memo(({ item, value, height, onSelect }: CalendarDateProps) => {
   return (
     <View
       key={`${item.getFullYear()}.${item.getMonth() + 1}`}
-      className="flex mb-2 mt-6 h-[352px] flex-col gap-5 overflow-hidden text-lg font-semibold"
+      className="flex flex-col gap-5 overflow-hidden pb-2 pt-6 text-lg font-semibold"
+      style={{ height }}
     >
       <Text className="mb-2 ml-6 text-3xl font-bold">{`${item.getFullYear()}년 ${item.getMonth() + 1}월`}</Text>
       <Calendar
@@ -20,7 +22,7 @@ const CalendarDate = memo(({ item, value, onSelect }: CalendarDateProps) => {
         selected={false}
         selectedDate={value}
         date={item}
-        className="h-[320px]"
+        style={{ height: height - 32 }}
         onSelect={onSelect}
       />
     </View>

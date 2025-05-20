@@ -80,7 +80,6 @@ export const placeApis = {
           headers: { 'Content-Type': 'application/json' },
         }
       );
-      console.log(data);
       return data as string;
     } catch (error) {
       console.error(error);
