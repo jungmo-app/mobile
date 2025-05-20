@@ -26,7 +26,7 @@ export default function DescriptionInput() {
           render={({ field }) => (
             <Input
               multiline
-              placeholder="일정 제목을 입력해주세요"
+              placeholder="일정에 대한 설명을 입력해주세요"
               className={`${errors.description && 'border-red-500'} min-h-32 bg-background`}
               style={{ textAlignVertical: 'top', height: inputHeight }}
               onContentSizeChange={handleSizeChange}

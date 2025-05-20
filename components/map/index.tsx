@@ -1,6 +1,7 @@
 import { apis } from '@/apis';
 import Header from '@/components/header';
-import { PlaceSearchDataType, Position, SearchStatusType } from '@/types/map';
+import { GOOGLE_MAP_FIELD } from '@/constants/place';
+import { PlaceSearchDataType, PlaceSearchResult, Position, SearchStatusType } from '@/types/map';
 import { formattedCoordinate, getRadiusFromZoom, isPointInSearchArea } from '@/utils/map';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
@@ -14,14 +15,16 @@ import SearchLocaitonBox from './searchLocationBox';
 interface MapProps {
   currentLocation: Position | null;
   open: boolean;
+  target?: (typeof GOOGLE_MAP_FIELD)[number][];
   onClose: () => void;
+  onSelect: (value: PlaceSearchResult) => Promise<void> | void;
 }
 
 interface IFormInput {
   inputValue: string;
 }
 
-export default function Map({ currentLocation, open, onClose }: MapProps) {
+export default function Map({ currentLocation, open, target, onClose, onSelect }: MapProps) {
   const mapRef = useRef<MapView>(null);
 
   const method = useForm<IFormInput>();
@@ -46,9 +49,12 @@ export default function Map({ currentLocation, open, onClose }: MapProps) {
     if (!places) {
       return;
     }
-    setMarkers(places);
 
-    const placeCoordinate = formattedCoordinate(places[0].location);
+    const placeResult = places.filter(item => item.location !== undefined) as PlaceSearchDataType[];
+
+    setMarkers(placeResult);
+
+    const placeCoordinate = formattedCoordinate(placeResult[0].location);
     mapRef.current.animateCamera({
       center: placeCoordinate,
     });
@@ -69,11 +75,14 @@ export default function Map({ currentLocation, open, onClose }: MapProps) {
             <SearchLocaitonBox onSubmit={method.handleSubmit(handleSubmitSearchForm)} />
             <MapLoader
               ref={mapRef}
+              target={target}
               position={currentLocation}
               markers={markers}
               searchStatus={searchStatus}
               open={open}
               onResearch={method.handleSubmit(handleSubmitSearchForm)}
+              onClose={onClose}
+              onSelect={onSelect}
             />
           </FormProvider>
         ) : (

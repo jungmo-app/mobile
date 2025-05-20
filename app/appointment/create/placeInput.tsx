@@ -19,7 +19,7 @@ export default function PlaceInput() {
         <Controller
           name="meetingLocation"
           control={control}
-          render={({ field }) => <LocationInput value={field.value} onChange={() => {}} />}
+          render={({ field }) => <LocationInput value={field.value} onChange={location => field.onChange(location)} />}
         />
         {errors.meetingLocation && <Text>올바른 장소를 입력해주세요</Text>}
       </View>

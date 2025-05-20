@@ -30,7 +30,8 @@ export default function SearchLocaitonBox({ onSubmit }: SearchLocaitonBoxProps) 
 
   const handleClickSuggestion = (value: string) => {
     setValue('inputValue', value);
-    setIsViewSuggestion(false);
+    inputRef.current?.blur();
+    onSubmit();
   };
 
   return (

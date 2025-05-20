@@ -30,6 +30,7 @@ export default function CreateAppointment() {
     },
     mode: 'onChange',
   });
+
   return (
     <FormProvider {...method}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
@@ -47,7 +48,7 @@ export default function CreateAppointment() {
             <AttendeeInput selectedAttendees={attendees} onAttendeesChange={setAttendees} />
           </View>
           <View className="bg-background p-4">
-            <Button disabled size="lg" title="일정 추가" titleClassName="text-xl" />
+            <Button disabled={!method.formState.isValid} size="lg" title="일정 추가" titleClassName="text-xl" />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

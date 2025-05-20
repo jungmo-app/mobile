@@ -2,7 +2,7 @@ import Map from '@/components/map';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui';
 import { getCurrentPosition } from '@/libs/map';
 import { meetingLocationSchema } from '@/schemas/appointment';
-import { Position } from '@/types/map';
+import { PlaceSearchResult, Position } from '@/types/map';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { z } from 'zod';
@@ -28,12 +28,12 @@ export default function LocationInput({ value, onChange }: LocationInputProps) {
     setIsModalOpen(false);
   };
 
-  /* const handleSelectLocation = async (value: PlaceSearchResult) => {
+  const handleSelectLocation = async (value: PlaceSearchResult) => {
     if (!value.place_id || !value.formatted_address || !value.name) {
       return;
     }
     await onChange({ id: value.place_id, address: value.formatted_address, name: value.name });
-  }; */
+  };
 
   return (
     <Sheet isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -47,7 +47,12 @@ export default function LocationInput({ value, onChange }: LocationInputProps) {
         </Pressable>
       </SheetTrigger>
       <SheetContent position="right" className="flex h-full w-full p-0" size="100%">
-        <Map open={isModalOpen} currentLocation={currentLocation} onClose={handleClose} />
+        <Map
+          open={isModalOpen}
+          currentLocation={currentLocation}
+          onClose={handleClose}
+          onSelect={handleSelectLocation}
+        />
       </SheetContent>
     </Sheet>
   );
