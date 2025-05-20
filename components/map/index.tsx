@@ -1,11 +1,11 @@
 import { apis } from '@/apis';
 import Header from '@/components/header';
 import { PlaceSearchDataType, Position, SearchStatusType } from '@/types/map';
-import { formattedCoordinate, getRadiusFromZoom } from '@/utils/map';
+import { formattedCoordinate, getRadiusFromZoom, isPointInSearchArea } from '@/utils/map';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { View } from 'react-native';
+import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 import MapView from 'react-native-maps';
 import { LoadingIcon } from '../ui';
 import MapLoader from './mapLoader';
@@ -47,32 +47,41 @@ export default function Map({ currentLocation, open, onClose }: MapProps) {
       return;
     }
     setMarkers(places);
+
+    const placeCoordinate = formattedCoordinate(places[0].location);
     mapRef.current.animateCamera({
-      center: formattedCoordinate(places[0].location),
+      center: placeCoordinate,
     });
-    setSearchStatus({ center, zoom: zoom });
+
+    if (isPointInSearchArea(placeCoordinate, { center, zoom })) {
+      setSearchStatus({ center, zoom });
+    } else {
+      setSearchStatus({ center: placeCoordinate, zoom });
+    }
   };
 
   return (
-    <View className="flex m-0 flex-1 flex-col bg-background p-0">
-      {currentLocation ? (
-        <FormProvider {...method}>
-          <Header title="장소 추가하기" className="relative" onClose={onClose} />
-          <SearchLocaitonBox onSubmit={method.handleSubmit(handleSubmitSearchForm)} />
-          <MapLoader
-            ref={mapRef}
-            position={currentLocation}
-            markers={markers}
-            searchStatus={searchStatus}
-            open={open}
-            onResearch={method.handleSubmit(handleSubmitSearchForm)}
-          />
-        </FormProvider>
-      ) : (
-        <View className="flex flex-1 items-center justify-center">
-          <LoadingIcon />
-        </View>
-      )}
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View className="flex m-0 flex-1 flex-col bg-background p-0">
+        {currentLocation ? (
+          <FormProvider {...method}>
+            <Header title="장소 추가하기" className="relative" onClose={onClose} />
+            <SearchLocaitonBox onSubmit={method.handleSubmit(handleSubmitSearchForm)} />
+            <MapLoader
+              ref={mapRef}
+              position={currentLocation}
+              markers={markers}
+              searchStatus={searchStatus}
+              open={open}
+              onResearch={method.handleSubmit(handleSubmitSearchForm)}
+            />
+          </FormProvider>
+        ) : (
+          <View className="flex flex-1 items-center justify-center">
+            <LoadingIcon />
+          </View>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 }

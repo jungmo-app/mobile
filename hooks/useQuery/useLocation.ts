@@ -1,5 +1,3 @@
-'use client';
-
 import { apis } from '@/apis';
 import { GOOGLE_MAP_FIELD } from '@/constants/place';
 import { PlaceSearchResult } from '@/types/map';

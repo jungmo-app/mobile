@@ -1,4 +1,6 @@
+import { apiPaths } from '@/constants/api';
 import { GOOGLE_MAP_FIELD } from '@/constants/place';
+import { baseAxios } from '@/libs/axios';
 import { PlaceSearchResult, Position } from '@/types/map';
 import axios from 'axios';
 
@@ -31,6 +33,15 @@ export const placeApis = {
         })
       );
       return result;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  getSearchKeyword: async (keyword: string) => {
+    try {
+      const { data } = await baseAxios.get<string[]>(`${apiPaths.place.autoComplete}?input=${keyword}`);
+      const result = Array.from(new Set(data.map(s => s.trim())));
+      return result as string[];
     } catch (error) {
       console.error(error);
     }

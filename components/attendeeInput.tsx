@@ -1,5 +1,3 @@
-'use client';
-
 import { UserDataResponse } from '@/types/user';
 import { User } from 'lucide-react-native';
 import { useState } from 'react';

@@ -32,7 +32,6 @@ const MapLoader = forwardRef<MapView, MapLoaderProps>(({ position, markers, sear
       return;
     }
     setIsViewUpdateSearchButton(!isRegionIntersectingZoomedArea(region, searchStatus));
-    console.log(region);
   };
 
   const handleClickRecenterButton = () => {

@@ -1,9 +1,12 @@
 import { Input } from '@/components/ui';
+import { useDebouncedValue } from '@/hooks/useDebounce';
+import { useSearchLocationKeyword } from '@/hooks/useQuery/useSearchLocationKeyword';
 import { mergeRefs } from '@/utils/mergeRefs';
 import { Search } from 'lucide-react-native';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Pressable, TextInput, View } from 'react-native';
+import HighlightText from './highlightText';
 
 interface SearchLocaitonBoxProps {
   onSubmit: () => void;
@@ -11,12 +14,23 @@ interface SearchLocaitonBoxProps {
 
 export default function SearchLocaitonBox({ onSubmit }: SearchLocaitonBoxProps) {
   const inputRef = useRef<TextInput | null>(null);
+  const latestKeyword = useRef<string>('');
 
-  const { control, setValue, handleSubmit } = useFormContext();
-  const [suggestion, setSuggestion] = useState<string[]>(['test1', 'test2']);
+  const [isViewSuggestion, setIsViewSuggestion] = useState(false);
+
+  const { control, setValue, handleSubmit, watch } = useFormContext();
+  const inputValue = watch('inputValue') as string;
+
+  const handleDebounce = useCallback(() => {
+    latestKeyword.current = inputValue;
+  }, [inputValue]);
+
+  const { value: debouncedKeyword } = useDebouncedValue(inputValue, 200, handleDebounce);
+  const { data: suggestions } = useSearchLocationKeyword(debouncedKeyword);
 
   const handleClickSuggestion = (value: string) => {
     setValue('inputValue', value);
+    setIsViewSuggestion(false);
   };
 
   return (
@@ -28,28 +42,30 @@ export default function SearchLocaitonBox({ onSubmit }: SearchLocaitonBoxProps) 
       <Controller
         control={control}
         name="inputValue"
-        render={({ field: { ref: formRef, onChange, ...fields } }) => (
+        render={({ field: { ref: formRef, onBlur, ...fields } }) => (
           <Input
             ref={mergeRefs(formRef, inputRef)}
             placeholder="장소를 입력해주세요"
             className="relative border bg-background pl-8"
             onSubmitEditing={handleSubmit(onSubmit)}
-            onChange={e => {
-              onChange(e);
+            onFocus={() => setIsViewSuggestion(true)}
+            onBlur={() => {
+              onBlur();
+              setIsViewSuggestion(false);
             }}
             {...fields}
           />
         )}
       />
-      {suggestion.length > 0 && (
+      {suggestions && suggestions.length > 0 && isViewSuggestion && (
         <View className="absolute inset-x-0 left-0 top-full z-[60] mx-2 translate-y-1 rounded-md bg-background py-2 shadow shadow-black">
-          {suggestion.slice(0, 6).map((item, index) => (
+          {suggestions.slice(0, 6).map((item, index) => (
             <Pressable
               key={index}
               className="flex w-full cursor-pointer items-center rounded-md p-4 hover:bg-blue-50 dark:hover:bg-gray-600"
               onPress={() => handleClickSuggestion(item)}
             >
-              <Text>{item}</Text>
+              <HighlightText text={item} keyword={debouncedKeyword} />
             </Pressable>
           ))}
         </View>
