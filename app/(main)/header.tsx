@@ -1,5 +1,4 @@
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { useDateStore } from '@/store/appointmentStore';
 import { router } from 'expo-router';
 import { Bell, CalendarRange, ChevronLeft, ChevronRight, User } from 'lucide-react-native';

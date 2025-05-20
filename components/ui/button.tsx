@@ -7,16 +7,41 @@ type Size = 'default' | 'sm' | 'lg' | 'icon' | 'none';
 
 interface ButtonProps extends PressableProps {
   title?: string;
+  titleClassName?: string;
   variant?: Variant;
   size?: Size;
 }
 
 const variantClass: Record<Variant, string> = {
-  default: 'bg-primary text-primary-foreground active:bg-primary/90',
-  destructive: 'bg-destructive text-destructive-foreground active:bg-destructive/90',
-  outline: 'border border-input bg-background active:bg-accent active:text-accent-foreground',
-  ghost: 'bg-transparent text-black active:bg-accent active:text-accent-foreground',
-  link: 'text-primary underline-offset-4 active:underline',
+  default: 'bg-primary active:bg-primary/90',
+  destructive: 'bg-destructive active:bg-destructive/90',
+  outline: 'border border-input bg-background active:bg-accent ',
+  ghost: 'bg-transparent active:bg-accent',
+  link: 'underline-offset-4 active:underline',
+};
+
+const disabledClass: Record<Variant, string> = {
+  default: 'bg-primary/30',
+  destructive: 'bg-destructive/30',
+  outline: 'border border-input/40',
+  ghost: 'bg-transparent',
+  link: 'underline-offset-4',
+};
+
+const textColorClass: Record<Variant, string> = {
+  default: 'text-primary-foreground',
+  destructive: 'text-destructive-foreground',
+  outline: 'text-black group:active:text-accent-foreground',
+  ghost: 'text-black group:active:text-accent-foreground',
+  link: 'text-primary',
+};
+
+const textDisabledClass: Record<Variant, string> = {
+  default: 'text-primary-foreground/40',
+  destructive: 'text-destructive-foreground/40',
+  outline: 'text-black/40',
+  ghost: 'text-black/30',
+  link: 'text-primary/40',
 };
 
 const sizeClass: Record<Size, string> = {
@@ -27,23 +52,32 @@ const sizeClass: Record<Size, string> = {
   none: '',
 };
 
-export const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>(
-  ({ title, variant = 'default', size = 'default', className, children, ...props }, ref) => {
+const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>(
+  ({ title, titleClassName, variant = 'default', size = 'default', className, disabled, children, ...props }, ref) => {
     return (
       <Pressable
         ref={ref}
+        disabled={disabled}
         className={cn(
-          'flex flex-row items-center justify-center gap-2 rounded-md font-medium',
-          variantClass[variant],
+          'group flex flex-row items-center justify-center gap-2 rounded-md',
+          disabled ? disabledClass[variant] : variantClass[variant],
           sizeClass[size],
           className
         )}
         {...props}
       >
-        {title ? <Text>{title}</Text> : children}
+        {title ? (
+          <Text className={cn(disabled ? textDisabledClass[variant] : textColorClass[variant], titleClassName)}>
+            {title}
+          </Text>
+        ) : (
+          children
+        )}
       </Pressable>
     );
   }
 );
 
 Button.displayName = 'Button';
+
+export { Button };

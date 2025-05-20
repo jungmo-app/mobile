@@ -1,44 +1,69 @@
 export interface Position {
+  latitude: number;
+  longitude: number;
+}
+
+export interface Location {
   lat: number;
   lng: number;
 }
 
 export interface PlaceSearchResult {
-  name: string;
-  place_id: string;
-  formatted_address: string;
-  geometry: {
-    location: {
-      lat: number;
-      lng: number;
-    };
-    viewport?: {
-      northeast: { lat: number; lng: number };
-      southwest: { lat: number; lng: number };
-    };
-  };
-  icon?: string;
-  business_status?: string;
-  rating?: number;
-  user_ratings_total?: number;
-  types?: string[];
-  opening_hours?: {
-    open_now: boolean;
-  };
-  photos?: {
-    photo_reference: string;
-    height: number;
-    width: number;
-    html_attributions: string[];
+  address_components?: { long_name: string; short_name: string; types: string[] };
+  adr_address?: string;
+  aspects?: {
+    rating: number;
+    type: string;
   }[];
+  formatted_address?: string;
+  formatted_phone_number?: string;
+  geometry?: {
+    location: Location;
+    viewport?: {
+      northeast: Location;
+      southwest: Location;
+    };
+  };
+  html_attributions?: string[];
+  icon?: string;
+  id?: string;
+  international_phone_number?: string;
+  name: string;
+  permanently_closed?: boolean;
+  photos?: PlacePhoto[];
+  place_id: string;
+  plus_code?: {
+    compound_code?: string;
+    global_code: string;
+  };
+  price_level?: number;
+  rating?: number;
+  reviews?: {
+    aspects: {
+      rating: number;
+      type: string;
+    }[];
+    author_name: string;
+    author_url?: string;
+    language: string;
+    profile_photo_url: string;
+    rating: number;
+    relative_time_description: string;
+    text: string;
+    time: number;
+  };
+  types?: string[];
+  url?: string;
+  user_ratings_total?: number;
+  utc_offset?: number;
+  utc_offset_minutes?: number;
+  vicinity?: string;
+  website?: string;
 }
 
 export interface PlaceSearchDataType {
   name: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
+  location: Location;
   formatted_address: string;
   place_id: string;
 }
@@ -49,4 +74,25 @@ export interface PlaceDataType {
   address: string;
   name: string;
   tags: string[];
+}
+
+export interface SearchStatusType {
+  center: Position;
+  zoom: number;
+}
+
+export interface PhotoOptions {
+  maxHeight?: number | null;
+  maxWidth?: number | null;
+}
+
+interface PlacePhoto {
+  height: number;
+  html_attributions: string[];
+  width: number;
+  getUrl(opts: PhotoOptions): string;
+}
+
+export interface Photos extends PlacePhoto {
+  photo_reference: string;
 }

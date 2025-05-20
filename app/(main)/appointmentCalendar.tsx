@@ -1,6 +1,8 @@
 import Calendar from '@/components/calendar';
 import { useDateStore } from '@/store/appointmentStore';
-import { isSameDay } from '@/utils/date';
+import { getWeekNum, isSameDay } from '@/utils/date';
+import { getCalendarItemHeight } from '@/utils/layout';
+import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 export default function AppointmentCalendar() {
@@ -17,7 +19,17 @@ export default function AppointmentCalendar() {
     }
     setDate(value);
   };
+
+  const itemHeight = useMemo(() => getCalendarItemHeight(getWeekNum(date)) - 24, [date]);
+
   return (
-    <Calendar showAdjacentDays selected date={date} className="my-3 h-[300px] gap-3 px-3" onSelect={handleClickDay} />
+    <Calendar
+      showAdjacentDays
+      selected
+      date={date}
+      className="my-3 gap-3 px-3"
+      style={{ height: itemHeight }}
+      onSelect={handleClickDay}
+    />
   );
 }

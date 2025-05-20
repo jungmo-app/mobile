@@ -26,7 +26,7 @@ type PopoverRootProps = {
   onOpenChange?: (open: boolean) => void;
 };
 
-export function Popover({ children, isOpen, onOpenChange }: PopoverRootProps) {
+const Popover = ({ children, isOpen, onOpenChange }: PopoverRootProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
   const open = isOpen ?? internalOpen;
 
@@ -48,9 +48,9 @@ export function Popover({ children, isOpen, onOpenChange }: PopoverRootProps) {
       </PopoverView>
     </PopoverContext.Provider>
   );
-}
+};
 
-export function PopoverTrigger({ children }: { children: ReactNode }) {
+const PopoverTrigger = ({ children }: { children: ReactNode }) => {
   const ctx = useContext(PopoverContext);
   if (!ctx) throw new Error('PopoverTrigger must be used within Popover');
 
@@ -63,15 +63,17 @@ export function PopoverTrigger({ children }: { children: ReactNode }) {
     onPress: () => ctx.setOpen(true),
     ...(children.props || {}),
   });
-}
+};
 
 let content: ReactNode = null;
 
-export function PopoverContent({ children }: { children: ReactNode }) {
+const PopoverContent = ({ children }: { children: ReactNode }) => {
   content = children;
   return null;
-}
+};
 
-function PopoverContentContainer() {
+const PopoverContentContainer = () => {
   return <View className="w-64 rounded-md bg-white p-4 shadow">{content}</View>;
-}
+};
+
+export { Popover, PopoverContent, PopoverContentContainer, PopoverTrigger };

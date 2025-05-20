@@ -1,13 +1,13 @@
-import { Button } from '@/components/ui/button';
-import LoadingIcon from '@/components/ui/loadingIcon';
-import { Link } from 'expo-router';
+import { Button } from '@/components/ui';
+import { GatheringListResponse } from '@/types/gathering';
+import { router } from 'expo-router';
 import { PlusCircle } from 'lucide-react-native';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import AppointmentCard from './appointmentCard';
 
 export default function AppointmentList() {
   const appointments = [
-    {
+    /* {
       id: 39,
       title:
         'Testafjaldfja;ldfkja;ldkjfal;kfdja;ldkfjl;asdkjflasjdfasdfhakdfhaldjhfkaljdhfklasjdhflkajhdfkaljfklahdfkaljdhflkajhflkasjhdflkajdhlkajf',
@@ -98,8 +98,8 @@ export default function AppointmentList() {
       endDate: '2025-05-01',
       startTime: '14:56',
       meetingLocation: 'ChIJqUYHUUqhfDURtZEZLcjny_0',
-    },
-  ];
+    }, */
+  ] as GatheringListResponse[];
   const isPending = false;
 
   return (
@@ -107,7 +107,7 @@ export default function AppointmentList() {
       <Text className="text-lg font-semibold">나의 일정 {!isPending && `${appointments?.length}개`}</Text>
       {isPending ? (
         <View className="flex h-full flex-1 items-center justify-center">
-          <LoadingIcon />
+          <ActivityIndicator size="large" color="blue" />
         </View>
       ) : (
         <View className="flex flex-col gap-4">
@@ -115,14 +115,18 @@ export default function AppointmentList() {
             <AppointmentCard key={appointment.id} appointment={appointment} />
           ))}
           <View className="mb-2 mt-4">
-            <Link href="/account">
-              <Button variant="outline" size="none" className="w-full py-4" aria-label="일정 추기">
-                <View className="flex h-6 items-center gap-2">
-                  <PlusCircle width={16} height={16} color="blue" />
-                  <Text className="text-md text-black">새로운 일정을 추가해보세요</Text>
-                </View>
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="none"
+              className="w-full py-4"
+              aria-label="일정 추가"
+              onPress={() => router.push('/appointment/create')}
+            >
+              <View className="flex h-6 items-center gap-2">
+                <PlusCircle width={16} height={16} color="blue" />
+                <Text className="text-md text-black">새로운 일정을 추가해보세요</Text>
+              </View>
+            </Button>
           </View>
         </View>
       )}
