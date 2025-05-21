@@ -13,7 +13,7 @@ export default function AppointmentCalendar() {
     }))
   );
 
-  const handleClickDay = (value: Date) => {
+  const handlePressDay = (value: Date) => {
     if (isSameDay(date, value)) {
       return;
     }
@@ -29,7 +29,7 @@ export default function AppointmentCalendar() {
       date={date}
       className="my-3 gap-3 px-3"
       style={{ height: itemHeight }}
-      onSelect={handleClickDay}
+      onSelect={handlePressDay}
     />
   );
 }

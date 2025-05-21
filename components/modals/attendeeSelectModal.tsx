@@ -39,7 +39,7 @@ export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }
   /* const { value: debouncedKeyword } = useDebouncedValue(inputValue, 200); */
   const [selectedUsers, setSelectedUsers] = useState<UserDataResponse[]>(value ?? []);
 
-  const [searchList, setSearchList] = useState<UserDataResponse[]>([]); // debouncedKeyword
+  const [searchList] = useState<UserDataResponse[]>([]); // debouncedKeyword
 
   const isPending = false;
   const isError = false;

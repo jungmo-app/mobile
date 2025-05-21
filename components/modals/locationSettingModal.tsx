@@ -2,7 +2,7 @@ import { GOOGLE_MAP_FIELD } from '@/constants/place';
 import { useLocation } from '@/hooks/useQuery/useLocation';
 import { Photos, PlaceSearchResult } from '@/types/map';
 import { X } from 'lucide-react-native';
-import { Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { Image, ScrollView, Text, View } from 'react-native';
 import { Button, Input, Label, Sheet, SheetClose, SheetContent } from '../ui';
 
 interface LocationSettingModalProps {
@@ -29,7 +29,7 @@ export default function LocationSettingModal({
     ...(target ?? []),
   ]);
 
-  const handleClickButton = async () => {
+  const handlePressButton = async () => {
     if (onSelect && location) {
       await onSelect(location);
     }
@@ -42,11 +42,13 @@ export default function LocationSettingModal({
       <SheetContent size="50%" isClose={false} className="pb-0">
         <View className="flex mb-2 items-center justify-between">
           <Text className="text-2xl font-bold">장소 정보</Text>
-          <SheetClose className="flex relative items-center justify-center">
-            <Pressable className="z-10 rounded-full p-2 active:bg-gray-200" onPress={() => onClose(false)}>
-              <X size={20} color="black" />
-            </Pressable>
-          </SheetClose>
+          <View className="flex relative items-center justify-center">
+            <SheetClose>
+              <View className="z-10 rounded-full p-2 active:bg-gray-200">
+                <X size={20} color="black" />
+              </View>
+            </SheetClose>
+          </View>
         </View>
         {isPending ? (
           <View className="flex-1 items-center justify-center">
@@ -112,7 +114,7 @@ export default function LocationSettingModal({
             </ScrollView>
             {onSelect && (
               <View className="flex z-[60] w-full border-t border-solid border-neutral-300 p-4 font-bold">
-                <Button className="h-12 w-full" aria-label="저장" title="저장하기" onPress={handleClickButton} />
+                <Button className="h-12 w-full" aria-label="저장" title="저장하기" onPress={handlePressButton} />
               </View>
             )}
           </View>

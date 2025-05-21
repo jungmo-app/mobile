@@ -27,7 +27,7 @@ const MapLoader = forwardRef<MapView, MapLoaderProps>(
     const [isViewRecenterButton, setIsViewRecenterButton] = useState(false);
     const [isViewUpdateSearchButton, setIsViewUpdateSearchButton] = useState(false);
 
-    const [clickedId, setClickedId] = useState<string | null>(null);
+    const [pressedId, setPressedId] = useState<string | null>(null);
 
     useImperativeHandle(ref, () => mapRef.current!, []);
 
@@ -42,11 +42,11 @@ const MapLoader = forwardRef<MapView, MapLoaderProps>(
       setIsViewUpdateSearchButton(!isRegionIntersectingZoomedArea(region, searchStatus));
     };
 
-    const handleClickMarker = (id: string) => {
-      setClickedId(id);
+    const handlePressMarker = (id: string) => {
+      setPressedId(id);
     };
 
-    const handleClickRecenterButton = () => {
+    const handlePressRecenterButton = () => {
       mapRef.current?.animateCamera(
         {
           center: position ?? { latitude: 37.5611628, longitude: 127.0225117 },
@@ -55,14 +55,14 @@ const MapLoader = forwardRef<MapView, MapLoaderProps>(
       );
     };
 
-    const handleClickUpdateButton = () => {
+    const handlePressUpdateButton = () => {
       setIsViewUpdateSearchButton(false);
       onResearch();
     };
 
     const handleClosePlaceModal = useCallback(
       (entireClose?: boolean) => {
-        setClickedId(null);
+        setPressedId(null);
         if (entireClose && onClose) {
           onClose();
         }
@@ -102,7 +102,7 @@ const MapLoader = forwardRef<MapView, MapLoaderProps>(
                 <Marker
                   key={marker.place_id}
                   coordinate={formattedCoordinate(marker.location)}
-                  onPress={() => handleClickMarker(marker.place_id)}
+                  onPress={() => handlePressMarker(marker.place_id)}
                 />
               ))}
             </MapView>
@@ -110,7 +110,7 @@ const MapLoader = forwardRef<MapView, MapLoaderProps>(
               <Button
                 variant="ghost"
                 className="absolute bottom-4 right-4 z-[9999] size-12 rounded-full bg-background shadow"
-                onPress={handleClickRecenterButton}
+                onPress={handlePressRecenterButton}
               >
                 <View className="flex items-center justify-center">
                   <LocateFixed size={16} color="black" />
@@ -121,7 +121,7 @@ const MapLoader = forwardRef<MapView, MapLoaderProps>(
               <Button
                 variant="ghost"
                 className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-background"
-                onPress={handleClickUpdateButton}
+                onPress={handlePressUpdateButton}
               >
                 <View>
                   <Text className="text-foreground">현재 위치에서 검색</Text>
@@ -129,9 +129,9 @@ const MapLoader = forwardRef<MapView, MapLoaderProps>(
               </Button>
             )}
             <LocationSettingModal
-              isOpen={Boolean(clickedId)}
+              isOpen={Boolean(pressedId)}
               target={target}
-              placeId={clickedId}
+              placeId={pressedId}
               onClose={handleClosePlaceModal}
               onSelect={onSelect}
             />

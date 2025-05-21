@@ -1,16 +1,7 @@
 import { cn } from '@/utils/style';
 import { X } from 'lucide-react-native';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Animated,
-  Dimensions,
-  GestureResponderEvent,
-  Modal,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Animated, Dimensions, GestureResponderEvent, Modal, Pressable, Text, View } from 'react-native';
 
 type SheetContextType = {
   open: boolean;
@@ -68,22 +59,30 @@ const SheetTrigger = ({ children, className }: SheetTriggerProps) => {
   return React.cloneElement(children, {
     ...children.props,
     onPress: (e: GestureResponderEvent) => {
-      children.props?.onPress?.(e); // 원래 있던 onPress 유지
-      context.setOpen(true); // 시트 열기
+      children.props?.onPress?.(e);
+      context.setOpen(true);
     },
     className: cn(children.props.className, className),
   });
 };
 
-const SheetClose = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+const SheetClose = ({
+  children,
+  onPress,
+}: {
+  children: React.ReactElement;
+  onPress?: () => void;
+  className?: string;
+}) => {
   const context = useContext(SheetContext);
-  if (!context) throw new Error('SheetClose must be used within a Sheet');
-
-  return (
-    <TouchableOpacity className={cn(className)} onPress={() => context.setOpen(false)}>
-      {children}
-    </TouchableOpacity>
-  );
+  return React.cloneElement(children as React.ReactElement, {
+    ...children.props,
+    onPress: (e: GestureResponderEvent) => {
+      children.props?.onPress?.(e);
+      onPress?.();
+      context.setOpen(false);
+    },
+  });
 };
 
 const SheetContent = ({ children, position = 'bottom', size = 300, isClose = true, className }: SheetContentProps) => {

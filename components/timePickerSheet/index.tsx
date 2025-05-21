@@ -18,12 +18,12 @@ export default function TimePickerSheet({ value, onSelect, classNames }: TimePic
     return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
   };
 
-  const handleClickHourButton = (hours: number) => {
+  const handlePressHourButton = (hours: number) => {
     setSelectedHour(hours);
     onSelect({ hours, minutes: selectedMinute });
   };
 
-  const handleClickMinuteButton = (minutes: number) => {
+  const handlePressMinuteButton = (minutes: number) => {
     setSelectedMinute(minutes);
     onSelect({ hours: selectedHour, minutes });
   };
@@ -49,8 +49,8 @@ export default function TimePickerSheet({ value, onSelect, classNames }: TimePic
         <Content
           selectedHour={selectedHour}
           selectedMinute={selectedMinute}
-          onSelectHour={handleClickHourButton}
-          onSelectMinute={handleClickMinuteButton}
+          onSelectHour={handlePressHourButton}
+          onSelectMinute={handlePressMinuteButton}
         />
       </SheetContent>
     </Sheet>

@@ -23,7 +23,7 @@ export default function SearchLocaitonBox({ onSubmit }: SearchLocaitonBoxProps) 
   const { value: debouncedKeyword } = useDebouncedValue(inputValue, 200);
   const { data: suggestions } = useSearchLocationKeyword(debouncedKeyword);
 
-  const handleClickSuggestion = (value: string) => {
+  const handlePressSuggestion = (value: string) => {
     setValue('inputValue', value);
     inputRef.current?.blur();
     onSubmit();
@@ -59,7 +59,7 @@ export default function SearchLocaitonBox({ onSubmit }: SearchLocaitonBoxProps) 
             <Pressable
               key={index}
               className="flex w-full cursor-pointer items-center rounded-md p-4 hover:bg-blue-50 dark:hover:bg-gray-600"
-              onPress={() => handleClickSuggestion(item)}
+              onPress={() => handlePressSuggestion(item)}
             >
               <HighlightText text={item} keyword={debouncedKeyword} />
             </Pressable>

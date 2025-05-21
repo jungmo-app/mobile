@@ -2,12 +2,13 @@
 
 import ImageSelectModal from '@/components/modals/ImageSelectModal';
 import { Avatar, AvatarFallback, AvatarImage, Button, Card, Input, Label } from '@/components/ui';
+import { ButtonContext } from '@/context/ButtonPressContext';
 import { useImagePicker } from '@/hooks/useImagePicker';
 import { EditProfileFormValues, editProfileSchema } from '@/schemas/auth';
 import { UserInfoResponse } from '@/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Copy, Edit, Save, X } from 'lucide-react-native';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { ActivityIndicator, Dimensions, Text, TextInput, View } from 'react-native';
 
@@ -20,6 +21,8 @@ export default function InfoForm() {
     provider: 'email',
   };
   const inputRef = useRef<TextInput | null>(null);
+
+  const { isPressed } = useContext(ButtonContext);
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [isEditImage, setIsEditImage] = useState(false);
@@ -61,11 +64,11 @@ export default function InfoForm() {
     editAccount({ ...data, profileImage: imageFiles[0] });
   };
 
-  const handleClickEditButton = () => {
+  const handlePressEditButton = () => {
     setIsEditMode(true);
   };
 
-  const handleClickCancelButton = () => {
+  const handlePressCancelButton = () => {
     setIsEditMode(false);
     if (inputRef.current) {
       inputRef.current.setNativeProps({ text: '' });
@@ -74,7 +77,7 @@ export default function InfoForm() {
     imageReset();
   };
 
-  const handleClickCopyButton = async () => {
+  const handlePressCopyButton = async () => {
     try {
       await navigator.clipboard.writeText(userData?.userCode ?? '');
       alert('클립보드에 복사하였습니다.');
@@ -102,7 +105,7 @@ export default function InfoForm() {
               size="none"
               className="group select-none p-0"
               aria-label="취소"
-              onPress={handleClickCancelButton}
+              onPress={handlePressCancelButton}
             >
               <X size={22} color="gray" />
             </Button>
@@ -113,7 +116,8 @@ export default function InfoForm() {
             size="none"
             className="group absolute right-3 top-3 select-none p-0"
             aria-label="편집"
-            onPress={handleClickEditButton}
+            disabled={isPressed}
+            onPress={handlePressEditButton}
           >
             <Edit size={22} color="gray" className="group-hover:stroke-neutral-500" />
           </Button>
@@ -126,7 +130,7 @@ export default function InfoForm() {
             </Avatar>
             {isEditMode && (
               <Button
-                className="bg-shadow-30 active:bg-shadow-50 absolute left-0 top-0 select-none rounded-full"
+                className="absolute left-0 top-0 select-none rounded-full bg-shadow-30 active:bg-shadow-50"
                 size="none"
                 aria-label="변경"
                 style={{
@@ -135,7 +139,7 @@ export default function InfoForm() {
                 }}
                 onPress={() => setIsEditImage(true)}
               >
-                <Text className="text-white-shadow-70 text-xl">변경</Text>
+                <Text className="text-xl text-white-shadow-70">변경</Text>
               </Button>
             )}
           </View>
@@ -164,7 +168,7 @@ export default function InfoForm() {
             className="mt-2 w-full justify-normal border border-input bg-background px-2"
             variant="ghost"
             aria-label="유저코드 복사"
-            onPress={handleClickCopyButton}
+            onPress={handlePressCopyButton}
           >
             <View className="flex items-center gap-2">
               <Copy size={16} color="gray" />
@@ -176,8 +180,8 @@ export default function InfoForm() {
       <ImageSelectModal
         isOpen={isEditImage}
         onClose={setIsEditImage}
-        onClickCamera={uploadTakingPicture}
-        onClickFile={uploadImageFiles}
+        onPressCamera={uploadTakingPicture}
+        onPressFile={uploadImageFiles}
       />
     </FormProvider>
   );

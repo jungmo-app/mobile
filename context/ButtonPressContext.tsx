@@ -3,28 +3,28 @@
 import { createContext, PropsWithChildren, useCallback, useMemo, useState } from 'react';
 
 interface ButtonContextType {
-  isClicked: boolean;
-  changeClick: React.Dispatch<React.SetStateAction<boolean>>;
+  isPressed: boolean;
+  changePress: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ButtonContext = createContext<ButtonContextType>({
-  isClicked: false,
-  changeClick: () => {},
+  isPressed: false,
+  changePress: () => {},
 });
 
 export const ButtonContextProvider = ({ children }: PropsWithChildren) => {
-  const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [isPressed, setIsPressed] = useState<boolean>(false);
 
-  const changeClick = useCallback((value: React.SetStateAction<boolean>) => {
-    setIsClicked(value);
+  const changePress = useCallback((value: React.SetStateAction<boolean>) => {
+    setIsPressed(value);
   }, []);
 
   const value = useMemo(
     () => ({
-      isClicked,
-      changeClick,
+      isPressed,
+      changePress,
     }),
-    [isClicked, changeClick]
+    [isPressed, changePress]
   );
   return <ButtonContext.Provider value={value}>{children}</ButtonContext.Provider>;
 };

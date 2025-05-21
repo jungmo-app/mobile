@@ -1,5 +1,5 @@
 import { Button, Input, Label, Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui';
-import { ButtonContext } from '@/context/ButtonClickContext';
+import { ButtonContext } from '@/context/ButtonPressContext';
 import { changePasswordSchema } from '@/schemas/auth';
 import { ChangePasswordFormValues } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,18 +19,18 @@ export default function ChangePasswordSheet() {
     mode: 'onChange',
   });
 
-  const { isClicked } = useContext(ButtonContext);
+  const { isPressed } = useContext(ButtonContext);
 
-  const handleClickSubmitButton = () => {
+  const handlePressSubmitButton = () => {
     console.log(getValues);
   };
 
   return (
     <Sheet>
       <SheetTrigger>
-        <Button variant="ghost" size="none" className="flex w-full justify-between px-5 py-4">
-          <Text className="text-lg text-gray-500">비밀번호 변경하기</Text>
-          <ChevronRight size={16} color="gray" />
+        <Button variant="ghost" size="none" className="flex w-full justify-between px-5 py-4" disabled={isPressed}>
+          <Text className={`text-lg ${isPressed ? 'text-gray-300' : 'text-gray-500'}`}>비밀번호 변경하기</Text>
+          <ChevronRight size={16} color={isPressed ? '#d1d5db' : '#6b7280'} />
         </Button>
       </SheetTrigger>
       <SheetContent size={400}>
@@ -81,10 +81,10 @@ export default function ChangePasswordSheet() {
           <View className="absolute bottom-1 w-full">
             <Button
               className="h-12 w-full"
-              disabled={!formState.isValid || isClicked}
+              disabled={!formState.isValid || isPressed}
               aria-label="변경"
               title="변경하기"
-              onPress={handleSubmit(handleClickSubmitButton)}
+              onPress={handleSubmit(handlePressSubmitButton)}
             />
           </View>
         </View>
