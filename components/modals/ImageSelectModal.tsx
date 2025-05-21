@@ -21,7 +21,7 @@ export default function ImageSelectModal({ isOpen, onClose, onClickCamera, onCli
   };
 
   return (
-    <Sheet isOpen={isOpen} className="h-full" onOpenChange={onClose}>
+    <Sheet isOpen={isOpen} onOpenChange={onClose}>
       <SheetContent position="bottom" size={Math.max(Dimensions.get('window').height * 0.2, 200)}>
         <SheetTitle>작업 선택</SheetTitle>
         <View className="flex h-full w-full flex-1 items-center justify-center">

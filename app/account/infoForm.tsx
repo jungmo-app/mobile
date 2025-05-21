@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Copy, Edit, Save, X } from 'lucide-react-native';
 import { useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { ActivityIndicator, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Text, TextInput, View } from 'react-native';
 
 export default function InfoForm() {
   const userData: UserInfoResponse = {
@@ -120,15 +120,19 @@ export default function InfoForm() {
         )}
         <View className="flex flex-col items-center space-y-4">
           <View className="relative">
-            <Avatar size={124} className="parent">
+            <Avatar size={Dimensions.get('window').height * 0.15} className="parent">
               <AvatarImage src={imageUris.length ? imageUris[0] : null} />
               <AvatarFallback fallback={form.watch('userName')} />
             </Avatar>
             {isEditMode && (
               <Button
-                className="bg-shadow-30 active:bg-shadow-50 absolute left-0 top-0 size-[124px] select-none rounded-full"
+                className="bg-shadow-30 active:bg-shadow-50 absolute left-0 top-0 select-none rounded-full"
                 size="none"
                 aria-label="변경"
+                style={{
+                  width: Dimensions.get('window').height * 0.15,
+                  height: Dimensions.get('window').height * 0.15,
+                }}
                 onPress={() => setIsEditImage(true)}
               >
                 <Text className="text-white-shadow-70 text-xl">변경</Text>
