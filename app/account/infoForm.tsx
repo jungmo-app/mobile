@@ -7,6 +7,7 @@ import { useImagePicker } from '@/hooks/useImagePicker';
 import { EditProfileFormValues, editProfileSchema } from '@/schemas/auth';
 import { UserInfoResponse } from '@/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import * as Clipboard from 'expo-clipboard';
 import { Copy, Edit, Save, X } from 'lucide-react-native';
 import { useContext, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -79,7 +80,7 @@ export default function InfoForm() {
 
   const handlePressCopyButton = async () => {
     try {
-      await navigator.clipboard.writeText(userData?.userCode ?? '');
+      await Clipboard.setStringAsync(userData?.userCode ?? '');
       alert('클립보드에 복사하였습니다.');
     } catch {
       alert('클립보드 복사에 실패하였습니다');
