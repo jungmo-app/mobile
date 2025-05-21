@@ -14,7 +14,7 @@ type AttendeeInputProps = {
 export default function AttendeeInput({ selectedAttendees, onAttendeesChange }: AttendeeInputProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleButtonClick = () => {
+  const handleButtonPress = () => {
     setIsModalOpen(true);
   };
 
@@ -25,7 +25,7 @@ export default function AttendeeInput({ selectedAttendees, onAttendeesChange }: 
           <User size={16} color="gray" />
           <Label>참가자</Label>
         </View>
-        <Pressable className="w-full" onPress={handleButtonClick}>
+        <Pressable className="w-full" onPress={handleButtonPress}>
           <View className="flex h-10 items-center rounded-md border border-gray-300 px-3">
             <Text className={`${selectedAttendees.length > 0 ? 'text-foreground' : 'text-gray-500'}`}>
               {selectedAttendees.length > 0

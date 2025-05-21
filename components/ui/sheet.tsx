@@ -1,16 +1,7 @@
 import { cn } from '@/utils/style';
 import { X } from 'lucide-react-native';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Animated,
-  Dimensions,
-  GestureResponderEvent,
-  Modal,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Animated, Dimensions, GestureResponderEvent, Modal, Pressable, Text, View } from 'react-native';
 
 type SheetContextType = {
   open: boolean;
@@ -68,22 +59,30 @@ const SheetTrigger = ({ children, className }: SheetTriggerProps) => {
   return React.cloneElement(children, {
     ...children.props,
     onPress: (e: GestureResponderEvent) => {
-      children.props?.onPress?.(e); // 원래 있던 onPress 유지
-      context.setOpen(true); // 시트 열기
+      children.props?.onPress?.(e);
+      context.setOpen(true);
     },
     className: cn(children.props.className, className),
   });
 };
 
-const SheetClose = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+const SheetClose = ({
+  children,
+  onPress,
+}: {
+  children: React.ReactElement;
+  onPress?: () => void;
+  className?: string;
+}) => {
   const context = useContext(SheetContext);
-  if (!context) throw new Error('SheetClose must be used within a Sheet');
-
-  return (
-    <TouchableOpacity className={cn(className)} onPress={() => context.setOpen(false)}>
-      {children}
-    </TouchableOpacity>
-  );
+  return React.cloneElement(children as React.ReactElement, {
+    ...children.props,
+    onPress: (e: GestureResponderEvent) => {
+      children.props?.onPress?.(e);
+      onPress?.();
+      context.setOpen(false);
+    },
+  });
 };
 
 const SheetContent = ({ children, position = 'bottom', size = 300, isClose = true, className }: SheetContentProps) => {
@@ -106,7 +105,7 @@ const SheetContent = ({ children, position = 'bottom', size = 300, isClose = tru
 
     if (typeof size === 'number') {
       translateFrom = size;
-    } else if (typeof size === 'string' && size.endsWith('%')) {
+    } else if (size.endsWith('%')) {
       const percent = parseFloat(size) / 100;
       const screenDimension =
         position === 'top' || position === 'bottom' ? Dimensions.get('window').height : Dimensions.get('window').width;
@@ -159,7 +158,7 @@ const SheetContent = ({ children, position = 'bottom', size = 300, isClose = tru
         <Pressable className="flex-1" onPress={() => setOpen(false)} />
         <Animated.View
           className={cn(
-            'absolute w-full rounded-t-2xl bg-background p-4',
+            'flex absolute w-full flex-col rounded-t-2xl bg-background p-4',
             position === 'bottom' && 'bottom-0',
             position === 'top' && 'top-0',
             position === 'left' && 'left-0 h-full rounded-none',
@@ -201,7 +200,9 @@ const SheetFooter = ({ children, className }: { children: React.ReactNode; class
 );
 
 const SheetTitle = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <Text className={cn('text-lg font-semibold text-foreground', className)}>{children}</Text>
+  <View className="py-2">
+    <Text className={cn('text-xl font-semibold text-foreground', className)}>{children}</Text>
+  </View>
 );
 
 const SheetDescription = ({ children, className }: { children: React.ReactNode; className?: string }) => (

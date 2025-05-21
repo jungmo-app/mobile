@@ -19,7 +19,7 @@ export default function Header() {
     setIsOpen(value);
   };
 
-  const handleClickPrevMonthButton = () => {
+  const handlePressPrevMonthButton = () => {
     setDate(prev => {
       const newDate = new Date(prev);
       newDate.setMonth(newDate.getMonth() - 1);
@@ -30,7 +30,7 @@ export default function Header() {
     });
   };
 
-  const handleClickNextMonthButton = () => {
+  const handlePressNextMonthButton = () => {
     setDate(prev => {
       const newDate = new Date(prev);
       newDate.setMonth(newDate.getMonth() + 1);
@@ -50,7 +50,7 @@ export default function Header() {
       </View>
 
       <View className="flex items-center gap-2">
-        <Button size="icon" variant="ghost" aria-label="이전 달" onPress={handleClickPrevMonthButton}>
+        <Button size="icon" variant="ghost" aria-label="이전 달" onPress={handlePressPrevMonthButton}>
           <ChevronLeft width={20} height={20} color="black" />
         </Button>
         <Popover isOpen={open} onOpenChange={handleOpenPopover}>
@@ -68,7 +68,7 @@ export default function Header() {
             </View>
           </PopoverContent>
         </Popover>
-        <Button size="icon" variant="ghost" aria-label="다음 달" onPress={handleClickNextMonthButton}>
+        <Button size="icon" variant="ghost" aria-label="다음 달" onPress={handlePressNextMonthButton}>
           <ChevronRight width={20} height={20} color="black" />
         </Button>
       </View>

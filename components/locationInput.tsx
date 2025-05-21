@@ -18,7 +18,7 @@ export default function LocationInput({ value, onChange }: LocationInputProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<Position | null>(null);
 
-  const handleButtonClick = async () => {
+  const handleButtonPress = async () => {
     setIsModalOpen(true);
     const location = await getCurrentPosition();
     setCurrentLocation(location);
@@ -38,7 +38,7 @@ export default function LocationInput({ value, onChange }: LocationInputProps) {
   return (
     <Sheet isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
       <SheetTrigger>
-        <Pressable className="w-full" onPress={handleButtonClick}>
+        <Pressable className="w-full" onPress={handleButtonPress}>
           <View className="flex h-10 items-center rounded-md border border-gray-300 px-3">
             <Text className={`${value.name !== '' ? 'text-foreground' : 'text-gray-500'}`}>
               {value.name !== '' ? value.name : '장소를 입력해주세요'}

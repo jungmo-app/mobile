@@ -80,7 +80,7 @@ export default function AppointmentList() {
       endDate: '2025-05-01',
       startTime: '14:40',
       meetingLocation: 'ChIJy_zVpBChfDURo_uiWGRy77s',
-    },
+    }, */
     {
       id: 47,
       title: 'Test4',
@@ -93,12 +93,13 @@ export default function AppointmentList() {
     {
       id: 48,
       title: 'Test5',
-      profileImage: null,
+      profileImage:
+        'https://jungmobucket.s3.amazonaws.com/profile-images/2/e927b6ba-8792-4baf-ae2a-83dad77931e7-10101139-샘플-우표.jpg',
       startDate: '2025-05-01',
       endDate: '2025-05-01',
       startTime: '14:56',
       meetingLocation: 'ChIJqUYHUUqhfDURtZEZLcjny_0',
-    }, */
+    },
   ] as GatheringListResponse[];
   const isPending = false;
 
