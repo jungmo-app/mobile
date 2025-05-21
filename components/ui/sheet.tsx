@@ -106,7 +106,7 @@ const SheetContent = ({ children, position = 'bottom', size = 300, isClose = tru
 
     if (typeof size === 'number') {
       translateFrom = size;
-    } else if (typeof size === 'string' && size.endsWith('%')) {
+    } else if (size.endsWith('%')) {
       const percent = parseFloat(size) / 100;
       const screenDimension =
         position === 'top' || position === 'bottom' ? Dimensions.get('window').height : Dimensions.get('window').width;
@@ -159,7 +159,7 @@ const SheetContent = ({ children, position = 'bottom', size = 300, isClose = tru
         <Pressable className="flex-1" onPress={() => setOpen(false)} />
         <Animated.View
           className={cn(
-            'absolute w-full rounded-t-2xl bg-background p-4',
+            'flex absolute w-full flex-col rounded-t-2xl bg-background p-4',
             position === 'bottom' && 'bottom-0',
             position === 'top' && 'top-0',
             position === 'left' && 'left-0 h-full rounded-none',
@@ -201,7 +201,9 @@ const SheetFooter = ({ children, className }: { children: React.ReactNode; class
 );
 
 const SheetTitle = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <Text className={cn('text-lg font-semibold text-foreground', className)}>{children}</Text>
+  <View className="py-2">
+    <Text className={cn('text-xl font-semibold text-foreground', className)}>{children}</Text>
+  </View>
 );
 
 const SheetDescription = ({ children, className }: { children: React.ReactNode; className?: string }) => (

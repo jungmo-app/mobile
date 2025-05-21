@@ -10,7 +10,7 @@ interface AppointmentCardProps {
 export default function AppointmentCard({ appointment }: AppointmentCardProps) {
   const { data: locationData } = useLocation(appointment.meetingLocation, ['name']);
   return (
-    <Link href="/account">
+    <Link href={`/appointment/${appointment.id}`}>
       <View className="flex items-center gap-4 p-2">
         <View className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg">
           <Image

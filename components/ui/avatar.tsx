@@ -17,21 +17,19 @@ export function Avatar({ children, className, size = 40 }: AvatarProps) {
 }
 
 interface AvatarImageProps {
-  src: string | null | undefined;
+  src: string | null;
   alt?: string;
   className?: string;
 }
 
 export function AvatarImage({ src, className }: AvatarImageProps) {
-  const imageSrc = src ?? null;
-
-  return imageSrc ? (
+  return (
     <Image
-      source={{ uri: imageSrc }}
       style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
       className={cn('rounded-full', className)}
+      source={typeof src === 'string' ? { uri: src } : require('@/assets/images/sample.jpg')}
     />
-  ) : null;
+  );
 }
 
 interface AvatarFallbackProps {
