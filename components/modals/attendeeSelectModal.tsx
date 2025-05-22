@@ -33,7 +33,7 @@ export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }
   const queryClient = useQueryClient();
   const userData = queryClient.getQueryData<UserInfoResponse>(['userData']);
 
-  const { control, setValue, watch } = useForm<IFormInput>();
+  const { control, setValue, watch, reset } = useForm<IFormInput>();
   const inputValue = watch('inputValue') as string;
 
   /* const { value: debouncedKeyword } = useDebouncedValue(inputValue, 200); */
@@ -67,6 +67,11 @@ export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }
     setSelectedUsers(value ?? []);
     setValue('inputValue', '');
     onClose();
+  };
+
+  const handleCancle = () => {
+    reset();
+    handleClose();
   };
 
   const SearchResultComponent = () => {
@@ -120,34 +125,32 @@ export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }
   return (
     <Sheet isOpen={isOpen} onOpenChange={handleClose}>
       <SheetContent position="bottom" className="w-full flex-1 flex-col" size="60%">
-        <SheetHeader>
+        <SheetHeader className="mb-2">
           <SheetTitle>참석자 추가</SheetTitle>
         </SheetHeader>
 
         <View className="flex flex-1 flex-col gap-4">
-          {/* 선택된 참석자 목록 */}
           {selectedUsers.length > 0 && (
-            <ScrollView>
+            <ScrollView horizontal className="p-0" style={{ flexDirection: 'row', flexGrow: 0 }}>
               <View className="flex flex-wrap gap-2 p-2">
                 {selectedUsers.map(user => (
-                  <View key={user.userId} className="flex items-center gap-1 rounded-full bg-secondary px-2 py-1">
-                    <Avatar className="h-5 w-5">
-                      <AvatarImage src={user.profileImage} />
-                      <AvatarFallback fallback={user.userName?.[0] ?? ''} />
-                    </Avatar>
-                    <Text className="text-sm">{user.userName}</Text>
-                    {userData?.userCode !== user.userCode && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-4 w-4 p-0"
-                        aria-label="닫기"
-                        onPress={() => handleUserRemove(user.userId)}
-                      >
-                        <X size={12} color="black" />
-                      </Button>
-                    )}
-                  </View>
+                  <Button
+                    key={user.userId}
+                    variant="ghost"
+                    size="none"
+                    className="p-0"
+                    aria-label="닫기"
+                    onPress={() => handleUserRemove(user.userId)}
+                  >
+                    <View className="flex items-center gap-1 rounded-full bg-secondary px-2 py-1">
+                      <Avatar size={20}>
+                        <AvatarImage src={user.profileImage} />
+                        <AvatarFallback fallback={user.userName?.[0] ?? ''} />
+                      </Avatar>
+                      <Text className="text-sm">{user.userName}</Text>
+                      {userData?.userCode !== user.userCode && <X size={12} color="black" />}
+                    </View>
+                  </Button>
                 ))}
               </View>
             </ScrollView>
@@ -167,13 +170,11 @@ export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }
             />
           </View>
 
-          {/* 검색 결과 목록 */}
           <SearchResultComponent />
 
-          {/* 하단 버튼 */}
           <View className="flex justify-end gap-2">
-            <Button variant="outline" aria-label="취소" title="취소" onPress={onClose} />
             <Button title="확인" onPress={handleConfirm} />
+            <Button variant="outline" aria-label="취소" title="취소" onPress={handleCancle} />
           </View>
         </View>
       </SheetContent>

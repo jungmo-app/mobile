@@ -1,7 +1,7 @@
 import { Button, Sheet, SheetContent, SheetHeader, SheetTrigger } from '@/components/ui';
 import { cn } from '@/utils/style';
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import Content from './content';
 
 interface TimePickerSheetProps {
@@ -33,14 +33,11 @@ export default function TimePickerSheet({ value, onSelect, classNames }: TimePic
       <SheetTrigger>
         <Button
           variant="outline"
-          className={cn('flex w-full justify-start px-4 py-2 text-left font-normal', classNames)}
+          className={cn('flex h-10 w-24 rounded-sm px-4 py-3 text-left font-normal', classNames)}
           size="none"
           aria-label="현재 날짜"
-        >
-          <View className="flex size-full items-center justify-center text-center">
-            <Text>{formatTime(selectedHour, selectedMinute)}</Text>
-          </View>
-        </Button>
+          title={formatTime(selectedHour, selectedMinute)}
+        />
       </SheetTrigger>
       <SheetContent position="bottom" size={300}>
         <SheetHeader>

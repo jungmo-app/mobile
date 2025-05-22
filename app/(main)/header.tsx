@@ -54,7 +54,7 @@ export default function Header() {
           <ChevronLeft width={20} height={20} color="black" />
         </Button>
         <Popover isOpen={open} onOpenChange={handleOpenPopover}>
-          <PopoverTrigger>
+          <PopoverTrigger asChild>
             <Button variant="ghost" aria-label="날짜">
               <Text className="text-3xl font-black">
                 {date.getFullYear()}. {(date.getMonth() + 1).toString().padStart(2, '0')}

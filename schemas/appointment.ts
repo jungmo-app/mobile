@@ -17,7 +17,7 @@ export const mainInfoSchema = z.object({
   title: z.string().min(1, '제목은 필수입니다'),
   startDate: z.string(),
   startTime: z.string(),
-  description: z.string().nullable(),
+  description: z.string(),
   userList: z.array(userDataResponseSchema),
 });
 

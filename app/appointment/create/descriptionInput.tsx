@@ -1,19 +1,13 @@
 import { Card, Input, Label } from '@/components/ui';
-import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { NativeSyntheticEvent, Text, TextInputContentSizeChangeEventData, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 export default function DescriptionInput() {
   const {
     control,
     formState: { errors },
   } = useFormContext();
-  const [inputHeight, setInputHeight] = useState<number>(128);
 
-  const handleSizeChange = (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
-    const contentHeight = e.nativeEvent.contentSize.height;
-    setInputHeight(contentHeight);
-  };
   return (
     <Card className="flex min-h-48 flex-col rounded-2xl p-4">
       <View className="space-y-4">
@@ -26,10 +20,11 @@ export default function DescriptionInput() {
           render={({ field }) => (
             <Input
               multiline
+              isHeightChange
+              minHeight={128}
               placeholder="일정에 대한 설명을 입력해주세요"
               className={`${errors.description && 'border-red-500'} min-h-32 bg-background`}
-              style={{ textAlignVertical: 'top', height: inputHeight }}
-              onContentSizeChange={handleSizeChange}
+              style={{ textAlignVertical: 'top' }}
               {...field}
             />
           )}
