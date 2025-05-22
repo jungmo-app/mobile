@@ -59,7 +59,7 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
         ref={ref}
         disabled={disabled}
         className={cn(
-          'group flex flex-row items-center justify-center gap-2 rounded-md',
+          'group flex w-auto items-center justify-center gap-2 rounded-md',
           disabled ? disabledClass[variant] : variantClass[variant],
           sizeClass[size],
           className
@@ -67,7 +67,10 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
         {...props}
       >
         {title ? (
-          <Text className={cn(disabled ? textDisabledClass[variant] : textColorClass[variant], titleClassName)}>
+          <Text
+            numberOfLines={1}
+            className={cn(disabled ? textDisabledClass[variant] : textColorClass[variant], titleClassName)}
+          >
             {title}
           </Text>
         ) : (
