@@ -50,7 +50,6 @@ const Input = forwardRef<TextInput, InputProps>(
       }
     };
 
-    console.log(inputHeight);
     return (
       <TextInput
         ref={ref}

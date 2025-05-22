@@ -28,6 +28,7 @@ export interface PlaceSearchResult {
   icon?: string;
   id?: string;
   international_phone_number?: string;
+  icon_background_color?: string;
   name: string;
   permanently_closed?: boolean;
   photos?: PlacePhoto[];

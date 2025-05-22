@@ -143,7 +143,7 @@ export default function MainInfo() {
   };
 
   return (
-    <View className="w-full rounded-2xl">
+    <View className="w-full rounded-2xl p-2">
       <View className="flex flex-col gap-3 space-y-2">
         <View className="flex w-full items-center justify-between gap-2">
           <View className="flex flex-1 items-center gap-2 overflow-hidden">
@@ -202,12 +202,16 @@ export default function MainInfo() {
           <Calendar className="mr-2 h-4 w-4" color="gray" />
           {isEditMode ? (
             <View className="flex items-center gap-1">
-              <DatePickerSheet
-                classNames="h-7 p-0"
-                value={new Date(getValues('startDate'))}
-                onSelect={handleSelectDate}
-              />
-              <TimePickerSheet classNames="h-7 p-0" value={getValues('startTime')} onSelect={handleSelectTime} />
+              <View>
+                <DatePickerSheet
+                  classNames="h-7 p-0"
+                  value={new Date(getValues('startDate'))}
+                  onSelect={handleSelectDate}
+                />
+              </View>
+              <View>
+                <TimePickerSheet classNames="h-7 p-0" value={getValues('startTime')} onSelect={handleSelectTime} />
+              </View>
             </View>
           ) : (
             <Text className="text-lg">{`${appointment.startDate} ${appointment.startTime}`}</Text>

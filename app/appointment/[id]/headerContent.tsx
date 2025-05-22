@@ -8,8 +8,6 @@ export default function HeaderContent() {
 
   const [isOpenMore, setIsOpenMore] = useState(false);
 
-  console.log(isOpenMore);
-
   return (
     <View className="flex items-center gap-2">
       <Button variant="ghost" size="icon" aria-label="공유 버튼">

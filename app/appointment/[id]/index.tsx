@@ -1,18 +1,29 @@
 import Header from '@/components/header';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import Footer from './footer';
 import HeaderContent from './headerContent';
 import MainInfo from './mainInfo';
+import MainLocation from './mainLocation';
+import PlaceToVisit from './placeToVisit';
 
 export default function AppointmentPage() {
   /* const { id } = useLocalSearchParams(); */
+
   return (
-    <View className="flex h-screen flex-col bg-background">
-      <View>
+    <View className="flex size-full flex-col bg-background">
+      <View className="flex flex-1 flex-col">
         <Header title="약속 상세" routeUrl="/">
           <HeaderContent />
         </Header>
-        <View className="flex relative flex-grow space-y-6 px-4 py-4">
-          <MainInfo />
+        <View className="flex flex-1 flex-col justify-between">
+          <ScrollView className="flex-1 p-2">
+            <MainInfo />
+            <MainLocation />
+            <PlaceToVisit />
+          </ScrollView>
+          <View className="flex-shrink-0 border-t border-gray-200 p-2">
+            <Footer />
+          </View>
         </View>
       </View>
     </View>
