@@ -1,3 +1,4 @@
+import { apis } from '@/apis';
 import { Button, Input, Label } from '@/components/ui';
 import { loginSchema } from '@/schemas/auth';
 import { LoginRequest } from '@/types/auth';
@@ -20,8 +21,9 @@ export default function LoginForm() {
     mode: 'onSubmit',
   });
 
-  const handleSubmitForm = (data: LoginRequest) => {
+  const handleSubmitForm = async (data: LoginRequest) => {
     console.log(data);
+    await apis.auth.login(data);
   };
 
   return (

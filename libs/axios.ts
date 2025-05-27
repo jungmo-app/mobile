@@ -8,14 +8,12 @@ const axiosConfig = {
   },
 };
 
-export const baseAxios = axios.create(axiosConfig);
-export const privateAxios = axios.create(axiosConfig);
+export const baseAxios = axios.create({ ...axiosConfig, withCredentials: true });
+export const privateAxios = axios.create({ ...axiosConfig, withCredentials: true });
 
 const cookie = 'cookie';
 
-baseAxios.interceptors.response.use(response => response.data);
-
 privateAxios.interceptors.request.use(config => {
   config.headers.Authorization = `Bearer ${cookie}`;
-  return config.data;
+  return config;
 });
