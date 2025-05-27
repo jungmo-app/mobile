@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui';
 import { ButtonContext } from '@/context/ButtonPressContext';
+import { router } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import { useContext } from 'react';
 import { Text } from 'react-native';
@@ -11,6 +12,7 @@ export default function LogoutButton() {
     console.log('logout');
     setTimeout(() => {
       changePress(false);
+      router.push('/login');
     }, 3000);
   };
 

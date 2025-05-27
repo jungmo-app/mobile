@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import commonSchemas from './common';
 
+export const loginSchema = z.object({
+  email: commonSchemas.email,
+  password: z.string().min(1, '비밀번호를 입력해주세요'),
+});
+
 export const fileSchema = z.object({
   uri: z.string().url(),
   name: z.string(),
