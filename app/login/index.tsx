@@ -5,7 +5,7 @@ import LoginForm from './loginForm';
 export default function Login() {
   return (
     <View className="flex size-full flex-col items-center justify-center bg-background p-4">
-      <View className="flex w-full flex-col items-center justify-center gap-4">
+      <View className="flex w-full max-w-md flex-col items-center justify-center gap-4">
         <View className="flex w-full flex-col items-center justify-center gap-2">
           <Text className="text-4xl font-bold">로그인</Text>
           <Text className="text-gray-500">계정 정보를 입력해주세요</Text>

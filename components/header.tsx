@@ -14,7 +14,7 @@ export default function Header({ title, className, onClose, routeUrl, children, 
   const handleBack = () => {
     onClose?.();
     if (routeUrl) {
-      router.push(routeUrl);
+      router.replace(routeUrl);
     }
   };
   return (

@@ -6,6 +6,12 @@ export const loginSchema = z.object({
   password: z.string().min(1, '비밀번호를 입력해주세요'),
 });
 
+export const signupSchema = z.object({
+  name: commonSchemas.name,
+  email: commonSchemas.email,
+  password: commonSchemas.password,
+});
+
 export const fileSchema = z.object({
   uri: z.string().url(),
   name: z.string(),

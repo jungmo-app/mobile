@@ -1,6 +1,7 @@
 'use client';
 
-import { Input, LoadingButton } from '@/components/ui';
+import { LoadingButton } from '@/components/loadingButton';
+import { Input } from '@/components/ui';
 import { setPasswordSchema } from '@/schemas/auth';
 import { SetPasswordFormValues } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,7 +32,7 @@ export default function EmailForm({ onSubmit }: EmailFormProps) {
     }, 3000);
   };
   return (
-    <View className="flex w-full max-w-[400px] flex-col gap-8 p-2">
+    <View className="flex w-full max-w-md flex-col gap-8 p-2">
       <View className="flex flex-col p-1">
         <Text className="text-gray-500">가입하신 이메일 정보를 입력해주세요.</Text>
         <Text className="text-gray-500">해당 이메일로 초기화 링크를 보내드립니다.</Text>
