@@ -1,16 +1,7 @@
+import { ButtonProps, Size, Variant } from '@/types/button';
 import { cn } from '@/utils/style';
 import React from 'react';
-import { Pressable, PressableProps, Text } from 'react-native';
-
-type Variant = 'default' | 'destructive' | 'outline' | 'ghost' | 'link';
-type Size = 'default' | 'sm' | 'lg' | 'icon' | 'none';
-
-interface ButtonProps extends PressableProps {
-  title?: string;
-  titleClassName?: string;
-  variant?: Variant;
-  size?: Size;
-}
+import { Pressable, Text } from 'react-native';
 
 const variantClass: Record<Variant, string> = {
   default: 'bg-primary active:bg-primary/90',

@@ -52,3 +52,7 @@ export const resetPasswordSchema = z
     message: '새 비밀번호가 일치하지 않아요',
     path: ['confirmPassword'],
   });
+
+export const setPasswordSchema = z.object({
+  email: commonSchemas.email,
+});
