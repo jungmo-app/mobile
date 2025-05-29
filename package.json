@@ -4,8 +4,8 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint"
   },
@@ -21,7 +21,9 @@
     "clsx": "^2.1.1",
     "cookie": "^1.0.2",
     "expo": "~52.0.46",
+    "expo-auth-session": "~6.0.3",
     "expo-blur": "~14.0.3",
+    "expo-build-properties": "~0.13.3",
     "expo-camera": "~16.0.18",
     "expo-clipboard": "~7.0.1",
     "expo-constants": "~17.0.8",
@@ -58,7 +60,8 @@
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^3.4.17",
     "zod": "^3.24.4",
-    "zustand": "^4.5.7"
+    "zustand": "^4.5.7",
+    "expo-dev-client": "~5.0.20"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

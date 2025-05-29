@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "jungmo",
+    "owner": "armd482",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -30,7 +31,8 @@
           "apiKey": "process.env.EXPO_PUBLIC_GOOGLE_API_KEY"
         }
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.armd482.jungmo"
     },
     "web": {
       "bundler": "metro",
@@ -48,10 +50,19 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bde5faa7-6766-41b1-bd3c-450f4a5cc8c7"
+      }
     }
   }
 }

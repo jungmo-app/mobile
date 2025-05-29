@@ -6,7 +6,7 @@ import { mergeRefs } from '@/utils/mergeRefs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Text, TextInput, View } from 'react-native';
+import { Linking, Text, TextInput, View } from 'react-native';
 
 export default function LoginForm() {
   const emailRef = useRef<TextInput>(null);
@@ -24,6 +24,12 @@ export default function LoginForm() {
   const handleSubmitForm = async (data: LoginRequest) => {
     console.log(data);
     await apis.auth.login(data);
+  };
+
+  const handleKakaoLogin = async () => {
+    const redirectUri = `https://front.jungmoserver.shop/login/oauth2/mobile`;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.EXPO_PUBLIC_KAKAO_API_KEY}&redirect_uri=${redirectUri}`;
+    await Linking.openURL(kakaoAuthUrl);
   };
 
   return (
@@ -101,6 +107,7 @@ export default function LoginForm() {
           className="h-12 w-full bg-yellow-400 font-semibold active:bg-yellow-500"
           titleClassName="text-black"
           title="카카오로 로그인하기"
+          onPress={handleKakaoLogin}
         />
       </View>
     </View>

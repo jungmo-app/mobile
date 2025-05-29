@@ -11,13 +11,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const init = async () => {
       const refreshToken = await SecureStore.getItemAsync('refreshToken');
       if (!refreshToken) {
-        router.push('/login');
+        router.replace('/login');
         return;
       }
 
       try {
         await apis.auth.refreshToken(refreshToken);
       } catch {
+        await SecureStore.deleteItemAsync('refreshToken');
         alert('세션이 만료되었습니다');
         router.push('/login');
       } finally {
