@@ -13,14 +13,11 @@ import { useContext, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { ActivityIndicator, Dimensions, Text, TextInput, View } from 'react-native';
 
-export default function InfoForm() {
-  const userData: UserInfoResponse = {
-    userId: 1,
-    userCode: 'CODE',
-    userName: 'TEST',
-    profileImage: null,
-    provider: 'email',
-  };
+interface InfoFormProps {
+  userData: UserInfoResponse | undefined;
+}
+
+export default function InfoForm({ userData }: InfoFormProps) {
   const inputRef = useRef<TextInput | null>(null);
 
   const { isPressed } = useContext(ButtonContext);
@@ -28,8 +25,7 @@ export default function InfoForm() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isEditImage, setIsEditImage] = useState(false);
   const { imageFiles, imageUris, imageError, uploadImageFiles, uploadTakingPicture, imageReset } = useImagePicker(
-    userData.profileImage,
-    1
+    userData?.profileImage ?? null
   );
 
   const form = useForm<EditProfileFormValues>({
