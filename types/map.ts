@@ -8,6 +8,14 @@ export interface Location {
   lng: number;
 }
 
+export interface Geometry {
+  location: Location;
+  viewport?: {
+    northeast: Location;
+    southwest: Location;
+  };
+}
+
 export interface PlaceSearchResult {
   address_components?: { long_name: string; short_name: string; types: string[] };
   adr_address?: string;
@@ -17,13 +25,7 @@ export interface PlaceSearchResult {
   }[];
   formatted_address?: string;
   formatted_phone_number?: string;
-  geometry?: {
-    location: Location;
-    viewport?: {
-      northeast: Location;
-      southwest: Location;
-    };
-  };
+  geometry?: Geometry;
   html_attributions?: string[];
   icon?: string;
   id?: string;

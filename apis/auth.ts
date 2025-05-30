@@ -3,6 +3,7 @@ import { baseAxios } from '@/libs/axios';
 import { storeCookie } from '@/libs/cookie';
 import { authStore } from '@/store/authStore';
 import { LoginRequest } from '@/types/auth';
+import * as SecureStore from 'expo-secure-store';
 
 export const authApis = {
   login: async (payload: LoginRequest) => {
@@ -15,7 +16,8 @@ export const authApis = {
       console.log(error);
     }
   },
-  refreshToken: async (refreshToken: string) => {
+  refreshToken: async () => {
+    const refreshToken = SecureStore.getItemAsync('refreshToken');
     const api = await baseAxios.post(
       apiPaths.auth.refreshToken,
       {},

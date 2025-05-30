@@ -1,5 +1,6 @@
 import { createAppointmentSchema } from '@/schemas/appointment';
 import { z } from 'zod';
+import { Geometry, PlaceSearchResult } from './map';
 import { UserDataResponse } from './user';
 
 export interface Location {
@@ -40,6 +41,16 @@ export interface DetailGatheringRespose {
   gatheringUsers: UserDataResponse[];
   meetingLocation: Location;
   locations: Location[];
+}
+
+export interface DetailGatheringType extends Omit<DetailGatheringRespose, 'meetingLocation' | 'locations'> {
+  meetingLocation: {
+    placeId: string;
+    placeName: string | undefined;
+    placeAddress: string | undefined;
+    point: Geometry | undefined;
+  };
+  locations: ((PlaceSearchResult & { id: number }) | { id: number })[];
 }
 
 export type AppointmentFormDataType = z.infer<typeof createAppointmentSchema>;

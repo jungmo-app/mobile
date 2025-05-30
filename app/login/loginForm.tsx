@@ -1,5 +1,5 @@
-import { apis } from '@/apis';
 import { Button, Input, Label } from '@/components/ui';
+import { useLogin } from '@/hooks/useMutation/useLogin';
 import { loginSchema } from '@/schemas/auth';
 import { LoginRequest } from '@/types/auth';
 import { mergeRefs } from '@/utils/mergeRefs';
@@ -12,6 +12,8 @@ export default function LoginForm() {
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
+  const { mutate: login } = useLogin();
+
   const { control, formState, clearErrors, handleSubmit } = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -21,9 +23,8 @@ export default function LoginForm() {
     mode: 'onSubmit',
   });
 
-  const handleSubmitForm = async (data: LoginRequest) => {
-    console.log(data);
-    await apis.auth.login(data);
+  const handleSubmitForm = (data: LoginRequest) => {
+    login(data);
   };
 
   const handleKakaoLogin = async () => {

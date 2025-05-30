@@ -1,11 +1,13 @@
 import { apis } from '@/apis';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { SessionContext } from './SessionProvider';
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [isLoad, setIsLoad] = useState(false);
+  const { openSession } = useContext(SessionContext);
 
   useEffect(() => {
     const init = async () => {
@@ -16,7 +18,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       }
 
       try {
-        await apis.auth.refreshToken(refreshToken);
+        await apis.auth.refreshToken();
+        await openSession();
       } catch {
         await SecureStore.deleteItemAsync('refreshToken');
         alert('세션이 만료되었습니다');
@@ -26,7 +29,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       }
     };
     init();
-  }, []);
+  }, [openSession]);
 
   return !isLoad ? (
     <View className="flex size-full items-center justify-center">

@@ -12,3 +12,5 @@ export interface NotificationType {
 export interface SSEDataType extends NotificationType {
   startDate: string;
 }
+
+export type SSEEventType = 'invite' | 'update' | 'delete' | 'remove' | 'open' | 'close';
