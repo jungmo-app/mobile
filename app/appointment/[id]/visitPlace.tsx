@@ -8,18 +8,8 @@ import { MapPin, MoreVertical } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { GestureResponderEvent, Image, Pressable, Text, View } from 'react-native';
 
-type RawPlace = Omit<PlaceSearchResult, 'id' | 'photos'> & {
-  id: number;
-  photos: {
-    height: number;
-    html_attributions: string[];
-    photo_reference: string;
-    width: number;
-  }[];
-};
-
 interface VisitPlaceProps {
-  place: RawPlace;
+  place: Omit<PlaceSearchResult, 'id'> & Record<'id', number>;
 }
 
 export default function VisitPlace({ place }: VisitPlaceProps) {

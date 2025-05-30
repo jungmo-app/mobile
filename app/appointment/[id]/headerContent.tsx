@@ -3,9 +3,11 @@ import { MoreVertical, Share2 } from 'lucide-react-native';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-export default function HeaderContent() {
-  const isEditable = true;
+interface HeaderContentProps {
+  isEditable: boolean;
+}
 
+export default function HeaderContent({ isEditable }: HeaderContentProps) {
   const [isOpenMore, setIsOpenMore] = useState(false);
 
   return (

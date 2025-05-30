@@ -8,26 +8,13 @@ interface HeaderProps extends ViewProps {
   title?: string;
   onClose?: () => void;
   routeUrl?: Href;
-  reset?: boolean;
 }
 
-export default function Header({
-  title,
-  className,
-  onClose,
-  routeUrl,
-  reset = false,
-  children,
-  ...props
-}: HeaderProps) {
+export default function Header({ title, className, onClose, routeUrl, children, ...props }: HeaderProps) {
   const handleBack = () => {
     onClose?.();
     if (routeUrl) {
-      if (reset) {
-        router.replace(routeUrl);
-        return;
-      }
-      router.push(routeUrl);
+      router.replace(routeUrl);
     }
   };
   return (

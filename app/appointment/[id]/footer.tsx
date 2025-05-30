@@ -1,18 +1,13 @@
 import Map from '@/components/map';
 import { Button, Sheet, SheetContent, SheetTrigger } from '@/components/ui';
-import { appointmentData } from '@/constants/mock';
 import { getCurrentPosition } from '@/libs/map';
 import { PlaceSearchResult, Position } from '@/types/map';
-import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 
 export default function Footer() {
-  const { id } = useLocalSearchParams();
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [currentLocation, setCurrentLocation] = useState<Position | null>(null);
-
-  const appointment = appointmentData(id as string);
 
   const handlePressButton = async () => {
     try {
@@ -35,10 +30,6 @@ export default function Footer() {
     }
     console.log(value);
   };
-
-  if (!appointment || appointment.authority !== 'WRITE') {
-    return;
-  }
 
   return (
     <Sheet isOpen={isOpenModal} onOpenChange={setIsOpenModal}>

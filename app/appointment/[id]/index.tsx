@@ -1,30 +1,35 @@
 import Header from '@/components/header';
-import { ScrollView, View } from 'react-native';
-import Footer from './footer';
+import { useAppointment } from '@/hooks/useQuery/useAppointment';
+import { useLocalSearchParams } from 'expo-router';
+import { useMemo } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
+import AppointmentDetail from './appointmentDetail';
 import HeaderContent from './headerContent';
-import MainInfo from './mainInfo';
-import MainLocation from './mainLocation';
-import PlaceToVisit from './placeToVisit';
 
 export default function AppointmentPage() {
-  /* const { id } = useLocalSearchParams(); */
+  const { id } = useLocalSearchParams();
+  const { data: appointment, isPending } = useAppointment(Number(id));
+
+  const isEditable = useMemo(() => appointment?.authority === 'WRITE', [appointment]);
 
   return (
     <View className="flex size-full flex-col bg-background">
       <View className="flex flex-1 flex-col">
         <Header title="약속 상세" routeUrl="/">
-          <HeaderContent />
+          <HeaderContent isEditable={isEditable} />
         </Header>
-        <View className="flex flex-1 flex-col justify-between">
-          <ScrollView className="flex-1 p-2">
-            <MainInfo />
-            <MainLocation />
-            <PlaceToVisit />
-          </ScrollView>
-          <View className="flex-shrink-0 border-t border-gray-200 p-2">
-            <Footer />
+
+        {isPending ? (
+          <View className="flex flex-1 items-center justify-center">
+            <ActivityIndicator />
           </View>
-        </View>
+        ) : appointment ? (
+          <AppointmentDetail appointment={appointment} />
+        ) : (
+          <View className="flex flex-1 items-center justify-center">
+            <Text>해당 약속을 불러올 수 없습니다.</Text>
+          </View>
+        )}
       </View>
     </View>
   );
