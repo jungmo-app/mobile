@@ -3,7 +3,12 @@ import { apiPaths } from '@/constants/api';
 import { GOOGLE_MAP_FIELD } from '@/constants/place';
 import { privateAxios } from '@/libs/axios';
 import { ApiResponse } from '@/types/api';
-import { DetailGatheringRespose, DetailGatheringType, GatheringListResponse } from '@/types/gathering';
+import {
+  CreateGatheringRequest,
+  DetailGatheringRespose,
+  DetailGatheringType,
+  GatheringListResponse,
+} from '@/types/gathering';
 import { QueryClient } from '@tanstack/react-query';
 
 const locationQuery = [
@@ -65,5 +70,10 @@ export const gatheringApis = {
       },
       locations,
     };
+  },
+  create: async (payload: CreateGatheringRequest) => {
+    const { data } = await privateAxios.post<ApiResponse<string>>(apiPaths.gathering.create, payload);
+
+    return data.data;
   },
 };

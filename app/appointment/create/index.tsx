@@ -1,6 +1,7 @@
 import AttendeeInput from '@/components/attendeeInput';
 import Header from '@/components/header';
 import { Button } from '@/components/ui';
+import { useCreateAppointment } from '@/hooks/useMutation/useCreateAppointment';
 import { createAppointmentSchema } from '@/schemas/appointment';
 import { useDateStore } from '@/store/appointmentStore';
 import { AppointmentFormDataType } from '@/types/gathering';
@@ -18,6 +19,9 @@ import TitleInput from './titleInput';
 export default function CreateAppointment() {
   const date = useDateStore(item => item.date);
   const [attendees, setAttendees] = useState<UserDataResponse[]>([]);
+
+  const { mutate: createAppointment } = useCreateAppointment();
+
   const method = useForm<AppointmentFormDataType>({
     resolver: zodResolver(createAppointmentSchema),
     defaultValues: {
@@ -30,6 +34,10 @@ export default function CreateAppointment() {
     },
     mode: 'onChange',
   });
+
+  const handleSubmitAppointment = (data: AppointmentFormDataType) => {
+    createAppointment(data);
+  };
 
   return (
     <FormProvider {...method}>
@@ -48,7 +56,13 @@ export default function CreateAppointment() {
             <AttendeeInput selectedAttendees={attendees} onAttendeesChange={setAttendees} />
           </View>
           <View className="bg-background p-4">
-            <Button disabled={!method.formState.isValid} size="lg" title="일정 추가" titleClassName="text-xl" />
+            <Button
+              disabled={!method.formState.isValid}
+              size="lg"
+              title="일정 추가"
+              titleClassName="text-xl"
+              onPress={method.handleSubmit(handleSubmitAppointment)}
+            />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
