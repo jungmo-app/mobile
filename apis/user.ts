@@ -5,9 +5,7 @@ import { UserInfoResponse } from '@/types/user';
 
 export const userApis = {
   getInfo: async () => {
-    const response = await privateAxios.get<ApiResponse<UserInfoResponse>>(apiPaths.user.userInfo, {
-      withCredentials: true,
-    });
+    const response = await privateAxios.get<ApiResponse<UserInfoResponse>>(apiPaths.user.userInfo);
 
     return response.data.data;
   },

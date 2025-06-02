@@ -21,7 +21,7 @@ export default function AppointmentPage() {
 
         {isPending ? (
           <View className="flex flex-1 items-center justify-center">
-            <ActivityIndicator />
+            <ActivityIndicator color="blue" size="large" />
           </View>
         ) : appointment ? (
           <AppointmentDetail appointment={appointment} />
