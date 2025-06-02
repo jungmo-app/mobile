@@ -1,6 +1,7 @@
+import Loading from '@/components/loading';
 import { SessionContext } from '@/context/SessionProvider';
 import { useContext } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import AppointmentCalendar from './appointmentCalendar';
 import AppointmentList from './appointmentList';
 import Header from './header';
@@ -8,11 +9,7 @@ import Header from './header';
 export default function Main() {
   const { isLoad } = useContext(SessionContext);
   if (!isLoad) {
-    return (
-      <View className="flex size-full items-center justify-center">
-        <ActivityIndicator size="large" color="blue" />
-      </View>
-    );
+    return <Loading className="size-full" />;
   }
   return (
     <View

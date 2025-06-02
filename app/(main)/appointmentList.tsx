@@ -1,8 +1,9 @@
+import Loading from '@/components/loading';
 import { Button } from '@/components/ui';
 import { useAppointmentList } from '@/hooks/useQuery/useAppointmentList';
 import { router } from 'expo-router';
 import { PlusCircle } from 'lucide-react-native';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import AppointmentCard from './appointmentCard';
 
 export default function AppointmentList() {
@@ -12,9 +13,7 @@ export default function AppointmentList() {
     <View className="flex flex-grow flex-col gap-3 overflow-auto p-4 pt-2">
       <Text className="text-lg font-semibold">나의 일정 {!isPending && `${appointments?.length}개`}</Text>
       {isPending ? (
-        <View className="flex h-full flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="blue" />
-        </View>
+        <Loading />
       ) : (
         <View className="flex flex-col gap-4">
           {(appointments ?? []).map(appointment => (

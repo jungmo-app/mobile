@@ -11,7 +11,7 @@ import * as Clipboard from 'expo-clipboard';
 import { Copy, Edit, Save, X } from 'lucide-react-native';
 import { useContext, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { ActivityIndicator, Dimensions, Text, TextInput, View } from 'react-native';
+import { Dimensions, Text, TextInput, View } from 'react-native';
 
 interface InfoFormProps {
   userData: UserInfoResponse | undefined;
@@ -51,11 +51,7 @@ export default function InfoForm({ userData }: InfoFormProps) {
   const isPending = false;
 
   if (!userData) {
-    return (
-      <View className="flex size-full flex-grow items-center justify-center">
-        <ActivityIndicator size="large" color="blue" />
-      </View>
-    );
+    throw new Error('userData is undefined');
   }
 
   const onSubmit = async (data: EditProfileFormValues) => {

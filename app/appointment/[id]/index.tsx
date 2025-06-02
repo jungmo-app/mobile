@@ -1,8 +1,9 @@
 import Header from '@/components/header';
+import Loading from '@/components/loading';
 import { useAppointment } from '@/hooks/useQuery/useAppointment';
 import { useLocalSearchParams } from 'expo-router';
 import { useMemo } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import AppointmentDetail from './appointmentDetail';
 import HeaderContent from './headerContent';
 
@@ -20,9 +21,7 @@ export default function AppointmentPage() {
         </Header>
 
         {isPending ? (
-          <View className="flex flex-1 items-center justify-center">
-            <ActivityIndicator color="blue" size="large" />
-          </View>
+          <Loading />
         ) : appointment ? (
           <AppointmentDetail appointment={appointment} />
         ) : (

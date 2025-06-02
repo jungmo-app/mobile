@@ -1,6 +1,6 @@
+import Loading from '@/components/loading';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
 
 export default function OauthRedirect() {
   const { code, error } = useLocalSearchParams();
@@ -21,9 +21,5 @@ export default function OauthRedirect() {
     return <Redirect href="/login" />;
   }
 
-  return (
-    <View className="flex size-full items-center justify-center bg-background">
-      <ActivityIndicator size="large" color="blue" />
-    </View>
-  );
+  return <Loading className="size-full" />;
 }

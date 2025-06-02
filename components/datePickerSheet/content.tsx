@@ -1,6 +1,7 @@
 import { getCalendarItemHeight } from '@/utils/layout';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, View, ViewToken } from 'react-native';
+import { FlatList, View, ViewToken } from 'react-native';
+import Loading from '../loading';
 import CalendarDate from './calendarDate';
 
 interface ContentProps {
@@ -54,11 +55,7 @@ export default function Content({ isOpen, value, onSelect }: ContentProps) {
 
   return (
     <View className="relative flex-1" onLayout={handleLayout}>
-      {isLoading && (
-        <View className="flex absolute left-0 top-0 z-[99999] size-full items-center justify-center">
-          <ActivityIndicator size="large" color="blue" />
-        </View>
-      )}
+      {isLoading && <Loading className="absolute left-0 top-0 z-[99999]" />}
 
       <FlatList
         data={dateList}
