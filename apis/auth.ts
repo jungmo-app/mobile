@@ -1,9 +1,9 @@
 import { apiPaths } from '@/constants/api';
-import { baseAxios } from '@/libs/axios';
+import { baseAxios, privateAxios } from '@/libs/axios';
 import { storeCookie } from '@/libs/cookie';
 import { authStore } from '@/store/authStore';
 import { ApiResponse } from '@/types/api';
-import { LoginRequest } from '@/types/auth';
+import { ChangePasswordPayload, LoginRequest } from '@/types/auth';
 import { UserInfoResponse } from '@/types/user';
 import * as SecureStore from 'expo-secure-store';
 
@@ -43,5 +43,9 @@ export const authApis = {
     );
     await storeCookie(api);
     authStore.getState().setAccessToken(api.data.data.accessToken);
+  },
+  changePassword: async (payload: ChangePasswordPayload) => {
+    const response = await privateAxios.put<ApiResponse>(apiPaths.auth.changePassword, payload);
+    return response.data;
   },
 };
