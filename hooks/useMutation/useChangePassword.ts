@@ -1,5 +1,3 @@
-'use client';
-
 import { apis } from '@/apis';
 import { ChangePasswordPayload } from '@/types/auth';
 import { ApiError } from '@/utils/api';

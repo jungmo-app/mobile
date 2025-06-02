@@ -1,5 +1,3 @@
-'use client';
-
 import { apis } from '@/apis';
 import { SessionContext } from '@/context/SessionProvider';
 import { ApiError } from '@/utils/api';

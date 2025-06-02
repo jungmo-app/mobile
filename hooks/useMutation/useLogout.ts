@@ -1,5 +1,3 @@
-'use client';
-
 import { apis } from '@/apis';
 import { SessionContext } from '@/context/SessionProvider';
 import { authStore } from '@/store/authStore';
@@ -32,7 +30,6 @@ export const useLogout = ({ onSuccess, onError }: LogoutProps = {}) => {
   };
 
   const handleErrorLogout = async (error: ApiError) => {
-    console.log(error);
     if (error.code === 'C006' || error.code.startsWith('T')) {
       await handleSuccessLogout();
       return;

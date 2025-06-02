@@ -4,6 +4,7 @@ import ImageSelectModal from '@/components/modals/ImageSelectModal';
 import { Avatar, AvatarFallback, AvatarImage, Button, Card, Input, Label } from '@/components/ui';
 import { ButtonContext } from '@/context/ButtonPressContext';
 import { useImagePicker } from '@/hooks/useImagePicker';
+import { useEditAccount } from '@/hooks/useMutation/useEditAccount';
 import { EditProfileFormValues, editProfileSchema } from '@/schemas/auth';
 import { UserInfoResponse } from '@/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,24 +38,22 @@ export default function InfoForm({ userData }: InfoFormProps) {
     mode: 'onChange',
   });
 
-  /* useEffect(() => {
-    if (!userData) {
-      router.push(`/login?date=${Date.now()}`);
-    }
-  }, [userData]); */
-
-  const editAccount = (payload: EditProfileFormValues) => {
-    console.log(payload);
-  };
-
-  const isPending = false;
+  const { mutate: editAccount, isPending } = useEditAccount({
+    onSuccess: () => {
+      setIsEditMode(false);
+    },
+    onError: () => {
+      imageReset();
+      form.reset();
+    },
+  });
 
   if (!userData) {
     throw new Error('userData is undefined');
   }
 
   const onSubmit = async (data: EditProfileFormValues) => {
-    editAccount({ ...data, profileImage: imageFiles[0] });
+    editAccount({ ...data, profileImage: imageFiles[0], preview: imageUris[0] ?? '' });
   };
 
   const handlePressEditButton = () => {
