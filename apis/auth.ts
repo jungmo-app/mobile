@@ -48,4 +48,7 @@ export const authApis = {
     const response = await privateAxios.put<ApiResponse>(apiPaths.auth.changePassword, payload);
     return response.data;
   },
+  deleteAccount: async () => {
+    await privateAxios.delete(apiPaths.user.deleteAccount);
+  },
 };

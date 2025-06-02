@@ -9,16 +9,41 @@ import {
   SheetTrigger,
 } from '@/components/ui';
 import { ButtonContext } from '@/context/ButtonPressContext';
+import { useDeleteAccount } from '@/hooks/useMutation/useDeleteAccount';
+import { ApiError } from '@/utils/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import { useContext, useState } from 'react';
 import { Text } from 'react-native';
 
 export default function DeleteAccountSheet() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { isPressed } = useContext(ButtonContext);
+  const { isPressed, changePress } = useContext(ButtonContext);
+
+  const { mutate: deleteAccount } = useDeleteAccount({
+    onSuccess: () => {
+      setIsOpen(false);
+      changePress(false);
+    },
+    onError: (error: ApiError) => {
+      if (error.code === 'C017') {
+        alert('이미 탈퇴한 유저입니다');
+        setIsOpen(false);
+        queryClient.clear();
+        router.replace('/login');
+        return;
+      }
+
+      alert('회원 탈퇴에 실패하였습니다');
+      changePress(false);
+    },
+  });
   const handleDeleteAccount = () => {
-    console.log('delete');
-    setIsOpen(false);
+    deleteAccount();
   };
 
   return (
