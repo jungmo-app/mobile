@@ -18,7 +18,6 @@ interface InfoFormProps {
 }
 
 export default function InfoForm({ userData }: InfoFormProps) {
-  console.log(userData);
   const inputRef = useRef<TextInput | null>(null);
 
   const { isPressed } = useContext(ButtonContext);

@@ -1,27 +1,25 @@
 import { Button } from '@/components/ui';
 import { ButtonContext } from '@/context/ButtonPressContext';
-import { authStore } from '@/store/authStore';
-import { useQueryClient } from '@tanstack/react-query';
-import { router } from 'expo-router';
-import * as SecureStore from 'expo-secure-store';
+import { useLogout } from '@/hooks/useMutation/useLogout';
 import { ChevronRight } from 'lucide-react-native';
 import { useContext } from 'react';
 import { Text } from 'react-native';
 
 export default function LogoutButton() {
   const { isPressed, changePress } = useContext(ButtonContext);
-  const queryClient = useQueryClient();
+
+  const { mutate: logout } = useLogout({
+    onSuccess: () => {
+      changePress(false);
+    },
+    onError: () => {
+      changePress(false);
+    },
+  });
 
   const handleButtonPress = async () => {
     changePress(true);
-    await SecureStore.deleteItemAsync('refreshToken');
-    authStore.getState().setAccessToken(null);
-    queryClient.clear();
-    console.log('logout');
-    setTimeout(() => {
-      changePress(false);
-      router.push('/login');
-    }, 3000);
+    logout();
   };
 
   return (

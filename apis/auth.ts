@@ -51,4 +51,7 @@ export const authApis = {
   deleteAccount: async () => {
     await privateAxios.delete(apiPaths.user.deleteAccount);
   },
+  logout: async () => {
+    await privateAxios.post(apiPaths.auth.logout);
+  },
 };
