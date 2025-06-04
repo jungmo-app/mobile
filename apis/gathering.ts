@@ -76,4 +76,7 @@ export const gatheringApis = {
 
     return data.data;
   },
+  edit: async (id: number, payload: CreateGatheringRequest) => {
+    await privateAxios.put<ApiResponse>(`${apiPaths.gathering.edit}/${id}`, payload);
+  },
 };

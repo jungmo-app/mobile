@@ -2,10 +2,12 @@ import DatePickerSheet from '@/components/datePickerSheet';
 import AttendeeSelectModal from '@/components/modals/attendeeSelectModal';
 import TimePickerSheet from '@/components/timePickerSheet';
 import { Avatar, AvatarImage, Button, Input, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
+import { useEditAppointment } from '@/hooks/useMutation/useEditAppointment';
 import { mainInfoSchema } from '@/schemas/appointment';
 import { MainInfoValue } from '@/types/appointment';
 import { DetailGatheringType } from '@/types/gathering';
 import { UserDataResponse } from '@/types/user';
+import { ApiError } from '@/utils/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Calendar, LucideFileTerminal, PenLine, Settings } from 'lucide-react-native';
 import { useState } from 'react';
@@ -32,22 +34,53 @@ export default function MainInfo({ appointment }: MainInfoProps) {
     mode: 'onChange',
   });
 
+  const { mutate: editAppointment, isPending } = useEditAppointment(appointment.id, {
+    onSuccess: () => {
+      setIsEditMode(false);
+    },
+    onError: (error: ApiError) => {
+      if (error.code === 'GL003') {
+        alert('자기 자신을 초대할 수 없습니다');
+        return;
+      }
+
+      if (error.code === 'G005') {
+        alert('초대한 참가자가 존재하지 않습니다');
+        return;
+      }
+
+      alert('모임 수정에 실패하였습니다');
+    },
+  });
+
   const isEditable = appointment.authority === 'WRITE';
   const visibleParticipants = getValues('userList').slice(0, 3);
   const remainingCount = getValues('userList').length - 3;
 
-  const handleClickSaveButton = (payload: MainInfoValue) => {
-    console.log(payload);
+  const handlePressSaveButton = (formData: MainInfoValue) => {
+    const { title, startDate, startTime, description: memo, userList } = formData;
+
+    const payload = {
+      title,
+      startDate,
+      endDate: startDate,
+      startTime,
+      meetingLocation: appointment.meetingLocation,
+      memo,
+      userIds: userList.map(user => user.userId),
+    };
+
+    editAppointment(payload);
   };
 
-  const handleClickCancleButton = () => {
+  const handlePressCancleButton = () => {
     setIsEditMode(false);
     if (appointment) {
       reset();
     }
   };
 
-  const handleClickEditButton = () => {
+  const handlePressEditButton = () => {
     setIsEditMode(true);
   };
 
@@ -108,7 +141,8 @@ export default function MainInfo({ appointment }: MainInfoProps) {
                     className={`h-[22px] w-[44px] rounded-full p-0 ${formState.isValid ? 'bg-green-500 active:bg-green-600' : 'bg-gray-300 active:bg-gray-300'} `}
                     title="저장"
                     titleClassName="text-white"
-                    onPress={handleSubmit(handleClickSaveButton)}
+                    disabled={isPending}
+                    onPress={handleSubmit(handlePressSaveButton)}
                   />
 
                   <Button
@@ -116,7 +150,8 @@ export default function MainInfo({ appointment }: MainInfoProps) {
                     className="h-[22px] w-[44px] rounded-full bg-red-500 p-0 active:bg-red-600"
                     title="취소"
                     titleClassName="text-white"
-                    onPress={handleClickCancleButton}
+                    disabled={isPending}
+                    onPress={handlePressCancleButton}
                   />
                 </>
               ) : (
@@ -124,7 +159,7 @@ export default function MainInfo({ appointment }: MainInfoProps) {
                   variant="outline"
                   className="active h-[22px] w-[44px] rounded-full bg-gray-200 p-0 active:bg-gray-300"
                   title="편집"
-                  onPress={handleClickEditButton}
+                  onPress={handlePressEditButton}
                 />
               )}
             </View>

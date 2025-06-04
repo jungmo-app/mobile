@@ -1,5 +1,3 @@
-'use client';
-
 import { apis } from '@/apis';
 import { AppointmentFormDataType } from '@/types/gathering';
 import { addAppointment } from '@/utils/updateAppointment';
