@@ -79,6 +79,10 @@ export interface PlaceDataType {
   tags: string[];
 }
 
+export interface ChangePlaceType extends PlaceDataType {
+  point?: Geometry;
+}
+
 export interface SearchStatusType {
   center: Position;
   zoom: number;
