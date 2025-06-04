@@ -1,5 +1,3 @@
-'use client';
-
 import { LoadingButton } from '@/components/loadingButton';
 import { Input } from '@/components/ui';
 import { setPasswordSchema } from '@/schemas/auth';

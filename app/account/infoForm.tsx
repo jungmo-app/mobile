@@ -1,5 +1,3 @@
-'use client';
-
 import ImageSelectModal from '@/components/modals/ImageSelectModal';
 import { Avatar, AvatarFallback, AvatarImage, Button, Card, Input, Label } from '@/components/ui';
 import { ButtonContext } from '@/context/ButtonPressContext';

@@ -1,6 +1,7 @@
 import LocationSettingModal from '@/components/modals/locationSettingModal';
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { appointmentData } from '@/constants/mock';
+import { useDeleteLocation } from '@/hooks/useMutation/useDeleteLocation';
 import { Photos, PlaceSearchResult } from '@/types/map';
 import { getDistance } from '@/utils/map';
 import { useLocalSearchParams } from 'expo-router';
@@ -14,6 +15,8 @@ interface VisitPlaceProps {
 
 export default function VisitPlace({ place }: VisitPlaceProps) {
   const { id } = useLocalSearchParams();
+
+  const { mutate: deleteLocation, isPending: isPendingDeleteLocation } = useDeleteLocation(Number(id));
 
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false);
@@ -38,7 +41,7 @@ export default function VisitPlace({ place }: VisitPlaceProps) {
       return;
     }
     setIsOpenSetting(false);
-    /* deleteLocation(place.id); */
+    deleteLocation(place.id);
   };
 
   if (!appointment) {
@@ -95,6 +98,7 @@ export default function VisitPlace({ place }: VisitPlaceProps) {
                     aria-label="삭제"
                     title="삭제하기"
                     className="w-full"
+                    disabled={isPendingDeleteLocation}
                     onPress={handleDeleteLocation}
                   />
                 </View>

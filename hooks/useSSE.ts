@@ -1,5 +1,3 @@
-'use client';
-
 import { apis } from '@/apis';
 import { apiPaths } from '@/constants/api';
 import createSSEEventHandlers from '@/handlers/createSSEEventHandlers';

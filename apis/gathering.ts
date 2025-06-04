@@ -87,4 +87,7 @@ export const gatheringApis = {
     });
     return data;
   },
+  deleteLocation: async (gatheringId: number, locationId: number) => {
+    await privateAxios.delete(`${apiPaths.gathering.deleteLocation}/${gatheringId}/locations/${locationId}`);
+  },
 };
