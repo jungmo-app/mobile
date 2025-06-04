@@ -1,4 +1,6 @@
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
+import { useDeleteAppointment } from '@/hooks/useMutation/useDeleteAppointment';
+import { useLocalSearchParams } from 'expo-router';
 import { MoreVertical, Share2 } from 'lucide-react-native';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -8,7 +10,14 @@ interface HeaderContentProps {
 }
 
 export default function HeaderContent({ isEditable }: HeaderContentProps) {
+  const { id } = useLocalSearchParams();
+
   const [isOpenMore, setIsOpenMore] = useState(false);
+  const { mutate: deleteAppointment, isPending } = useDeleteAppointment(Number(id));
+
+  const handlePressDeleteButton = () => {
+    deleteAppointment();
+  };
 
   return (
     <View className="flex items-center gap-2">
@@ -24,7 +33,14 @@ export default function HeaderContent({ isEditable }: HeaderContentProps) {
           </PopoverTrigger>
           <PopoverContent>
             <View className="flex h-12 w-36 items-center justify-center p-0 text-sm">
-              <Button variant="ghost" aria-label="삭제" title="삭제하기" className="w-full" />
+              <Button
+                variant="ghost"
+                aria-label="삭제"
+                title="삭제하기"
+                disabled={isPending}
+                className="w-full"
+                onPress={handlePressDeleteButton}
+              />
             </View>
           </PopoverContent>
         </Popover>

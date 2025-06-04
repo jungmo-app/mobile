@@ -90,4 +90,7 @@ export const gatheringApis = {
   deleteLocation: async (gatheringId: number, locationId: number) => {
     await privateAxios.delete(`${apiPaths.gathering.deleteLocation}/${gatheringId}/locations/${locationId}`);
   },
+  delete: async (id: number) => {
+    await privateAxios.delete(`${apiPaths.gathering.delete}/${id}`);
+  },
 };
