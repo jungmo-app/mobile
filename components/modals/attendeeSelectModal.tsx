@@ -11,6 +11,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui';
+import { useDebouncedValue } from '@/hooks/useDebounce';
+import { useSearchUserKeyword } from '@/hooks/useQuery/useSearchUserKeyword';
 import { UserDataResponse, UserInfoResponse } from '@/types/user';
 import { useQueryClient } from '@tanstack/react-query';
 import { Search, X } from 'lucide-react-native';
@@ -36,13 +38,10 @@ export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }
   const { control, setValue, watch, reset } = useForm<IFormInput>();
   const inputValue = watch('inputValue') as string;
 
-  /* const { value: debouncedKeyword } = useDebouncedValue(inputValue, 200); */
+  const { value: debouncedKeyword } = useDebouncedValue(inputValue, 200);
   const [selectedUsers, setSelectedUsers] = useState<UserDataResponse[]>(value ?? []);
 
-  const [searchList] = useState<UserDataResponse[]>([]); // debouncedKeyword
-
-  const isPending = false;
-  const isError = false;
+  const { data: searchList = [], isPending, isError } = useSearchUserKeyword(debouncedKeyword);
 
   const searchResult = useMemo(() => {
     const selectedCodes = new Set(selectedUsers.map(user => user.userCode));
@@ -95,12 +94,13 @@ export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }
     if (searchResult.length > 0) {
       return (
         <ScrollView className="flex-1">
-          <View className="flex flex-col gap-1 space-y-2">
+          <View className="flex flex-wrap gap-x-4 gap-y-2">
             {searchResult.map(user => (
               <Button
                 key={user.userId}
                 variant="ghost"
-                className="w-full gap-2"
+                size="none"
+                className="gap-2 px-1 py-2"
                 style={{ justifyContent: 'flex-start' }}
                 aria-label="사용자 선택"
                 onPress={() => handleUserSelect(user)}
@@ -129,7 +129,7 @@ export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }
           <SheetTitle>참석자 추가</SheetTitle>
         </SheetHeader>
 
-        <View className="flex flex-1 flex-col gap-4">
+        <View className="flex flex-1 flex-col gap-2">
           {selectedUsers.length > 0 && (
             <ScrollView horizontal className="p-0" style={{ flexDirection: 'row', flexGrow: 0 }}>
               <View className="flex flex-wrap gap-2 p-2">

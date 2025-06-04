@@ -36,7 +36,7 @@ export default function CreateAppointment() {
   });
 
   const handleSubmitAppointment = (data: AppointmentFormDataType) => {
-    createAppointment(data);
+    createAppointment({ ...data, userIds: attendees.map(user => user.userId) });
   };
 
   return (

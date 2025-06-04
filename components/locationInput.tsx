@@ -19,9 +19,10 @@ export default function LocationInput({ value, onChange }: LocationInputProps) {
   const [currentLocation, setCurrentLocation] = useState<Position | null>(null);
 
   const handleButtonPress = async () => {
-    setIsModalOpen(true);
     const location = await getCurrentPosition();
+    console.log(location);
     setCurrentLocation(location);
+    setIsModalOpen(true);
   };
 
   const handleClose = () => {

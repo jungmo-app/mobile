@@ -45,8 +45,8 @@ export const authApis = {
     authStore.getState().setAccessToken(api.data.data.accessToken);
   },
   changePassword: async (payload: ChangePasswordPayload) => {
-    const response = await privateAxios.put<ApiResponse>(apiPaths.auth.changePassword, payload);
-    return response.data;
+    const { data } = await privateAxios.put<ApiResponse>(apiPaths.auth.changePassword, payload);
+    return data;
   },
   deleteAccount: async () => {
     await privateAxios.delete(apiPaths.user.deleteAccount);

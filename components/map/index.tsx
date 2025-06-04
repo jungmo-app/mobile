@@ -27,6 +27,8 @@ interface IFormInput {
 export default function Map({ currentLocation, open, target, onClose, onSelect }: MapProps) {
   const mapRef = useRef<MapView>(null);
 
+  console.log(currentLocation);
+
   const method = useForm<IFormInput>();
   const queryCleint = useQueryClient();
 

@@ -40,7 +40,7 @@ export default function DatePickerSheet({ value, onSelect, classNames }: DatePic
           <Text className="text-3xl font-bold">날짜 선택</Text>
         </SheetHeader>
         <View className="size-full">
-          <Content value={currentDate} isOpen={isOpen} onSelect={handleSelectDay} />
+          <Content value={currentDate} onSelect={handleSelectDay} />
         </View>
       </SheetContent>
     </Sheet>

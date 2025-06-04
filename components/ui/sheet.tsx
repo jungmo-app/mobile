@@ -192,7 +192,7 @@ const SheetContent = ({ children, position = 'bottom', size = 300, isClose = tru
 };
 
 const SheetHeader = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <View className={cn('mb-2', className)}>{children}</View>
+  <View className={cn('p-2', className)}>{children}</View>
 );
 
 const SheetFooter = ({ children, className }: { children: React.ReactNode; className?: string }) => (
