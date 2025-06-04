@@ -79,4 +79,12 @@ export const gatheringApis = {
   edit: async (id: number, payload: CreateGatheringRequest) => {
     await privateAxios.put<ApiResponse>(`${apiPaths.gathering.edit}/${id}`, payload);
   },
+  addLocation: async (gatheringId: number, placeId: string) => {
+    const {
+      data: { data },
+    } = await privateAxios.post<ApiResponse<number>>(`${apiPaths.gathering.addLocation}/${gatheringId}/locations`, {
+      placeId,
+    });
+    return data;
+  },
 };
