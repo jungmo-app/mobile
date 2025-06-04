@@ -27,8 +27,6 @@ interface IFormInput {
 export default function Map({ currentLocation, open, target, onClose, onSelect }: MapProps) {
   const mapRef = useRef<MapView>(null);
 
-  console.log(currentLocation);
-
   const method = useForm<IFormInput>();
   const queryCleint = useQueryClient();
 
@@ -88,7 +86,7 @@ export default function Map({ currentLocation, open, target, onClose, onSelect }
             />
           </FormProvider>
         ) : (
-          <Loading />
+          <Loading message="위치 정보 불러오는 중..." />
         )}
       </View>
     </TouchableWithoutFeedback>

@@ -13,8 +13,8 @@ import {
 } from '@/components/ui';
 import { useDebouncedValue } from '@/hooks/useDebounce';
 import { useSearchUserKeyword } from '@/hooks/useQuery/useSearchUserKeyword';
-import { UserDataResponse, UserInfoResponse } from '@/types/user';
-import { useQueryClient } from '@tanstack/react-query';
+import { useUserData } from '@/hooks/useQuery/useUserData';
+import { UserDataResponse } from '@/types/user';
 import { Search, X } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -32,8 +32,7 @@ interface IFormInput {
 }
 
 export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }: AttendeeSelectModalProps) {
-  const queryClient = useQueryClient();
-  const userData = queryClient.getQueryData<UserInfoResponse>(['userData']);
+  const { data: userData } = useUserData();
 
   const { control, setValue, watch, reset } = useForm<IFormInput>();
   const inputValue = watch('inputValue') as string;
@@ -45,8 +44,8 @@ export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }
 
   const searchResult = useMemo(() => {
     const selectedCodes = new Set(selectedUsers.map(user => user.userCode));
-    return searchList.filter(user => !selectedCodes.has(user.userCode));
-  }, [searchList, selectedUsers]);
+    return searchList.filter(user => !selectedCodes.has(user.userCode) && user.userId !== userData?.userId);
+  }, [searchList, selectedUsers, userData]);
 
   const handleUserSelect = (newUser: UserDataResponse) => {
     setSelectedUsers(prev => [...prev.filter(user => user.userId !== newUser.userId), newUser]);

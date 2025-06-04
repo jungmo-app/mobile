@@ -67,6 +67,10 @@ export const SessionContextProvider = ({ children }: PropsWithChildren) => {
 
       try {
         await apis.auth.refreshToken();
+        await queryClient.fetchQuery({
+          queryKey: ['userData'],
+          queryFn: apis.user.getInfo,
+        });
         await openSession();
       } catch {
         await SecureStore.deleteItemAsync('refreshToken');

@@ -38,6 +38,7 @@ export const useEditAccount = ({ onSuccess, onError }: EditAccountProps = {}) =>
       queryClient.setQueryData<UserDataResponse>(['userData'], prev =>
         prev ? { ...prev, userName, profileImage } : undefined
       );
+      queryClient.removeQueries({ queryKey: ['searchUser'] });
       alert('수정하였습니다');
       onSuccess?.();
     },
