@@ -1,7 +1,6 @@
-import { Button, Sheet, SheetContent, SheetHeader, SheetTrigger } from '@/components/ui';
+import { Button, Sheet, SheetContent, SheetTrigger } from '@/components/ui';
 import { cn } from '@/utils/style';
 import { useState } from 'react';
-import { Text } from 'react-native';
 import Content from './content';
 
 interface TimePickerSheetProps {
@@ -39,10 +38,7 @@ export default function TimePickerSheet({ value, onSelect, classNames }: TimePic
           title={formatTime(selectedHour, selectedMinute)}
         />
       </SheetTrigger>
-      <SheetContent position="bottom" size={300}>
-        <SheetHeader>
-          <Text className="text-3xl font-bold">시간 선택</Text>
-        </SheetHeader>
+      <SheetContent position="bottom" size={300} title="시간 선택">
         <Content
           selectedHour={selectedHour}
           selectedMinute={selectedMinute}

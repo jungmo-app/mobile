@@ -1,6 +1,7 @@
 import { getCalendarItemHeight } from '@/utils/layout';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, View, ViewToken } from 'react-native';
+import { FlatList, View, ViewToken } from 'react-native';
+import Loading from '../loading';
 import CalendarDate from './calendarDate';
 
 interface ContentProps {
@@ -12,7 +13,7 @@ const RENDER_NUM = 1200;
 
 export default function Content({ value, onSelect }: ContentProps) {
   const flatListRef = useRef<FlatList>(null);
-  const [isLoading, setIsLoading] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const dateList = useMemo(
     () =>
@@ -33,7 +34,6 @@ export default function Content({ value, onSelect }: ContentProps) {
   const itemHeight = useMemo(() => getCalendarItemHeight(), []);
 
   const handleLayout = useCallback(() => {
-    setIsLoading(true);
     requestAnimationFrame(() => {
       flatListRef.current?.scrollToOffset({ offset: RENDER_NUM * itemHeight + itemHeight / 2, animated: false });
     });
@@ -49,12 +49,8 @@ export default function Content({ value, onSelect }: ContentProps) {
   );
 
   return (
-    <View className="relative flex-1" onLayout={handleLayout}>
-      {isLoading && (
-        <View className="flex absolute left-0 top-0 z-[99999] size-full items-center justify-center">
-          <ActivityIndicator size="large" color="blue" />
-        </View>
-      )}
+    <View className="flex-1" onLayout={handleLayout}>
+      {isLoading && <Loading className="absolute left-0 top-0 z-[9999] size-full" />}
 
       <FlatList
         data={dateList}

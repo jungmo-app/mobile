@@ -1,13 +1,4 @@
-import {
-  Button,
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui';
+import { Button, Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui';
 import { ButtonContext } from '@/context/ButtonPressContext';
 import { useDeleteAccount } from '@/hooks/useMutation/useDeleteAccount';
 import { ApiError } from '@/utils/api';
@@ -15,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import { useContext, useState } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 export default function DeleteAccountSheet() {
   const queryClient = useQueryClient();
@@ -54,14 +45,14 @@ export default function DeleteAccountSheet() {
           <ChevronRight size={16} color={isPressed ? '#d1d5db' : '#6b7280'} />
         </Button>
       </SheetTrigger>
-      <SheetContent position="bottom" size={200}>
-        <SheetHeader className="mb-4">
-          <SheetTitle>정말 탈퇴하시겠어요?</SheetTitle>
+      <SheetContent position="bottom" size={180} className="justify-between">
+        <View>
+          <Text className="text-2xl font-bold">정말 탈퇴하시겠어요?</Text>
           <Text className="text-base text-gray-600">
             탈퇴 시 모든 데이터는 즉시 삭제되며, 이 작업은 되돌릴 수 없어요.
           </Text>
-        </SheetHeader>
-        <SheetFooter className="flex-col gap-2">
+        </View>
+        <View className="flex-col gap-2">
           <Button
             variant="destructive"
             className="w-full"
@@ -73,7 +64,7 @@ export default function DeleteAccountSheet() {
           <SheetClose>
             <Button variant="outline" className="w-full" aria-label="취소" disabled={isPressed} title="취소" />
           </SheetClose>
-        </SheetFooter>
+        </View>
       </SheetContent>
     </Sheet>
   );

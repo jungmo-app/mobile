@@ -1,14 +1,4 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Button,
-  Input,
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui';
+import { Avatar, AvatarFallback, AvatarImage, Button, Input, Sheet, SheetContent } from '@/components/ui';
 import { useDebouncedValue } from '@/hooks/useDebounce';
 import { useSearchUserKeyword } from '@/hooks/useQuery/useSearchUserKeyword';
 import { useUserData } from '@/hooks/useQuery/useUserData';
@@ -121,11 +111,7 @@ export default function AttendeeSelectModal({ isOpen, value, onClose, onSelect }
 
   return (
     <Sheet isOpen={isOpen} onOpenChange={handleClose}>
-      <SheetContent position="bottom" className="w-full flex-1 flex-col" size="60%">
-        <SheetHeader className="mb-2">
-          <SheetTitle>참석자 추가</SheetTitle>
-        </SheetHeader>
-
+      <SheetContent position="bottom" className="w-full flex-1 flex-col" size="60%" title="참석자 추가">
         <View className="flex flex-1 flex-col gap-2">
           {selectedUsers.length > 0 && (
             <ScrollView horizontal className="p-0" style={{ flexDirection: 'row', flexGrow: 0 }}>

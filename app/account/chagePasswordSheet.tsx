@@ -1,4 +1,4 @@
-import { Button, Input, Label, Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui';
+import { Button, Input, Label, Sheet, SheetContent, SheetTrigger } from '@/components/ui';
 import { ButtonContext } from '@/context/ButtonPressContext';
 import { useChangePassword } from '@/hooks/useMutation/useChangePassword';
 import { changePasswordSchema } from '@/schemas/auth';
@@ -67,8 +67,7 @@ export default function ChangePasswordSheet() {
           <ChevronRight size={16} color={isPressed ? '#d1d5db' : '#6b7280'} />
         </Button>
       </SheetTrigger>
-      <SheetContent size={400}>
-        <SheetTitle>비밀번호 변경</SheetTitle>
+      <SheetContent size={400} title="비밀번호 변경">
         <View className="flex relative flex-1 flex-col gap-4 pt-4">
           <View className="flex flex-col">
             <Label className="font-bold">현재 비밀번호</Label>
