@@ -127,7 +127,9 @@ export default function MainInfo({ appointment }: MainInfoProps) {
               />
             ) : (
               <View className="flex h-7 items-center">
-                <Text className="truncate text-xl font-semibold">{appointment.title}</Text>
+                <Text className="text-xl font-semibold" numberOfLines={1} ellipsizeMode="tail">
+                  {appointment.title}
+                </Text>
               </View>
             )}
           </View>
@@ -213,13 +215,13 @@ export default function MainInfo({ appointment }: MainInfoProps) {
           <View className="flex">
             {visibleParticipants.map(participant => (
               <View key={participant.userId} className="group relative">
-                <Popover position="top">
+                <Popover>
                   <PopoverTrigger>
-                    <Avatar className="relative h-8 w-8 border border-gray-50">
+                    <Avatar className="relative h-8 w-8 border border-red-500">
                       <AvatarImage src={participant.profileImage} alt={participant.userName} />
                     </Avatar>
                   </PopoverTrigger>
-                  <PopoverContent>
+                  <PopoverContent height={18}>
                     <View className="max-w-52 rounded-xl border border-gray-300 bg-background px-2">
                       <Text className="text-nowrap text-lg font-bold" numberOfLines={1} style={{ flexWrap: 'wrap' }}>
                         {participant.userName}

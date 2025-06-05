@@ -69,7 +69,9 @@ export default function VisitPlace({ place }: VisitPlaceProps) {
             </View>
             <View className="min-w-0">
               <View className="flex mb-1 items-center gap-2">
-                <Text className="truncate text-xl font-medium">{place.name ?? ''}</Text>
+                <Text className="text-xl font-medium" numberOfLines={1} ellipsizeMode="tail">
+                  {place.name ?? ''}
+                </Text>
 
                 {place.types && (
                   <View className="flex-shrink-0 rounded-md bg-gray-200 px-3 py-[2px] font-bold">
@@ -78,7 +80,7 @@ export default function VisitPlace({ place }: VisitPlaceProps) {
                 )}
               </View>
               <View className="text-sm text-gray-500">
-                <Text className="block truncate" numberOfLines={1}>
+                <Text numberOfLines={1} ellipsizeMode="tail">
                   {distance && `${distance[0]} ${distance[1]} • `} {place.formatted_address ?? ''}
                 </Text>
               </View>
@@ -91,7 +93,7 @@ export default function VisitPlace({ place }: VisitPlaceProps) {
                   <MoreVertical size={16} color="black" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent>
+              <PopoverContent height={48} width={144}>
                 <View className="flex h-12 w-36 items-center justify-center p-0 text-sm">
                   <Button
                     variant="ghost"

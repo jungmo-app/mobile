@@ -1,7 +1,8 @@
+import NotificationButton from '@/components/notificationButton';
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { useDateStore } from '@/store/appointmentStore';
 import { router } from 'expo-router';
-import { Bell, CalendarRange, ChevronLeft, ChevronRight, User } from 'lucide-react-native';
+import { CalendarRange, ChevronLeft, ChevronRight, User } from 'lucide-react-native';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
@@ -62,7 +63,7 @@ export default function Header() {
               <CalendarRange width={16} height={16} color="black" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent width={256} height={288}>
             <View className="h-72 w-64">
               <Text>test</Text>
             </View>
@@ -73,7 +74,7 @@ export default function Header() {
         </Button>
       </View>
       <View>
-        <Bell width={16} height={16} color="black" />
+        <NotificationButton />
       </View>
     </View>
   );

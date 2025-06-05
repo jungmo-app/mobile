@@ -37,16 +37,12 @@ export default function AppointmentCard({ appointment }: AppointmentCardProps) {
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
-              className="truncate text-sm text-muted-foreground"
+              className="text-sm text-muted-foreground"
             >{`${appointment.startDate} ${appointment.startTime}`}</Text>
           </Skeleton>
 
           <Skeleton isPending={isPending} height={12} className="py-[1px]">
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              className="block w-full truncate text-sm text-muted-foreground"
-            >
+            <Text numberOfLines={1} ellipsizeMode="tail" className="block w-full text-sm text-muted-foreground">
               {locationData?.name ?? '장소를 불러올 수 없습니다'}
             </Text>
           </Skeleton>

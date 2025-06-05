@@ -53,10 +53,12 @@ export default function MainLocation({ appointment }: MainLocationProps) {
         </View>
 
         <View>
-          <Text className="flex-1 truncate font-medium">
+          <Text className="flex-1 font-medium" numberOfLines={1} ellipsizeMode="tail">
             {appointment.meetingLocation.placeName ?? '위치를 불러올 수 없습니다'}
           </Text>
-          <Text className="mt-1 truncate text-sm text-gray-500">{appointment.meetingLocation.placeAddress}</Text>
+          <Text className="mt-1 text-sm text-gray-500" numberOfLines={1} ellipsizeMode="tail">
+            {appointment.meetingLocation.placeAddress}
+          </Text>
         </View>
       </View>
 
