@@ -1,37 +1,56 @@
 import { Button } from '@/components/ui';
+import { useDeleteNotification } from '@/hooks/useMutation/useDeleteNotification';
+import { useReadNotification } from '@/hooks/useMutation/useReadNotification';
 import { NotificationType } from '@/types/notification';
 import { getTimeline, parseKST } from '@/utils/date';
 import { clsx } from 'clsx';
 import { useRouter } from 'expo-router';
 import { X } from 'lucide-react-native';
-import { GestureResponderEvent, Image, Pressable, Text, View } from 'react-native';
+import { useCallback } from 'react';
+import { GestureResponderEvent, Image, Text, View } from 'react-native';
 import { SwipeableNotification } from './swipeableNotification';
 
 interface NotificationProps {
   notification: NotificationType;
+  onClose: () => void;
 }
 
-export default function Notification({ notification }: NotificationProps) {
+export default function Notification({ notification, onClose }: NotificationProps) {
   const router = useRouter();
 
   const { notificationId, gatheringId, read: isRead } = notification;
 
-  const handleClickNotification = async () => {
+  const { mutate: readNotification } = useReadNotification({
+    onMutate: () => {
+      router.push(`/appointment/${gatheringId}`);
+    },
+    onSuccess: () => {
+      onClose();
+    },
+  });
+  const { mutate: deleteNotification } = useDeleteNotification();
+
+  const handlePressNotification = useCallback(() => {
     if (!isRead) {
-      console.log(notificationId);
+      readNotification(notificationId);
       return;
     }
     router.push(`/appointment/${gatheringId}`);
-  };
+    onClose();
+  }, [onClose, notificationId, gatheringId, isRead, readNotification, router]);
+
+  const handleSwipeNotification = useCallback(() => {
+    deleteNotification([notificationId]);
+  }, [deleteNotification, notificationId]);
 
   const handleClickDeleteButton = async (e: GestureResponderEvent) => {
     e.stopPropagation();
-    console.log([notificationId]);
+    deleteNotification([notificationId]);
   };
 
   return (
-    <SwipeableNotification id={[notificationId]} onDelete={(id: number[]) => console.log(id)}>
-      <Pressable className="group relative w-full cursor-pointer" onPress={handleClickNotification}>
+    <SwipeableNotification onPress={handlePressNotification} onSwipe={handleSwipeNotification}>
+      <View className="group relative w-full cursor-pointer">
         <Button
           className="flex invisible absolute right-2 top-2 z-10 select-none items-center justify-center rounded-full p-[2px]"
           disabled={false}
@@ -76,7 +95,7 @@ export default function Notification({ notification }: NotificationProps) {
             </Text>
           </View>
         </View>
-      </Pressable>
+      </View>
     </SwipeableNotification>
   );
 }

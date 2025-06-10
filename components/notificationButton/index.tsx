@@ -1,13 +1,17 @@
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
+import { useDeleteNotification } from '@/hooks/useMutation/useDeleteNotification';
 import { useNotification } from '@/hooks/useQuery/useNotification';
 import { NotificationType } from '@/types/notification';
 import { Bell } from 'lucide-react-native';
+import { useCallback, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import GroupNotification from './groupNotification';
 import Notification from './notification';
 
 export default function NotificationButton() {
+  const [isOpen, setIsOpen] = useState(false);
   const { data: notification } = useNotification();
+  const { mutate: deleteNotification } = useDeleteNotification();
 
   const groupNotification = Object.values(
     (notification ?? []).reduce(
@@ -23,11 +27,15 @@ export default function NotificationButton() {
 
   const handleClickDeleteAllButton = async () => {
     const notificationIdList = (notification ?? [])?.map(item => item.notificationId);
-    console.log(notificationIdList);
+    deleteNotification(notificationIdList);
   };
 
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
   return (
-    <Popover>
+    <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
         <View className="relative">
           <Bell size={24} color="gray" />
@@ -46,21 +54,29 @@ export default function NotificationButton() {
             <View className="flex my-2 items-center justify-between px-4">
               <Text className="text-xl font-semibold">{`알림 ${notification?.length}개`}</Text>
             </View>
-            {(groupNotification?.length ?? 0 > 0) ? (
+            {groupNotification?.length > 0 ? (
               <ScrollView
                 className="mb-6 w-full flex-col gap-2 text-sm"
                 contentContainerStyle={{ padding: 4, alignItems: 'center' }}
               >
                 {groupNotification?.map(item =>
                   item.length > 1 ? (
-                    <GroupNotification key={`appointment-${item[0].gatheringId}`} notification={item} />
+                    <GroupNotification
+                      key={`appointment-${item[0].gatheringId}`}
+                      notification={item}
+                      onClose={handleClose}
+                    />
                   ) : (
-                    <Notification key={`notification-${item[0].notificationId}`} notification={item[0]} />
+                    <Notification
+                      key={`notification-${item[0].notificationId}`}
+                      notification={item[0]}
+                      onClose={handleClose}
+                    />
                   )
                 )}
               </ScrollView>
             ) : (
-              <View className="flex h-56 flex-1 items-center justify-center">
+              <View className="flex h-56 w-full items-center justify-center">
                 <Text className="text-sm text-gray-500">알림이 없습니다</Text>
               </View>
             )}

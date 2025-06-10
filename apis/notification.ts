@@ -10,4 +10,14 @@ export const notificationApis = {
     } = await privateAxios.get<ApiResponse<NotificationType[]>>(apiPaths.notification.getNotification);
     return data;
   },
+  readNotification: async (id: number[]) => {
+    await privateAxios.patch(apiPaths.notification.readNotification, { notificationIds: id });
+  },
+  deleteNotification: async (id: number[]) => {
+    await privateAxios.delete(apiPaths.notification.deleteNotification, {
+      data: {
+        notificationIds: id,
+      },
+    });
+  },
 };

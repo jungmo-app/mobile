@@ -1,6 +1,7 @@
 import { SessionContextProvider } from '@/context/SessionProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Host } from 'react-native-portalize';
 import Toast, { ToastConfig } from 'react-native-toast-message';
 
@@ -27,13 +28,15 @@ const toastConfig: ToastConfig = {
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <SessionContextProvider>
-        <Host>
-          <Stack screenOptions={{ headerShown: false }} />
-          <Toast config={toastConfig} />
-        </Host>
-      </SessionContextProvider>
-    </QueryClientProvider>
+    <GestureHandlerRootView className="flex-1">
+      <QueryClientProvider client={queryClient}>
+        <SessionContextProvider>
+          <Host>
+            <Stack screenOptions={{ headerShown: false }} />
+            <Toast config={toastConfig} />
+          </Host>
+        </SessionContextProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

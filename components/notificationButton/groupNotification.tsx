@@ -1,30 +1,47 @@
+import { useDeleteNotification } from '@/hooks/useMutation/useDeleteNotification';
+import { useReadNotification } from '@/hooks/useMutation/useReadNotification';
 import { NotificationType } from '@/types/notification';
 import { getTimeline, parseKST } from '@/utils/date';
 import { cn } from '@/utils/style';
+import { useRouter } from 'expo-router';
 import { ChevronDown, ChevronUp, X } from 'lucide-react-native';
-import { useState } from 'react';
-import { GestureResponderEvent, Image, Pressable, Text, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { GestureResponderEvent, Image, Text, View } from 'react-native';
 import { Button } from '../ui';
 import Notification from './notification';
 import { SwipeableNotification } from './swipeableNotification';
 
 interface GroupNotificationProps {
   notification: NotificationType[];
+  onClose: () => void;
 }
 
-export default function GroupNotification({ notification }: GroupNotificationProps) {
+export default function GroupNotification({ notification, onClose }: GroupNotificationProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
+  const { mutate: readNotification } = useReadNotification({
+    onMutate: () => {
+      router.push(`/appointment/${notification[0].gatheringId}`);
+    },
+  });
+  const { mutate: deleteNotification } = useDeleteNotification();
 
   const notificationId = notification.map(item => item.notificationId);
 
   const handleClickDeleteButton = () => {
-    console.log(notificationId);
+    deleteNotification(notificationId);
   };
 
-  const handleClickNotification = () => {
+  const handlePressNotification = () => {
     const unreadId = notification.filter(noti => !noti.read).map(noti => noti.notificationId);
-    console.log(unreadId);
+    readNotification(unreadId);
+    onClose();
   };
+
+  const handleSwipeNotification = useCallback(() => {
+    deleteNotification(notificationId);
+  }, [deleteNotification, notificationId]);
 
   const isRead = notification.every(item => item.read === true);
 
@@ -65,7 +82,7 @@ export default function GroupNotification({ notification }: GroupNotificationPro
         </View>
         <View className="flex flex-col gap-2">
           {notification.map(noti => (
-            <Notification key={`notification-${noti.notificationId}`} notification={noti} />
+            <Notification key={`notification-${noti.notificationId}`} notification={noti} onClose={onClose} />
           ))}
         </View>
       </View>
@@ -74,12 +91,11 @@ export default function GroupNotification({ notification }: GroupNotificationPro
 
   const RenderCollapsed = () => {
     return (
-      <Pressable
+      <View
         className={cn(
           'flex relative w-full items-center gap-3 rounded-lg border border-gray-300 bg-background p-3 text-left',
           isRead && 'opacity-50'
         )}
-        onPress={handleClickNotification}
       >
         <Button
           className="group flex absolute right-2 top-3 z-50 w-10 flex-shrink-0 items-center px-1"
@@ -127,7 +143,7 @@ export default function GroupNotification({ notification }: GroupNotificationPro
             {notification[1].message}
           </Text>
         </View>
-      </Pressable>
+      </View>
     );
   };
 
@@ -136,7 +152,7 @@ export default function GroupNotification({ notification }: GroupNotificationPro
       {isOpen ? (
         <RenderExpanded />
       ) : (
-        <SwipeableNotification id={notificationId} onDelete={(id: number[]) => console.log(id)}>
+        <SwipeableNotification onPress={handlePressNotification} onSwipe={handleSwipeNotification}>
           <RenderCollapsed />
         </SwipeableNotification>
       )}

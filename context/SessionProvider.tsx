@@ -32,10 +32,10 @@ export const SessionContextProvider = ({ children }: PropsWithChildren) => {
   const openSession = useCallback(async () => {
     try {
       await Promise.all([
-        /* queryClient.fetchQuery({
-            queryKey: ['notification'],
-            queryFn: () => apis.notification.getNotification(token),
-          }), */
+        queryClient.fetchQuery({
+          queryKey: ['notification'],
+          queryFn: () => apis.notification.getNotification(),
+        }),
         connectSSE(),
       ]);
       setIsLoad(true);
@@ -44,7 +44,7 @@ export const SessionContextProvider = ({ children }: PropsWithChildren) => {
       closeSSE();
       throw new Error('로그인 오류');
     }
-  }, [connectSSE, closeSSE]);
+  }, [connectSSE, closeSSE, queryClient]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', state => {
@@ -81,7 +81,7 @@ export const SessionContextProvider = ({ children }: PropsWithChildren) => {
       }
     };
     init();
-  }, [openSession]);
+  }, [openSession, queryClient]);
 
   const value = useMemo(
     () => ({
