@@ -1,5 +1,6 @@
 import { apis } from '@/apis';
 import { useSSE } from '@/hooks/useSSE';
+import { refreshAccessToken } from '@/libs/token';
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
@@ -66,7 +67,7 @@ export const SessionContextProvider = ({ children }: PropsWithChildren) => {
       }
 
       try {
-        await apis.auth.refreshToken();
+        await refreshAccessToken();
         await queryClient.fetchQuery({
           queryKey: ['userData'],
           queryFn: apis.user.getInfo,

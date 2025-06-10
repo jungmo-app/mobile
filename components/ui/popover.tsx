@@ -69,14 +69,7 @@ const PopoverTrigger = ({ children, asChild = false }: PopoverTriggerProps) => {
   }
 
   return (
-    <Pressable
-      ref={ctx.touchableRef}
-      className="relative"
-      onPress={handlePress}
-      onLayout={e => {
-        console.log(e.nativeEvent.layout.width);
-      }}
-    >
+    <Pressable ref={ctx.touchableRef} className="relative" onPress={handlePress}>
       {children}
     </Pressable>
   );

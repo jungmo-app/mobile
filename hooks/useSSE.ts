@@ -1,6 +1,6 @@
-import { apis } from '@/apis';
 import { apiPaths } from '@/constants/api';
 import createSSEEventHandlers from '@/handlers/createSSEEventHandlers';
+import { refreshAccessToken } from '@/libs/token';
 import { authStore } from '@/store/authStore';
 import { SSEEventType } from '@/types/notification';
 import { useQueryClient } from '@tanstack/react-query';
@@ -46,7 +46,7 @@ export const useSSE = () => {
         const err = error as Event & { status: number };
         if (err.status === 401) {
           try {
-            await apis.auth.refreshToken();
+            await refreshAccessToken();
             await connectSSE(retry - 1);
           } catch (error) {
             console.error(error);

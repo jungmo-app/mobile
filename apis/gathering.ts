@@ -1,4 +1,3 @@
-import { apis } from '@/apis';
 import { apiPaths } from '@/constants/api';
 import { GOOGLE_MAP_FIELD } from '@/constants/place';
 import { privateAxios } from '@/libs/axios';
@@ -10,6 +9,7 @@ import {
   GatheringListResponse,
 } from '@/types/gathering';
 import { QueryClient } from '@tanstack/react-query';
+import { placeApis } from './place';
 
 const locationQuery = [
   'name',
@@ -41,7 +41,7 @@ export const gatheringApis = {
     const meetingLocation = await queryClient.fetchQuery({
       queryKey: ['location', response.data.data.meetingLocation.placeId, 'name', 'formatted_address', 'geometry'],
       queryFn: () =>
-        apis.place.getDetail(
+        placeApis.getDetail(
           response.data.data.meetingLocation.placeId,
           ['name', 'formatted_address', 'geometry'],
           queryClient
@@ -53,7 +53,7 @@ export const gatheringApis = {
         queryClient.fetchQuery({
           queryKey: ['location', place.placeId, ...locationQuery],
           queryFn: async () => {
-            const data = await apis.place.getDetail(place.placeId, locationQuery, queryClient);
+            const data = await placeApis.getDetail(place.placeId, locationQuery, queryClient);
             return { ...data, id: place.id };
           },
         })

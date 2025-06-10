@@ -1,7 +1,7 @@
-import { apis } from '@/apis';
 import { authStore } from '@/store/authStore';
 import { ApiError } from '@/utils/api';
 import axios from 'axios';
+import { refreshAccessToken } from './token';
 
 const axiosConfig = {
   baseURL: process.env.EXPO_PUBLIC_API_BASE_URL,
@@ -42,7 +42,7 @@ privateAxios.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        await apis.auth.refreshToken();
+        await refreshAccessToken();
 
         const newAccessToken = authStore.getState().accessToken;
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
