@@ -93,7 +93,7 @@ export default function VisitPlace({ place }: VisitPlaceProps) {
                   <MoreVertical size={16} color="black" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent height={48} width={144}>
+              <PopoverContent>
                 <View className="flex h-12 w-36 items-center justify-center p-0 text-sm">
                   <Button
                     variant="ghost"

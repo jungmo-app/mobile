@@ -31,7 +31,7 @@ export default function HeaderContent({ isEditable }: HeaderContentProps) {
               <MoreVertical size={16} color="black" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent width={144} height={48}>
+          <PopoverContent>
             <View className="flex h-12 w-36 items-center justify-center p-0 text-sm">
               <Button
                 variant="ghost"

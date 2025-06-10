@@ -1,6 +1,7 @@
 import { SessionContextProvider } from '@/context/SessionProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
+import { Host } from 'react-native-portalize';
 import Toast, { ToastConfig } from 'react-native-toast-message';
 
 import SlideInToast from '@/components/slideInToast';
@@ -28,8 +29,10 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionContextProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-        <Toast config={toastConfig} />
+        <Host>
+          <Stack screenOptions={{ headerShown: false }} />
+          <Toast config={toastConfig} />
+        </Host>
       </SessionContextProvider>
     </QueryClientProvider>
   );

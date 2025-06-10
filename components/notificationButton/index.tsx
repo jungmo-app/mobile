@@ -40,7 +40,7 @@ export default function NotificationButton() {
           )}
         </View>
       </PopoverTrigger>
-      <PopoverContent width={300} height={380}>
+      <PopoverContent>
         {notification ? (
           <View className="max-h-96 w-[300px] p-2">
             <View className="flex my-2 items-center justify-between px-4">

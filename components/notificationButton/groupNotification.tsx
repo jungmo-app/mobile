@@ -1,6 +1,6 @@
 import { NotificationType } from '@/types/notification';
 import { getTimeline, parseKST } from '@/utils/date';
-import { clsx } from 'clsx';
+import { cn } from '@/utils/style';
 import { ChevronDown, ChevronUp, X } from 'lucide-react-native';
 import { useState } from 'react';
 import { GestureResponderEvent, Image, Pressable, Text, View } from 'react-native';
@@ -35,7 +35,7 @@ export default function GroupNotification({ notification }: GroupNotificationPro
 
   const RenderExpanded = () => {
     return (
-      <View className="mb-2 w-full rounded-lg bg-gray-50 pb-[10px] pt-[2px]">
+      <View className="mb-2 w-full rounded-lg pb-[10px] pt-[2px]">
         <View className="flex mb-1 mt-2 items-center justify-between px-2">
           <View className="flex-1">
             <Text className="font-semibold" numberOfLines={1} ellipsizeMode="tail">
@@ -45,7 +45,7 @@ export default function GroupNotification({ notification }: GroupNotificationPro
 
           <View className="flex flex-shrink-0 items-center gap-2">
             <Button
-              className="flex select-none items-center justify-center rounded-full p-[2px] hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="flex select-none items-center justify-center rounded-full p-[2px]"
               size="none"
               variant="ghost"
               onPress={handleButtonClick}
@@ -54,7 +54,7 @@ export default function GroupNotification({ notification }: GroupNotificationPro
             </Button>
 
             <Button
-              className="flex select-none items-center justify-center rounded-full p-[2px] pl-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="flex select-none items-center justify-center rounded-full p-[2px] pl-1"
               size="none"
               variant="ghost"
               onPress={handleClickDeleteButton}
@@ -75,8 +75,8 @@ export default function GroupNotification({ notification }: GroupNotificationPro
   const RenderCollapsed = () => {
     return (
       <Pressable
-        className={clsx(
-          'dark:border-gray-600, flex relative w-full items-center gap-3 rounded-lg border border-gray-300 bg-background p-3 text-left shadow-sm hover:shadow-md',
+        className={cn(
+          'flex relative w-full items-center gap-3 rounded-lg border border-gray-300 bg-background p-3 text-left',
           isRead && 'opacity-50'
         )}
         onPress={handleClickNotification}

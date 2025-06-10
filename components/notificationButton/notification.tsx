@@ -33,7 +33,7 @@ export default function Notification({ notification }: NotificationProps) {
     <SwipeableNotification id={[notificationId]} onDelete={(id: number[]) => console.log(id)}>
       <Pressable className="group relative w-full cursor-pointer" onPress={handleClickNotification}>
         <Button
-          className="flex invisible absolute right-2 top-2 z-10 select-none items-center justify-center rounded-full p-[2px] hover:bg-gray-100 group-hover:visible dark:hover:bg-gray-700"
+          className="flex invisible absolute right-2 top-2 z-10 select-none items-center justify-center rounded-full p-[2px]"
           disabled={false}
           size="none"
           variant="ghost"

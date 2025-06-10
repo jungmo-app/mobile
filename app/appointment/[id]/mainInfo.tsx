@@ -221,7 +221,7 @@ export default function MainInfo({ appointment }: MainInfoProps) {
                       <AvatarImage src={participant.profileImage} alt={participant.userName} />
                     </Avatar>
                   </PopoverTrigger>
-                  <PopoverContent height={18}>
+                  <PopoverContent position="top">
                     <View className="max-w-52 rounded-xl border border-gray-300 bg-background px-2">
                       <Text className="text-nowrap text-lg font-bold" numberOfLines={1} style={{ flexWrap: 'wrap' }}>
                         {participant.userName}

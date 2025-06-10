@@ -63,7 +63,7 @@ export default function Header() {
               <CalendarRange width={16} height={16} color="black" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent width={256} height={288}>
+          <PopoverContent>
             <View className="h-72 w-64">
               <Text>test</Text>
             </View>
