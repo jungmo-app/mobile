@@ -1,16 +1,19 @@
-import { Button, Input, Label } from '@/components/ui';
+import { Button, Input, Label, Sheet, SheetContent, SheetTrigger } from '@/components/ui';
 import { useLogin } from '@/hooks/useMutation/useLogin';
 import { loginSchema } from '@/schemas/auth';
 import { LoginRequest } from '@/types/auth';
 import { mergeRefs } from '@/utils/mergeRefs';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Linking, Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
+import KakaoLoginWebView from './KakaoLoginWebView';
 
 export default function LoginForm() {
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
+
+  const [isOpenSheet, setIsOpenSheet] = useState<boolean>(false);
 
   const { mutate: login } = useLogin();
 
@@ -27,11 +30,15 @@ export default function LoginForm() {
     login(data);
   };
 
-  const handleKakaoLogin = async () => {
+  const handleCloseSheet = () => {
+    setIsOpenSheet(false);
+  };
+
+  /* const handleKakaoLogin = async () => {
     const redirectUri = `https://front.jungmoserver.shop/login/oauth2/mobile`;
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.EXPO_PUBLIC_KAKAO_API_KEY}&redirect_uri=${redirectUri}`;
     await Linking.openURL(kakaoAuthUrl);
-  };
+  }; */
 
   return (
     <View className="flex w-full max-w-96 flex-col gap-4">
@@ -104,12 +111,18 @@ export default function LoginForm() {
             <Text className="bg-background px-2 text-muted-foreground">OR</Text>
           </View>
         </View>
-        <Button
-          className="h-12 w-full bg-yellow-400 font-semibold active:bg-yellow-500"
-          titleClassName="text-black"
-          title="카카오로 로그인하기"
-          onPress={handleKakaoLogin}
-        />
+        <Sheet isOpen={isOpenSheet} onOpenChange={setIsOpenSheet}>
+          <SheetTrigger>
+            <Button
+              className="h-12 w-full bg-yellow-400 font-semibold active:bg-yellow-500"
+              titleClassName="text-black"
+              title="카카오로 로그인하기"
+            />
+          </SheetTrigger>
+          <SheetContent size="100%" className="rounded-none">
+            <KakaoLoginWebView onClose={handleCloseSheet} />
+          </SheetContent>
+        </Sheet>
       </View>
     </View>
   );
