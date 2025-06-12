@@ -3,7 +3,13 @@ import { baseAxios, privateAxios } from '@/libs/axios';
 import { storeCookie } from '@/libs/cookie';
 import { authStore } from '@/store/authStore';
 import { ApiResponse } from '@/types/api';
-import { ChangePasswordPayload, KakaoLoginPayload, LoginRequest, SetPasswordFormValues } from '@/types/auth';
+import {
+  ChangePasswordPayload,
+  KakaoLoginPayload,
+  LoginRequest,
+  SetPasswordFormValues,
+  SignupFormValues,
+} from '@/types/auth';
 import { UserInfoResponse } from '@/types/user';
 import { AxiosResponse } from 'axios';
 
@@ -51,5 +57,15 @@ export const authApis = {
   },
   setPassword: async (payload: SetPasswordFormValues) => {
     await baseAxios.post(apiPaths.auth.setPassword, payload);
+  },
+  register: async (payload: SignupFormValues) => {
+    const response = await baseAxios.post<ApiResponse<UserInfoResponse & Record<'accessToken', string>>>(
+      apiPaths.auth.register,
+      payload,
+      { withCredentials: true }
+    );
+
+    const result = storeToken(response);
+    return result;
   },
 };

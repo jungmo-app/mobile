@@ -1,4 +1,5 @@
 import { Button, Input, Label } from '@/components/ui';
+import { useRegister } from '@/hooks/useMutation/useRegister';
 import { signupSchema } from '@/schemas/auth';
 import { SignupFormValues } from '@/types/auth';
 import { mergeRefs } from '@/utils/mergeRefs';
@@ -11,7 +12,7 @@ export default function SignupForm() {
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
-  const { control, formState, handleSubmit } = useForm<SignupFormValues>({
+  const { control, formState, handleSubmit, setError } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
       name: '',
@@ -21,8 +22,20 @@ export default function SignupForm() {
     mode: 'onSubmit',
   });
 
+  const { mutate: register, isPending } = useRegister({
+    onError: error => {
+      if (error.code === 'C008' || error.code === 'C011') {
+        setError('email', {
+          message: '이미 존재하는 이메일입니다',
+        });
+        return;
+      }
+      alert('회원가입에 실패하였습니다');
+    },
+  });
+
   const handleSubmitForm = (data: SignupFormValues) => {
-    console.log(data);
+    register(data);
   };
 
   return (
@@ -89,7 +102,7 @@ export default function SignupForm() {
       <Button
         className="mt-6 h-12 w-full"
         titleClassName="font-semibold text-white"
-        disabled={!formState.isValid}
+        disabled={!formState.isValid || isPending}
         title="회원가입"
       />
     </View>
