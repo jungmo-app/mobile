@@ -1,9 +1,9 @@
 import { LoadingButton } from '@/components/loadingButton';
 import { Input } from '@/components/ui';
+import { useRequestEmail } from '@/hooks/useMutation/useRequestEmail';
 import { setPasswordSchema } from '@/schemas/auth';
 import { SetPasswordFormValues } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Text, View } from 'react-native';
 
@@ -12,7 +12,6 @@ interface EmailFormProps {
 }
 
 export default function EmailForm({ onSubmit }: EmailFormProps) {
-  const [pending, setPending] = useState(false);
   const form = useForm<SetPasswordFormValues>({
     resolver: zodResolver(setPasswordSchema),
     defaultValues: {
@@ -21,13 +20,27 @@ export default function EmailForm({ onSubmit }: EmailFormProps) {
     mode: 'onChange',
   });
 
-  const handleSubmit = (data: SetPasswordFormValues) => {
-    setPending(true);
-    console.log(data);
-    setTimeout(() => {
-      setPending(false);
+  const { mutate: requestEmail, isPending } = useRequestEmail({
+    onSuccess: () => {
       onSubmit();
-    }, 3000);
+    },
+    onError: error => {
+      if (error.code === 'C018') {
+        alert('이메일 전송에 실패하였습니다');
+        return;
+      }
+
+      if (error.code === 'C009' || error.code === 'C005') {
+        form.setError('email', { message: '존재하지 않는 회원입니다' });
+        return;
+      }
+
+      alert('초기화 링크 생성에 실패하였습니다');
+    },
+  });
+
+  const handleSubmit = (data: SetPasswordFormValues) => {
+    requestEmail(data);
   };
   return (
     <View className="flex w-full max-w-md flex-col gap-8 p-2">
@@ -44,7 +57,7 @@ export default function EmailForm({ onSubmit }: EmailFormProps) {
       <LoadingButton
         disabled={!form.formState.isValid}
         className="h-12 w-full"
-        isLoading={pending}
+        isLoading={isPending}
         loadingText="링크 생성 중"
         onPress={form.handleSubmit(handleSubmit)}
       >

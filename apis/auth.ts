@@ -3,7 +3,7 @@ import { baseAxios, privateAxios } from '@/libs/axios';
 import { storeCookie } from '@/libs/cookie';
 import { authStore } from '@/store/authStore';
 import { ApiResponse } from '@/types/api';
-import { ChangePasswordPayload, KakaoLoginPayload, LoginRequest } from '@/types/auth';
+import { ChangePasswordPayload, KakaoLoginPayload, LoginRequest, SetPasswordFormValues } from '@/types/auth';
 import { UserInfoResponse } from '@/types/user';
 import { AxiosResponse } from 'axios';
 
@@ -48,5 +48,8 @@ export const authApis = {
 
     const result = storeToken(response);
     return result;
+  },
+  setPassword: async (payload: SetPasswordFormValues) => {
+    await baseAxios.post(apiPaths.auth.setPassword, payload);
   },
 };
