@@ -95,7 +95,7 @@ export const SessionContextProvider = ({ children }: PropsWithChildren) => {
       isInitial.current = false;
       init();
     }
-  }, [openSession, queryClient, pathname]);
+  }, [openSession, queryClient, pathname, router]);
 
   const value = useMemo(
     () => ({

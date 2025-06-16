@@ -7,6 +7,7 @@ import {
   ChangePasswordPayload,
   KakaoLoginPayload,
   LoginRequest,
+  ResetPasswordPayload,
   SetPasswordFormValues,
   SignupFormValues,
 } from '@/types/auth';
@@ -67,5 +68,12 @@ export const authApis = {
 
     const result = storeToken(response);
     return result;
+  },
+  resetPassword: async (payload: ResetPasswordPayload) => {
+    const response = await baseAxios.patch(apiPaths.auth.resetPassword, payload, {
+      withCredentials: true,
+    });
+
+    storeToken(response);
   },
 };

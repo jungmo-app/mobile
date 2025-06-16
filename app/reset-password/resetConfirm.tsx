@@ -1,9 +1,12 @@
 import Header from '@/components/header';
 import { Button, Input, Label } from '@/components/ui';
+import { usePasswordReset } from '@/hooks/useMutation/usePasswordReset';
 import { resetPasswordSchema } from '@/schemas/auth';
 import { ResetPasswordFormValues } from '@/types/auth';
+import { ApiError } from '@/utils/api';
 import { mergeRefs } from '@/utils/mergeRefs';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'expo-router';
 import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Text, TextInput, View } from 'react-native';
@@ -13,8 +16,24 @@ interface ResetConfirmProps {
 }
 
 export default function ResetConfirm({ token }: ResetConfirmProps) {
+  const router = useRouter();
   const newPasswordRef = useRef<TextInput>(null);
   const confirmPasswordRef = useRef<TextInput>(null);
+
+  const { mutate: resetPassword, isPending } = usePasswordReset({
+    onSuccess: () => {
+      alert('비밀번호가 변경되었습니다');
+      router.push('/');
+    },
+    onError: (error: ApiError) => {
+      if (error.status === 401) {
+        alert('만료된 url입니다');
+        router.push('/login');
+        return;
+      }
+      alert('비밀번호 초기화에 실패하였습니다');
+    },
+  });
 
   const {
     control,
@@ -31,7 +50,7 @@ export default function ResetConfirm({ token }: ResetConfirmProps) {
   });
 
   const handleConfirmSubmit = (data: ResetPasswordFormValues) => {
-    console.log({ newPassword: data.newPassword, token });
+    resetPassword({ newPassword: data.newPassword, token });
   };
   return (
     <View className="flex size-full flex-col bg-background">
@@ -90,6 +109,7 @@ export default function ResetConfirm({ token }: ResetConfirmProps) {
           className="mt-6 h-12 w-full"
           title="비밀번호 변경하기"
           titleClassName="font-semibold"
+          disabled={isPending || !formState.isValid}
           onPress={handleSubmit(handleConfirmSubmit)}
         />
       </View>
