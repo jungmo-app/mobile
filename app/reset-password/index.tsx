@@ -1,11 +1,18 @@
 import Header from '@/components/header';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 import EmailForm from './emailForm';
 import RequestInfo from './requestInfo';
+import ResetConfirm from './resetConfirm';
 
 export default function ResetPassword() {
+  const params = useLocalSearchParams();
   const [isRequestSuccess, setIsRequestSucces] = useState(false);
+
+  if (params.token) {
+    return <ResetConfirm token={params.token as string} />;
+  }
 
   const handleSubmit = () => {
     setIsRequestSucces(true);

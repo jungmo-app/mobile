@@ -2,9 +2,9 @@ import { apis } from '@/apis';
 import { useSSE } from '@/hooks/useSSE';
 import { refreshAccessToken } from '@/libs/token';
 import { useQueryClient } from '@tanstack/react-query';
-import { router } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import { PropsWithChildren, createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { PropsWithChildren, createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 
 interface SessionContextType {
@@ -19,10 +19,16 @@ export const SessionContext = createContext<SessionContextType>({
   closeSession: () => {},
 });
 
+const EXCEPT_URL = ['reset-confirm', 'reset-password', 'signup'];
+
 export const SessionContextProvider = ({ children }: PropsWithChildren) => {
   const queryClient = useQueryClient();
+  const pathname = usePathname();
+  const router = useRouter();
+
   const { connectSSE, closeSSE } = useSSE();
 
+  const isInitial = useRef<boolean>(true);
   const [isLoad, setIsLoad] = useState(false);
 
   const closeSession = useCallback(() => {
@@ -60,6 +66,10 @@ export const SessionContextProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     const init = async () => {
+      if (EXCEPT_URL.includes(pathname)) {
+        return;
+      }
+
       const refreshToken = await SecureStore.getItemAsync('refreshToken');
       if (!refreshToken) {
         router.replace('/login');
@@ -81,8 +91,11 @@ export const SessionContextProvider = ({ children }: PropsWithChildren) => {
         setIsLoad(true);
       }
     };
-    init();
-  }, [openSession, queryClient]);
+    if (isInitial.current) {
+      isInitial.current = false;
+      init();
+    }
+  }, [openSession, queryClient, pathname]);
 
   const value = useMemo(
     () => ({

@@ -34,12 +34,6 @@ export default function LoginForm() {
     setIsOpenSheet(false);
   };
 
-  /* const handleKakaoLogin = async () => {
-    const redirectUri = `https://front.jungmoserver.shop/login/oauth2/mobile`;
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.EXPO_PUBLIC_KAKAO_API_KEY}&redirect_uri=${redirectUri}`;
-    await Linking.openURL(kakaoAuthUrl);
-  }; */
-
   return (
     <View className="flex w-full max-w-96 flex-col gap-4">
       <Controller
