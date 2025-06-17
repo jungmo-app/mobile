@@ -17,9 +17,9 @@ export default function DateInput() {
     [setValue]
   );
 
-  /* const handleChangeTime = (time: Record<'hours' | 'minutes', number>) => {
+  const handleChangeTime = (time: Record<'hours' | 'minutes', number>) => {
     setValue('startTime', `${time.hours.toString().padStart(2, '0')}:${time.minutes.toString().padStart(2, '0')}`);
-  }; */
+  };
 
   return (
     <Card className="space-y-4 rounded-2xl p-4">
@@ -30,16 +30,7 @@ export default function DateInput() {
         </View>
         <View className="flex w-full items-center justify-between gap-4">
           <DatePickerSheet value={new Date(getValues('startDate'))} onSelect={handleChangeDate} />
-          <TimePickerSheet
-            value={getValues('startTime')}
-            classNames="flex-1"
-            onSelect={time =>
-              setValue(
-                'startTime',
-                `${time.hours.toString().padStart(2, '0')}:${time.minutes.toString().padStart(2, '0')}`
-              )
-            }
-          />
+          <TimePickerSheet value={getValues('startTime')} classNames="flex-1 w-full" onSelect={handleChangeTime} />
         </View>
       </View>
     </Card>

@@ -1,7 +1,17 @@
 import { cn } from '@/utils/style';
 import { X } from 'lucide-react-native';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Dimensions, GestureResponderEvent, Modal, Pressable, Text, View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  GestureResponderEvent,
+  InteractionManager,
+  Modal,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
+import Loading from '../loading';
 
 type SheetContextType = {
   open: boolean;
@@ -28,6 +38,8 @@ interface SheetContentProps {
   className?: string;
   size?: number | string;
   isClose?: boolean;
+  title?: string;
+  isLoadingAnimtaion?: boolean;
 }
 
 const Sheet = ({ children, isOpen, onOpenChange, className }: SheetProps) => {
@@ -85,9 +97,18 @@ const SheetClose = ({
   });
 };
 
-const SheetContent = ({ children, position = 'bottom', size = 300, isClose = true, className }: SheetContentProps) => {
+const SheetContent = ({
+  children,
+  position = 'bottom',
+  size = 300,
+  isClose = true,
+  isLoadingAnimtaion = false,
+  title,
+  className,
+}: SheetContentProps) => {
   const { open, setOpen } = useContext(SheetContext);
   const [isVisible, setIsVisible] = useState(open);
+  const [isAnimationEnd, setIsAnimationEnd] = useState<boolean>(false);
 
   const translateAnim = useRef(new Animated.Value(0));
   const opacityAnim = useRef(new Animated.Value(0));
@@ -128,7 +149,11 @@ const SheetContent = ({ children, position = 'bottom', size = 300, isClose = tru
             duration: 250,
             useNativeDriver: true,
           }),
-        ]).start();
+        ]).start(() => {
+          InteractionManager.runAfterInteractions(() => {
+            setIsAnimationEnd(true);
+          });
+        });
       });
     } else {
       requestAnimationFrame(() => {
@@ -145,6 +170,7 @@ const SheetContent = ({ children, position = 'bottom', size = 300, isClose = tru
           }),
         ]).start(() => {
           setIsVisible(false);
+          setIsAnimationEnd(false);
         });
       });
     }
@@ -183,30 +209,20 @@ const SheetContent = ({ children, position = 'bottom', size = 300, isClose = tru
               <X size={20} color="black" />
             </Pressable>
           )}
-
-          {children}
+          {title && (
+            <View className="p-2">
+              <Text className={cn('text-2xl font-semibold text-foreground', className)}>{title}</Text>
+            </View>
+          )}
+          {isAnimationEnd || !isLoadingAnimtaion ? children : <Loading />}
         </Animated.View>
       </Animated.View>
     </Modal>
   );
 };
 
-const SheetHeader = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <View className={cn('mb-2', className)}>{children}</View>
-);
-
-const SheetFooter = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <View className={cn('mt-4 flex-row justify-end space-x-2', className)}>{children}</View>
-);
-
-const SheetTitle = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <View className="py-2">
-    <Text className={cn('text-xl font-semibold text-foreground', className)}>{children}</Text>
-  </View>
-);
-
 const SheetDescription = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <Text className={cn('hidden text-sm text-muted-foreground', className)}>{children}</Text>
 );
 
-export { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger };
+export { Sheet, SheetClose, SheetContent, SheetDescription, SheetTrigger };

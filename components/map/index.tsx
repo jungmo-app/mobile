@@ -6,12 +6,14 @@ import { formattedCoordinate, getRadiusFromZoom, isPointInSearchArea } from '@/u
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { ActivityIndicator, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
+import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 import MapView from 'react-native-maps';
+import Loading from '../loading';
 import MapLoader from './mapLoader';
 import SearchLocaitonBox from './searchLocationBox';
 
 interface MapProps {
+  title?: string;
   currentLocation: Position | null;
   open: boolean;
   target?: (typeof GOOGLE_MAP_FIELD)[number][];
@@ -23,7 +25,7 @@ interface IFormInput {
   inputValue: string;
 }
 
-export default function Map({ currentLocation, open, target, onClose, onSelect }: MapProps) {
+export default function Map({ title, currentLocation, open, target, onClose, onSelect }: MapProps) {
   const mapRef = useRef<MapView>(null);
 
   const method = useForm<IFormInput>();
@@ -70,7 +72,7 @@ export default function Map({ currentLocation, open, target, onClose, onSelect }
       <View className="flex m-0 flex-1 flex-col bg-background p-0">
         {currentLocation ? (
           <FormProvider {...method}>
-            <Header title="장소 추가하기" className="relative" onClose={onClose} />
+            <Header title={title ?? '장소 추가하기'} className="relative" onClose={onClose} />
             <SearchLocaitonBox onSubmit={method.handleSubmit(handleSubmitSearchForm)} />
             <MapLoader
               ref={mapRef}
@@ -85,9 +87,7 @@ export default function Map({ currentLocation, open, target, onClose, onSelect }
             />
           </FormProvider>
         ) : (
-          <View className="flex flex-1 items-center justify-center">
-            <ActivityIndicator size="large" color="blue" />
-          </View>
+          <Loading message="위치 정보 불러오는 중..." />
         )}
       </View>
     </TouchableWithoutFeedback>

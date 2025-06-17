@@ -1,6 +1,7 @@
 import { apiPaths } from '@/constants/api';
 import { GOOGLE_MAP_FIELD, placeTypeTranslations } from '@/constants/place';
 import { baseAxios } from '@/libs/axios';
+import { ApiResponse } from '@/types/api';
 import { PlaceSearchResult, Position } from '@/types/map';
 import { snakeToSpace } from '@/utils/formatText';
 import { QueryClient } from '@tanstack/react-query';
@@ -40,29 +41,24 @@ export const placeApis = {
   },
   getSearchResult: async (keyword: string, center: Position, radius: number) => {
     const { latitude, longitude } = center;
-    try {
-      const { data } = await axios.get(
-        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${keyword}&location=${latitude},${longitude}&radius=${radius}&key=${process.env.EXPO_PUBLIC_GOOGLE_API_KEY}`
-      );
-      const result = (data.results as PlaceSearchResult[]).map(({ name, geometry, formatted_address, place_id }) => ({
-        name: name ?? '',
-        location: geometry?.location,
-        formatted_address: formatted_address ?? '',
-        place_id,
-      }));
-      return result;
-    } catch (error) {
-      console.error(error);
-    }
+
+    const { data } = await axios.get(
+      `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${keyword}&location=${latitude},${longitude}&radius=${radius}&key=${process.env.EXPO_PUBLIC_GOOGLE_API_KEY}`
+    );
+    const result = (data.results as PlaceSearchResult[]).map(({ name, geometry, formatted_address, place_id }) => ({
+      name: name ?? '',
+      location: geometry?.location,
+      formatted_address: formatted_address ?? '',
+      place_id,
+    }));
+    return result;
   },
   getSearchKeyword: async (keyword: string) => {
-    try {
-      const { data } = await baseAxios.get<string[]>(`${apiPaths.place.autoComplete}?input=${keyword}`);
-      const result = Array.from(new Set(data.map(s => s.trim())));
-      return result as string[];
-    } catch (error) {
-      console.error(error);
-    }
+    const {
+      data: { data },
+    } = await baseAxios.get<ApiResponse<string[]>>(`${apiPaths.place.autoComplete}?input=${keyword}`);
+    const result = Array.from(new Set(data.map(s => s.trim())));
+    return result as string[];
   },
   translatePlaceType: async (keyword: string) => {
     const spaceWord = snakeToSpace(keyword);

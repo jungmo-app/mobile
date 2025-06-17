@@ -8,6 +8,7 @@ export const apiPaths = {
     resetPassword: '/auth/reset-password',
     refreshToken: '/auth/refresh',
     checkBlacklist: '/auth/isBlacklist',
+    kakao: '/auth/kakao',
   },
   gathering: {
     create: '/gatherings',

@@ -1,17 +1,25 @@
 import { Button } from '@/components/ui';
 import { ButtonContext } from '@/context/ButtonPressContext';
+import { useLogout } from '@/hooks/useMutation/useLogout';
 import { ChevronRight } from 'lucide-react-native';
 import { useContext } from 'react';
 import { Text } from 'react-native';
 
 export default function LogoutButton() {
   const { isPressed, changePress } = useContext(ButtonContext);
-  const handleButtonPress = () => {
-    changePress(true);
-    console.log('logout');
-    setTimeout(() => {
+
+  const { mutate: logout } = useLogout({
+    onSuccess: () => {
       changePress(false);
-    }, 3000);
+    },
+    onError: () => {
+      changePress(false);
+    },
+  });
+
+  const handleButtonPress = async () => {
+    changePress(true);
+    logout();
   };
 
   return (

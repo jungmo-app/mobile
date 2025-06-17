@@ -2,91 +2,25 @@ import DatePickerSheet from '@/components/datePickerSheet';
 import AttendeeSelectModal from '@/components/modals/attendeeSelectModal';
 import TimePickerSheet from '@/components/timePickerSheet';
 import { Avatar, AvatarImage, Button, Input, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
+import { useEditAppointment } from '@/hooks/useMutation/useEditAppointment';
 import { mainInfoSchema } from '@/schemas/appointment';
 import { MainInfoValue } from '@/types/appointment';
+import { DetailGatheringType } from '@/types/gathering';
 import { UserDataResponse } from '@/types/user';
+import { ApiError } from '@/utils/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useLocalSearchParams } from 'expo-router';
 import { Calendar, LucideFileTerminal, PenLine, Settings } from 'lucide-react-native';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Text, View } from 'react-native';
 
-export default function MainInfo() {
-  const { id } = useLocalSearchParams();
+interface MainInfoProps {
+  appointment: DetailGatheringType;
+}
 
+export default function MainInfo({ appointment }: MainInfoProps) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isOpenSelectModal, setIsOpenSelectModal] = useState(false);
-
-  const appointment = {
-    authority: 'WRITE',
-    id: Number(id),
-    title: 'test',
-    startDate: '2025-05-22',
-    endDate: '2025-05-22',
-    startTime: '14:45',
-    memo: '',
-    gatheringUsers: [
-      {
-        userId: 2,
-        userCode: 'C1A8MZ',
-        userName: 'test11',
-        profileImage:
-          'https://jungmobucket.s3.amazonaws.com/profile-images/2/e927b6ba-8792-4baf-ae2a-83dad77931e7-10101139-샘플-우표.jpg',
-      },
-      {
-        userId: 3,
-        userCode: 'C1A8MZ',
-        userName: 'test11',
-        profileImage:
-          'https://jungmobucket.s3.amazonaws.com/profile-images/2/e927b6ba-8792-4baf-ae2a-83dad77931e7-10101139-샘플-우표.jpg',
-      },
-      {
-        userId: 4,
-        userCode: 'C1A8MZ',
-        userName: 'test11',
-        profileImage:
-          'https://jungmobucket.s3.amazonaws.com/profile-images/2/e927b6ba-8792-4baf-ae2a-83dad77931e7-10101139-샘플-우표.jpg',
-      },
-      {
-        userId: 5,
-        userCode: 'C1A8MZ',
-        userName: 'test11',
-        profileImage:
-          'https://jungmobucket.s3.amazonaws.com/profile-images/2/e927b6ba-8792-4baf-ae2a-83dad77931e7-10101139-샘플-우표.jpg',
-      },
-      {
-        userId: 6,
-        userCode: 'C1A8MZ',
-        userName: 'test11',
-        profileImage:
-          'https://jungmobucket.s3.amazonaws.com/profile-images/2/e927b6ba-8792-4baf-ae2a-83dad77931e7-10101139-샘플-우표.jpg',
-      },
-      {
-        userId: 7,
-        userCode: 'C1A8MZ',
-        userName: 'test11',
-        profileImage:
-          'https://jungmobucket.s3.amazonaws.com/profile-images/2/e927b6ba-8792-4baf-ae2a-83dad77931e7-10101139-샘플-우표.jpg',
-      },
-    ],
-    meetingLocation: {
-      placeId: 'ChIJR2AS3cyhfDUR4LnI13dxb5k',
-      placeName: '스타벅스 국기원사거리점',
-      placeAddress: '대한민국 서울특별시 강남구 테헤란로 125 동찬빌딩',
-      point: {
-        location: {
-          lat: 37.4995995,
-          lng: 127.0316606,
-        },
-        viewport: {
-          northeast: { lat: 37.5009484802915, lng: 127.0330095802915 },
-          southwest: { lat: 37.4982505197085, lng: 127.0303116197085 },
-        },
-      },
-    },
-    location: [],
-  };
 
   const { control, getValues, reset, setValue, handleSubmit, formState } = useForm({
     resolver: zodResolver(mainInfoSchema),
@@ -100,22 +34,53 @@ export default function MainInfo() {
     mode: 'onChange',
   });
 
+  const { mutate: editAppointment, isPending } = useEditAppointment(appointment.id, {
+    onSuccess: () => {
+      setIsEditMode(false);
+    },
+    onError: (error: ApiError) => {
+      if (error.code === 'GL003') {
+        alert('자기 자신을 초대할 수 없습니다');
+        return;
+      }
+
+      if (error.code === 'G005') {
+        alert('초대한 참가자가 존재하지 않습니다');
+        return;
+      }
+
+      alert('모임 수정에 실패하였습니다');
+    },
+  });
+
   const isEditable = appointment.authority === 'WRITE';
   const visibleParticipants = getValues('userList').slice(0, 3);
   const remainingCount = getValues('userList').length - 3;
 
-  const handleClickSaveButton = (payload: MainInfoValue) => {
-    console.log(payload);
+  const handlePressSaveButton = (formData: MainInfoValue) => {
+    const { title, startDate, startTime, description: memo, userList } = formData;
+
+    const payload = {
+      title,
+      startDate,
+      endDate: startDate,
+      startTime,
+      meetingLocation: appointment.meetingLocation,
+      memo,
+      userIds: userList.map(user => user.userId),
+    };
+
+    editAppointment(payload);
   };
 
-  const handleClickCancleButton = () => {
+  const handlePressCancleButton = () => {
     setIsEditMode(false);
     if (appointment) {
       reset();
     }
   };
 
-  const handleClickEditButton = () => {
+  const handlePressEditButton = () => {
     setIsEditMode(true);
   };
 
@@ -162,7 +127,9 @@ export default function MainInfo() {
               />
             ) : (
               <View className="flex h-7 items-center">
-                <Text className="truncate text-xl font-semibold">{appointment.title}</Text>
+                <Text className="text-xl font-semibold" numberOfLines={1} ellipsizeMode="tail">
+                  {appointment.title}
+                </Text>
               </View>
             )}
           </View>
@@ -176,7 +143,8 @@ export default function MainInfo() {
                     className={`h-[22px] w-[44px] rounded-full p-0 ${formState.isValid ? 'bg-green-500 active:bg-green-600' : 'bg-gray-300 active:bg-gray-300'} `}
                     title="저장"
                     titleClassName="text-white"
-                    onPress={handleSubmit(handleClickSaveButton)}
+                    disabled={isPending}
+                    onPress={handleSubmit(handlePressSaveButton)}
                   />
 
                   <Button
@@ -184,7 +152,8 @@ export default function MainInfo() {
                     className="h-[22px] w-[44px] rounded-full bg-red-500 p-0 active:bg-red-600"
                     title="취소"
                     titleClassName="text-white"
-                    onPress={handleClickCancleButton}
+                    disabled={isPending}
+                    onPress={handlePressCancleButton}
                   />
                 </>
               ) : (
@@ -192,7 +161,7 @@ export default function MainInfo() {
                   variant="outline"
                   className="active h-[22px] w-[44px] rounded-full bg-gray-200 p-0 active:bg-gray-300"
                   title="편집"
-                  onPress={handleClickEditButton}
+                  onPress={handlePressEditButton}
                 />
               )}
             </View>
@@ -236,7 +205,9 @@ export default function MainInfo() {
                 )}
               />
             ) : (
-              <View className="flex-shrink whitespace-pre-line break-all">{appointment.memo}</View>
+              <View className="flex-shrink">
+                <Text className="flex-wrap">{appointment.memo}</Text>
+              </View>
             )}
           </View>
         </View>
@@ -244,13 +215,13 @@ export default function MainInfo() {
           <View className="flex">
             {visibleParticipants.map(participant => (
               <View key={participant.userId} className="group relative">
-                <Popover position="top">
+                <Popover>
                   <PopoverTrigger>
-                    <Avatar className="relative h-8 w-8 border border-gray-50">
+                    <Avatar className="relative h-8 w-8 border border-red-500">
                       <AvatarImage src={participant.profileImage} alt={participant.userName} />
                     </Avatar>
                   </PopoverTrigger>
-                  <PopoverContent>
+                  <PopoverContent position="top">
                     <View className="max-w-52 rounded-xl border border-gray-300 bg-background px-2">
                       <Text className="text-nowrap text-lg font-bold" numberOfLines={1} style={{ flexWrap: 'wrap' }}>
                         {participant.userName}

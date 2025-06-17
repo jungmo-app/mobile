@@ -1,7 +1,8 @@
+import NotificationButton from '@/components/notificationButton';
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { useDateStore } from '@/store/appointmentStore';
 import { router } from 'expo-router';
-import { Bell, CalendarRange, ChevronLeft, ChevronRight, User } from 'lucide-react-native';
+import { CalendarRange, ChevronLeft, ChevronRight, User } from 'lucide-react-native';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
@@ -42,7 +43,7 @@ export default function Header() {
   };
 
   return (
-    <View className="flex h-14 items-center justify-between bg-background p-4">
+    <View className="flex h-14 w-full items-center justify-between bg-background p-4">
       <View>
         <Button variant="ghost" size="icon" aria-label="계정 정보" onPress={() => router.push('/account')}>
           <User width={16} height={16} className="bg-transparent" color="black" />
@@ -73,7 +74,7 @@ export default function Header() {
         </Button>
       </View>
       <View>
-        <Bell width={16} height={16} color="black" />
+        <NotificationButton />
       </View>
     </View>
   );

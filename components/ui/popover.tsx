@@ -1,4 +1,5 @@
-import React, {
+import { cn } from '@/utils/style';
+import {
   cloneElement,
   createContext,
   isValidElement,
@@ -10,40 +11,25 @@ import React, {
   type ReactNode,
   type RefObject,
 } from 'react';
-import { Pressable, View } from 'react-native';
-import PopoverView from 'react-native-popover-view';
+import { Animated, Dimensions, LayoutChangeEvent, Pressable, View } from 'react-native';
+import { Portal } from 'react-native-portalize';
 
-type PopoverContextType = {
+interface PopoverContextType {
   open: boolean;
   setOpen: (v: boolean) => void;
   touchableRef: RefObject<View>;
-  content: ReactNode;
-  setContent: (node: ReactNode) => void;
-};
-
-enum Placement {
-  TOP = 'top',
-  RIGHT = 'right',
-  BOTTOM = 'bottom',
-  LEFT = 'left',
-  AUTO = 'auto',
-  FLOATING = 'floating',
-  CENTER = 'center',
 }
 
 const PopoverContext = createContext<PopoverContextType | null>(null);
 
-type PopoverRootProps = {
+interface PopoverRootProps {
   children: ReactNode;
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  position?: 'top' | 'bottom';
-};
+}
 
-const Popover = ({ children, isOpen, onOpenChange, position = 'bottom' }: PopoverRootProps) => {
+const Popover = ({ children, isOpen, onOpenChange }: PopoverRootProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
-  const [content, setContent] = useState<ReactNode>(null);
-
   const open = isOpen ?? internalOpen;
 
   const setOpen = useCallback(
@@ -54,35 +40,9 @@ const Popover = ({ children, isOpen, onOpenChange, position = 'bottom' }: Popove
     [onOpenChange]
   );
 
-  const touchableRef = useRef(null);
+  const touchableRef = useRef<View>(null);
 
-  const placement = position === 'top' ? Placement.TOP : Placement.BOTTOM;
-
-  return (
-    <PopoverContext.Provider value={{ open, setOpen, touchableRef, content, setContent }}>
-      {children}
-      <PopoverView
-        isVisible={open}
-        from={touchableRef}
-        placement={placement}
-        backgroundStyle={{ backgroundColor: 'transparent' }}
-        arrowSize={{ width: 0, height: 0 }}
-        popoverStyle={{
-          borderRadius: 12,
-          backgroundColor: 'white',
-          padding: 0,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.2,
-          shadowRadius: 8,
-          elevation: 10,
-        }}
-        onRequestClose={() => setOpen(false)}
-      >
-        <PopoverContentContainer />
-      </PopoverView>
-    </PopoverContext.Provider>
-  );
+  return <PopoverContext.Provider value={{ open, setOpen, touchableRef }}>{children}</PopoverContext.Provider>;
 };
 
 interface PopoverTriggerProps {
@@ -98,38 +58,114 @@ const PopoverTrigger = ({ children, asChild = false }: PopoverTriggerProps) => {
     throw new Error('PopoverTrigger expects a single valid React element as child');
   }
 
+  const handlePress = () => ctx.setOpen(true);
+
   if (asChild) {
     return cloneElement(children, {
       ref: ctx.touchableRef,
-      onPress: () => ctx.setOpen(true),
+      onPress: handlePress,
       ...(children.props || {}),
     });
   }
 
   return (
-    <Pressable ref={ctx.touchableRef} onPress={() => ctx.setOpen(true)}>
+    <Pressable ref={ctx.touchableRef} className="relative" onPress={handlePress}>
       {children}
     </Pressable>
   );
 };
 
-const PopoverContent = ({ children }: { children: ReactNode }) => {
-  const ctx = useContext(PopoverContext);
-  if (!ctx) throw new Error('PopoverContent must be used within Popover');
-  useEffect(() => {
-    ctx.setContent(children);
-  }, [children, ctx]);
-  return null;
-};
+interface PopvoerContentProps {
+  children: ReactNode;
+  className?: string;
+  position?: 'top' | 'bottom';
+}
 
-const PopoverContentContainer = () => {
+const PopoverContent = ({ children, className, position = 'bottom' }: PopvoerContentProps) => {
+  const contentRef = useRef<View | null>(null);
   const ctx = useContext(PopoverContext);
-  if (!ctx) throw new Error('PopoverContentContainer must be used within Popover');
+
+  const [layout, setLayout] = useState({ x: 0, y: 0 });
+
+  const animation = useRef(new Animated.Value(0));
+
+  if (!ctx) throw new Error('PopoverContent must be used within Popover');
+
+  const handleClose = () => {
+    ctx.setOpen(false);
+  };
+
+  const handleLayout = (e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    const { width: viewWidth, height: viewHeight } = Dimensions.get('window');
+    ctx.touchableRef.current?.measureInWindow((x, y, triggerWidth, triggerHeight) => {
+      const positionX = Math.round(x + triggerWidth / 2 - width / 2);
+      const positionY = Math.round(position === 'bottom' ? y + triggerHeight + 4 : y - height - 4);
+
+      setLayout(prev => {
+        const finalX = positionX + width < viewWidth ? positionX : viewWidth - width - 4;
+        const finalY = positionY + height < viewHeight ? positionY : viewHeight - height - 4;
+
+        if (prev.x !== finalX || prev.y !== finalY) {
+          return { x: finalX, y: finalY };
+        }
+        return prev;
+      });
+    });
+  };
+
+  useEffect(() => {
+    if (ctx.open) {
+      Animated.parallel([
+        Animated.timing(animation.current, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      Animated.parallel([
+        Animated.timing(animation.current, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [ctx.open]);
+
   return (
-    <View className="rounded-md bg-white" style={{ alignSelf: 'flex-start' }}>
-      {ctx.content}
-    </View>
+    <Portal>
+      <Animated.View
+        ref={contentRef}
+        className={cn('rounded-lg bg-background shadow', className)}
+        style={{
+          pointerEvents: ctx.open ? 'auto' : 'none',
+          position: 'absolute',
+          zIndex: 9999,
+          left: layout.x,
+          top: layout.y,
+          opacity: animation.current,
+          transform: [
+            {
+              translateY: animation.current.interpolate({
+                inputRange: [0, 1],
+                outputRange: [10, 0],
+              }),
+            },
+          ],
+        }}
+        onLayout={handleLayout}
+      >
+        {children}
+      </Animated.View>
+
+      <Pressable
+        className={cn('absolute left-0 top-0 z-[9998] h-screen w-screen', ctx.open ? 'inline-block' : 'hidden')}
+        onPress={handleClose}
+      />
+    </Portal>
   );
 };
 
-export { Popover, PopoverContent, PopoverContentContainer, PopoverTrigger };
+export { Popover, PopoverContent, PopoverTrigger };

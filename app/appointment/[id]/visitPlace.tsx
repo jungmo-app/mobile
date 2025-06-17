@@ -1,6 +1,7 @@
 import LocationSettingModal from '@/components/modals/locationSettingModal';
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { appointmentData } from '@/constants/mock';
+import { useDeleteLocation } from '@/hooks/useMutation/useDeleteLocation';
 import { Photos, PlaceSearchResult } from '@/types/map';
 import { getDistance } from '@/utils/map';
 import { useLocalSearchParams } from 'expo-router';
@@ -8,22 +9,14 @@ import { MapPin, MoreVertical } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { GestureResponderEvent, Image, Pressable, Text, View } from 'react-native';
 
-type RawPlace = Omit<PlaceSearchResult, 'id' | 'photos'> & {
-  id: number;
-  photos: {
-    height: number;
-    html_attributions: string[];
-    photo_reference: string;
-    width: number;
-  }[];
-};
-
 interface VisitPlaceProps {
-  place: RawPlace;
+  place: Omit<PlaceSearchResult, 'id'> & Record<'id', number>;
 }
 
 export default function VisitPlace({ place }: VisitPlaceProps) {
   const { id } = useLocalSearchParams();
+
+  const { mutate: deleteLocation, isPending: isPendingDeleteLocation } = useDeleteLocation(Number(id));
 
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [isOpenSetting, setIsOpenSetting] = useState<boolean>(false);
@@ -48,7 +41,7 @@ export default function VisitPlace({ place }: VisitPlaceProps) {
       return;
     }
     setIsOpenSetting(false);
-    /* deleteLocation(place.id); */
+    deleteLocation(place.id);
   };
 
   if (!appointment) {
@@ -76,7 +69,9 @@ export default function VisitPlace({ place }: VisitPlaceProps) {
             </View>
             <View className="min-w-0">
               <View className="flex mb-1 items-center gap-2">
-                <Text className="truncate text-xl font-medium">{place.name ?? ''}</Text>
+                <Text className="text-xl font-medium" numberOfLines={1} ellipsizeMode="tail">
+                  {place.name ?? ''}
+                </Text>
 
                 {place.types && (
                   <View className="flex-shrink-0 rounded-md bg-gray-200 px-3 py-[2px] font-bold">
@@ -85,7 +80,7 @@ export default function VisitPlace({ place }: VisitPlaceProps) {
                 )}
               </View>
               <View className="text-sm text-gray-500">
-                <Text className="block truncate" numberOfLines={1}>
+                <Text numberOfLines={1} ellipsizeMode="tail">
                   {distance && `${distance[0]} ${distance[1]} • `} {place.formatted_address ?? ''}
                 </Text>
               </View>
@@ -105,6 +100,7 @@ export default function VisitPlace({ place }: VisitPlaceProps) {
                     aria-label="삭제"
                     title="삭제하기"
                     className="w-full"
+                    disabled={isPendingDeleteLocation}
                     onPress={handleDeleteLocation}
                   />
                 </View>

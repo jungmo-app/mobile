@@ -1,6 +1,17 @@
 import { z } from 'zod';
 import commonSchemas from './common';
 
+export const loginSchema = z.object({
+  email: commonSchemas.email,
+  password: z.string().min(1, '비밀번호를 입력해주세요'),
+});
+
+export const signupSchema = z.object({
+  name: commonSchemas.name,
+  email: commonSchemas.email,
+  password: commonSchemas.password,
+});
+
 export const fileSchema = z.object({
   uri: z.string().url(),
   name: z.string(),
@@ -47,3 +58,7 @@ export const resetPasswordSchema = z
     message: '새 비밀번호가 일치하지 않아요',
     path: ['confirmPassword'],
   });
+
+export const setPasswordSchema = z.object({
+  email: commonSchemas.email,
+});

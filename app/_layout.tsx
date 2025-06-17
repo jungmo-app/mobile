@@ -1,5 +1,11 @@
+import { SessionContextProvider } from '@/context/SessionProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Host } from 'react-native-portalize';
+import Toast, { ToastConfig } from 'react-native-toast-message';
+
+import SlideInToast from '@/components/slideInToast';
 import '../global.css';
 
 const queryClient = new QueryClient({
@@ -16,10 +22,21 @@ const queryClient = new QueryClient({
   },
 });
 
+const toastConfig: ToastConfig = {
+  custom: props => <SlideInToast {...props} onHide={props.hide} />,
+};
+
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </QueryClientProvider>
+    <GestureHandlerRootView className="flex-1">
+      <QueryClientProvider client={queryClient}>
+        <SessionContextProvider>
+          <Host>
+            <Stack screenOptions={{ headerShown: false }} />
+            <Toast config={toastConfig} />
+          </Host>
+        </SessionContextProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

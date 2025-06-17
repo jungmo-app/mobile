@@ -1,9 +1,8 @@
-'use client';
-
 import ImageSelectModal from '@/components/modals/ImageSelectModal';
 import { Avatar, AvatarFallback, AvatarImage, Button, Card, Input, Label } from '@/components/ui';
 import { ButtonContext } from '@/context/ButtonPressContext';
 import { useImagePicker } from '@/hooks/useImagePicker';
+import { useEditAccount } from '@/hooks/useMutation/useEditAccount';
 import { EditProfileFormValues, editProfileSchema } from '@/schemas/auth';
 import { UserInfoResponse } from '@/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,16 +10,13 @@ import * as Clipboard from 'expo-clipboard';
 import { Copy, Edit, Save, X } from 'lucide-react-native';
 import { useContext, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { ActivityIndicator, Dimensions, Text, TextInput, View } from 'react-native';
+import { Dimensions, Text, TextInput, View } from 'react-native';
 
-export default function InfoForm() {
-  const userData: UserInfoResponse = {
-    userId: 1,
-    userCode: 'CODE',
-    userName: 'TEST',
-    profileImage: null,
-    provider: 'email',
-  };
+interface InfoFormProps {
+  userData: UserInfoResponse | undefined;
+}
+
+export default function InfoForm({ userData }: InfoFormProps) {
   const inputRef = useRef<TextInput | null>(null);
 
   const { isPressed } = useContext(ButtonContext);
@@ -28,8 +24,7 @@ export default function InfoForm() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isEditImage, setIsEditImage] = useState(false);
   const { imageFiles, imageUris, imageError, uploadImageFiles, uploadTakingPicture, imageReset } = useImagePicker(
-    userData.profileImage,
-    1
+    userData?.profileImage ?? null
   );
 
   const form = useForm<EditProfileFormValues>({
@@ -41,28 +36,22 @@ export default function InfoForm() {
     mode: 'onChange',
   });
 
-  /* useEffect(() => {
-    if (!userData) {
-      router.push(`/login?date=${Date.now()}`);
-    }
-  }, [userData]); */
-
-  const editAccount = (payload: EditProfileFormValues) => {
-    console.log(payload);
-  };
-
-  const isPending = false;
+  const { mutate: editAccount, isPending } = useEditAccount({
+    onSuccess: () => {
+      setIsEditMode(false);
+    },
+    onError: () => {
+      imageReset();
+      form.reset();
+    },
+  });
 
   if (!userData) {
-    return (
-      <View className="flex size-full flex-grow items-center justify-center">
-        <ActivityIndicator size="large" color="blue" />
-      </View>
-    );
+    throw new Error('userData is undefined');
   }
 
   const onSubmit = async (data: EditProfileFormValues) => {
-    editAccount({ ...data, profileImage: imageFiles[0] });
+    editAccount({ ...data, profileImage: imageFiles[0], preview: imageUris[0] ?? '' });
   };
 
   const handlePressEditButton = () => {

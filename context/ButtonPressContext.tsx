@@ -1,5 +1,3 @@
-'use client';
-
 import { createContext, PropsWithChildren, useCallback, useMemo, useState } from 'react';
 
 interface ButtonContextType {
