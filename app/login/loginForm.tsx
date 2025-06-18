@@ -15,7 +15,7 @@ export default function LoginForm() {
 
   const [isOpenSheet, setIsOpenSheet] = useState<boolean>(false);
 
-  const { mutate: login } = useLogin();
+  const { mutate: login, isPending } = useLogin();
 
   const { control, formState, clearErrors, handleSubmit } = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
@@ -46,6 +46,7 @@ export default function LoginForm() {
             </View>
             <Input
               ref={mergeRefs(ref, emailRef)}
+              readOnly={isPending}
               placeholder="이메일을 입력해주세요"
               error={Boolean(formState.errors.email)}
               clearError={() => clearErrors('email')}
@@ -69,6 +70,7 @@ export default function LoginForm() {
             </View>
             <Input
               secureTextEntry
+              readOnly={isPending}
               ref={mergeRefs(ref, passwordRef)}
               autoComplete="password"
               placeholder="이메일을 입력해주세요"
@@ -94,7 +96,7 @@ export default function LoginForm() {
           title="로그인"
           titleClassName="font-semibold test-white"
           className="h-12 w-full"
-          disabled={!formState.isValid}
+          disabled={!formState.isValid || isPending}
           onPress={handleSubmit(handleSubmitForm)}
         />
         <View className="relative mb-3 mt-4">
@@ -110,6 +112,7 @@ export default function LoginForm() {
             <Button
               className="h-12 w-full bg-yellow-400 font-semibold active:bg-yellow-500"
               titleClassName="text-black"
+              disabled={isPending}
               title="카카오로 로그인하기"
             />
           </SheetTrigger>

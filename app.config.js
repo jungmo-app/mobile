@@ -10,6 +10,7 @@ export default {
     userInterfaceStyle: 'automatic',
     newArchEnabled: true,
     ios: {
+      bundleIdentifier: "com.armd482.jungmo",
       config: {
         googleMaps: {
           apiKey: process.env.EXPO_PUBLIC_GOOGLE_API_KEY,

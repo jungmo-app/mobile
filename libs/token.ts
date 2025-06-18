@@ -12,7 +12,7 @@ export const refreshAccessToken = async () => {
     {
       headers: {
         'Content-Type': 'application/json',
-        Cookie: `refreshToken=${refreshToken}`,
+        Authorization: `Bearer ${refreshToken}`,
       },
       withCredentials: true,
     }

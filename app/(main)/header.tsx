@@ -57,10 +57,15 @@ export default function Header() {
         <Popover isOpen={open} onOpenChange={handleOpenPopover}>
           <PopoverTrigger asChild>
             <Button variant="ghost" aria-label="날짜">
-              <Text className="text-3xl font-black">
-                {date.getFullYear()}. {(date.getMonth() + 1).toString().padStart(2, '0')}
-              </Text>
-              <CalendarRange width={16} height={16} color="black" />
+              <View className="flex h-9 items-center justify-center gap-2">
+                <View className="flex items-center justify-center">
+                  <Text className="text-center text-2xl font-bold">
+                    {`${date.getFullYear()}. ${(date.getMonth() + 1).toString().padStart(2, '0')}`}
+                  </Text>
+                </View>
+
+                <CalendarRange width={16} height={16} color="black" />
+              </View>
             </Button>
           </PopoverTrigger>
           <PopoverContent>

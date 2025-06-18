@@ -38,7 +38,7 @@ export default function NotificationButton() {
     <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
         <View className="relative">
-          <Bell size={24} color="gray" />
+          <Bell size={18} color="black" />
           {unReadCount > 0 && (
             <View className="flex absolute -top-1 right-0 size-[14px] cursor-pointer items-center justify-center rounded-full bg-red-600">
               <Text className={`${unReadCount > 99 ? 'text-[8px]' : 'text-[10px]'} text-white`}>

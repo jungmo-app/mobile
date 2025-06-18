@@ -20,5 +20,8 @@ export const useLogin = () => {
         throw new Error('session error');
       }
     },
+    onError: error => {
+      console.log(error);
+    },
   });
 };

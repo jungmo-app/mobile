@@ -11,8 +11,9 @@ import {
   type ReactNode,
   type RefObject,
 } from 'react';
-import { Animated, Dimensions, LayoutChangeEvent, Pressable, View } from 'react-native';
+import { Animated, Dimensions, LayoutChangeEvent, Platform, Pressable, View } from 'react-native';
 import { Portal } from 'react-native-portalize';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface PopoverContextType {
   open: boolean;
@@ -85,6 +86,8 @@ const PopoverContent = ({ children, className, position = 'bottom' }: PopvoerCon
   const contentRef = useRef<View | null>(null);
   const ctx = useContext(PopoverContext);
 
+  const insets = useSafeAreaInsets();
+
   const [layout, setLayout] = useState({ x: 0, y: 0 });
 
   const animation = useRef(new Animated.Value(0));
@@ -98,9 +101,12 @@ const PopoverContent = ({ children, className, position = 'bottom' }: PopvoerCon
   const handleLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
     const { width: viewWidth, height: viewHeight } = Dimensions.get('window');
+
     ctx.touchableRef.current?.measureInWindow((x, y, triggerWidth, triggerHeight) => {
+      const adjustedY = Platform.OS === 'ios' ? y - insets.top : y;
+
       const positionX = Math.round(x + triggerWidth / 2 - width / 2);
-      const positionY = Math.round(position === 'bottom' ? y + triggerHeight + 4 : y - height - 4);
+      const positionY = Math.round(position === 'bottom' ? adjustedY + triggerHeight + 4 : adjustedY - height - 4);
 
       setLayout(prev => {
         const finalX = positionX + width < viewWidth ? positionX : viewWidth - width - 4;
