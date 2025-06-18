@@ -48,6 +48,7 @@ export const useEditAccount = ({ onSuccess, onError }: EditAccountProps = {}) =>
         return;
       }
       alert('수정에 실패하였습니다');
+      console.log(error);
       onError?.(error);
     },
   });

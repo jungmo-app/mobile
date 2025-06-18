@@ -71,7 +71,6 @@ export const SessionContextProvider = ({ children }: PropsWithChildren) => {
       }
 
       const refreshToken = await SecureStore.getItemAsync('refreshToken');
-      console.log('refreshToken:', refreshToken);
       if (!refreshToken) {
         router.replace('/login');
         return;

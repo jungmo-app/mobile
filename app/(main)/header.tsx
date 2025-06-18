@@ -63,7 +63,6 @@ export default function Header() {
                     {`${date.getFullYear()}. ${(date.getMonth() + 1).toString().padStart(2, '0')}`}
                   </Text>
                 </View>
-
                 <CalendarRange width={16} height={16} color="black" />
               </View>
             </Button>
