@@ -3,9 +3,10 @@ import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui
 import { useDateStore } from '@/store/appointmentStore';
 import { router } from 'expo-router';
 import { CalendarRange, ChevronLeft, ChevronRight, User } from 'lucide-react-native';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
+import CalendarPopoever from './calendarPopover';
 
 export default function Header() {
   const [open, setIsOpen] = useState<boolean>(false);
@@ -16,9 +17,9 @@ export default function Header() {
     }))
   );
 
-  const handleOpenPopover = (value: boolean) => {
+  const handleOpenPopover = useCallback((value: boolean) => {
     setIsOpen(value);
-  };
+  }, []);
 
   const handlePressPrevMonthButton = () => {
     setDate(prev => {
@@ -68,8 +69,8 @@ export default function Header() {
             </Button>
           </PopoverTrigger>
           <PopoverContent>
-            <View className="h-72 w-64">
-              <Text>test</Text>
+            <View className="flex h-72 w-64">
+              <CalendarPopoever onClose={() => handleOpenPopover(false)} />
             </View>
           </PopoverContent>
         </Popover>
