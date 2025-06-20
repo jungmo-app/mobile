@@ -50,7 +50,7 @@ export default function MonthPicker({
   const listRef = useRef<FlatList>(null);
   const isInitial = useRef<boolean>(true);
 
-  const { date, setDate } = useDateStore(
+  const { setDate } = useDateStore(
     useShallow(state => ({
       date: state.date,
       setDate: state.setDate,
@@ -102,20 +102,24 @@ export default function MonthPicker({
     [onClose, setDate]
   );
 
+  const handlePressTitle = () => {
+    onChangeType('year');
+  };
+
   useEffect(() => {
-    if (!isInitial.current || startYear > date.getFullYear() || endYear < date.getFullYear()) {
+    if (!isInitial.current || startYear > currentDate.getFullYear() || endYear < currentDate.getFullYear()) {
       return;
     }
     requestAnimationFrame(() => {
-      listRef.current?.scrollToIndex({ animated: false, index: (date.getFullYear() - startYear) * 3 - 0.5 });
+      listRef.current?.scrollToIndex({ animated: false, index: (currentDate.getFullYear() - startYear) * 3 - 0.5 });
       isInitial.current = false;
     });
-  }, [date, startYear, endYear]);
+  }, [currentDate, startYear, endYear]);
 
   return (
     <View className="flex size-full flex-col">
-      <Pressable onPress={() => onChangeType('year')}>
-        <View className="flex h-12 w-full items-center justify-center rounded-lg bg-white active:bg-gray-100">
+      <Pressable className="h-12 w-full bg-white active:bg-gray-100" onPress={handlePressTitle}>
+        <View className="flex size-full items-center justify-center rounded-lg">
           <Text className="text-xl font-bold">{currentDate.getFullYear()}</Text>
         </View>
       </Pressable>

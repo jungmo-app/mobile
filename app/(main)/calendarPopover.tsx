@@ -2,6 +2,7 @@ import { useDateStore } from '@/store/appointmentStore';
 import { SetStateAction, useCallback, useState } from 'react';
 import { View } from 'react-native';
 import MonthPicker from './monthPicker';
+import YearPicker from './yearPicker';
 
 interface CalendarPopoeverProps {
   onClose: () => void;
@@ -22,14 +23,25 @@ export default function CalendarPopoever({ onClose }: CalendarPopoeverProps) {
 
   return (
     <View className="flex size-full flex-col">
-      <MonthPicker
-        startYear={1900}
-        endYear={2100}
-        currentDate={currentDate}
-        onChangeCurrentDate={handleChangeCurrentDate}
-        onChangeType={handleChangeType}
-        onClose={onClose}
-      />
+      {type === 'month' ? (
+        <MonthPicker
+          startYear={1900}
+          endYear={2100}
+          currentDate={currentDate}
+          onChangeCurrentDate={handleChangeCurrentDate}
+          onChangeType={handleChangeType}
+          onClose={onClose}
+        />
+      ) : (
+        <YearPicker
+          startYear={1900}
+          endYear={2100}
+          currentDate={currentDate}
+          onChangeCurrentDate={handleChangeCurrentDate}
+          onChangeType={handleChangeType}
+          onClose={onClose}
+        />
+      )}
     </View>
   );
 }
