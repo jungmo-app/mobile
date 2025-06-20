@@ -40,7 +40,8 @@ export default function InfoForm({ userData }: InfoFormProps) {
     onSuccess: () => {
       setIsEditMode(false);
     },
-    onError: () => {
+    onError: error => {
+      console.log(error.code);
       imageReset();
       form.reset();
     },
@@ -51,6 +52,9 @@ export default function InfoForm({ userData }: InfoFormProps) {
   }
 
   const onSubmit = async (data: EditProfileFormValues) => {
+    if (imageError) {
+      return;
+    }
     editAccount({ ...data, profileImage: imageFiles[0], preview: imageUris[0] ?? '' });
   };
 
@@ -85,7 +89,7 @@ export default function InfoForm({ userData }: InfoFormProps) {
               size="none"
               className="group select-none p-0"
               aria-label="저장"
-              disabled={isPending}
+              disabled={isPending || imageError !== null}
               onPress={form.handleSubmit(onSubmit)}
             >
               <Save size={22} color="gray" />

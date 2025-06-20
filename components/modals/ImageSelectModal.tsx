@@ -12,12 +12,16 @@ interface ImageSelectModalProps {
 export default function ImageSelectModal({ isOpen, onClose, onPressCamera, onPressFile }: ImageSelectModalProps) {
   const handlePressCameraButton = async () => {
     onClose(false);
-    await onPressCamera();
+    setTimeout(async () => {
+      await onPressCamera();
+    }, 300);
   };
 
   const handlePressFileButton = async () => {
     onClose(false);
-    await onPressFile();
+    setTimeout(async () => {
+      await onPressFile();
+    }, 300);
   };
 
   return (

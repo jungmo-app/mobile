@@ -58,6 +58,8 @@ privateAxios.interceptors.response.use(
       const { status, data } = error.response;
       const { code, message } = data;
 
+      console.log(status, message, code);
+
       return Promise.reject(new ApiError(status, code, message));
     }
 

@@ -3,9 +3,10 @@ import { Button, Popover, PopoverContent, PopoverTrigger } from '@/components/ui
 import { useDateStore } from '@/store/appointmentStore';
 import { router } from 'expo-router';
 import { CalendarRange, ChevronLeft, ChevronRight, User } from 'lucide-react-native';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
+import CalendarPopoever from './calendarPopover';
 
 export default function Header() {
   const [open, setIsOpen] = useState<boolean>(false);
@@ -16,9 +17,9 @@ export default function Header() {
     }))
   );
 
-  const handleOpenPopover = (value: boolean) => {
+  const handleOpenPopover = useCallback((value: boolean) => {
     setIsOpen(value);
-  };
+  }, []);
 
   const handlePressPrevMonthButton = () => {
     setDate(prev => {
@@ -57,15 +58,19 @@ export default function Header() {
         <Popover isOpen={open} onOpenChange={handleOpenPopover}>
           <PopoverTrigger asChild>
             <Button variant="ghost" aria-label="날짜">
-              <Text className="text-3xl font-black">
-                {date.getFullYear()}. {(date.getMonth() + 1).toString().padStart(2, '0')}
-              </Text>
-              <CalendarRange width={16} height={16} color="black" />
+              <View className="flex h-9 items-center justify-center gap-2">
+                <View className="flex items-center justify-center">
+                  <Text className="text-center text-2xl font-bold">
+                    {`${date.getFullYear()}. ${(date.getMonth() + 1).toString().padStart(2, '0')}`}
+                  </Text>
+                </View>
+                <CalendarRange width={16} height={16} color="black" />
+              </View>
             </Button>
           </PopoverTrigger>
           <PopoverContent>
-            <View className="h-72 w-64">
-              <Text>test</Text>
+            <View className="flex h-72 w-64">
+              <CalendarPopoever onClose={() => handleOpenPopover(false)} />
             </View>
           </PopoverContent>
         </Popover>

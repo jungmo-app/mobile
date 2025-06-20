@@ -6,6 +6,7 @@ import { Host } from 'react-native-portalize';
 import Toast, { ToastConfig } from 'react-native-toast-message';
 
 import SlideInToast from '@/components/slideInToast';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import '../global.css';
 
 const queryClient = new QueryClient({
@@ -28,15 +29,17 @@ const toastConfig: ToastConfig = {
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView className="flex-1">
-      <QueryClientProvider client={queryClient}>
-        <SessionContextProvider>
-          <Host>
-            <Stack screenOptions={{ headerShown: false }} />
-            <Toast config={toastConfig} />
-          </Host>
-        </SessionContextProvider>
-      </QueryClientProvider>
-    </GestureHandlerRootView>
+    <SafeAreaView className="flex-1">
+      <GestureHandlerRootView className="flex-1">
+        <QueryClientProvider client={queryClient}>
+          <SessionContextProvider>
+            <Host>
+              <Stack screenOptions={{ headerShown: false }} />
+              <Toast config={toastConfig} />
+            </Host>
+          </SessionContextProvider>
+        </QueryClientProvider>
+      </GestureHandlerRootView>
+    </SafeAreaView>
   );
 }
