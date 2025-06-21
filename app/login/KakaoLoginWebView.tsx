@@ -32,7 +32,7 @@ export default function KakaoLoginWebView({ onClose }: KakaoLoginWebViewProps) {
 
   return (
     <WebView
-      renderLoading={() => <Loading />}
+      renderLoading={() => <Loading className="size-full" />}
       source={{
         uri: kakaoAuthUrl,
       }}

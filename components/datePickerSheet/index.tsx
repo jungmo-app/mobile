@@ -28,10 +28,11 @@ export default function DatePickerSheet({ value, onSelect, classNames }: DatePic
       <SheetTrigger>
         <Button
           variant="outline"
-          className={cn('flex h-10 w-48 rounded-sm px-4 py-3 text-left font-normal', classNames)}
+          className={cn('flex h-12 w-48 rounded-sm px-4 py-3 text-left font-normal', classNames)}
           size="none"
           aria-label="현재 날짜"
           title={formattedDateKr(currentDate)}
+          titleClassName="text-sm"
         />
       </SheetTrigger>
       <SheetContent isLoadingAnimtaion position="bottom" size="80%" title="날짜 선택">
