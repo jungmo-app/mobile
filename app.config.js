@@ -12,13 +12,12 @@ export default {
     ios: {
       bundleIdentifier: "com.armd482.jungmo",
       config: {
-        googleMaps: {
-          apiKey: process.env.EXPO_PUBLIC_GOOGLE_API_KEY,
-        },
+        googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_API_KEY,
       },
       infoPlist: {
         NSCameraUsageDescription: '사진 촬영을 위해 카메라 접근 권한이 필요합니다',
         NSPhotoLibraryUsageDescription: '사진 선택을 위해 갤러리 접근 권한이 필요합니다',
+        NSLocationWhenInUseUsageDescription: '지도를 표시하고 현재 위치를 확인하려면 위치 권한이 필요합니다',
       },
       supportsTablet: true,
     },
