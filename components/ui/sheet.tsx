@@ -11,6 +11,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Loading from '../loading';
 
 type SheetContextType = {
@@ -106,7 +107,13 @@ const SheetContent = ({
   title,
   className,
 }: SheetContentProps) => {
+  const insets = useSafeAreaInsets();
   const { open, setOpen } = useContext(SheetContext);
+
+  const isFullScreen =
+    (typeof size === 'string' && size.trim() === '100%') ||
+    (typeof size === 'number' && size >= Dimensions.get('window').height);
+
   const [isVisible, setIsVisible] = useState(open);
   const [isAnimationEnd, setIsAnimationEnd] = useState<boolean>(false);
 
@@ -193,6 +200,7 @@ const SheetContent = ({
           )}
           style={[
             {
+              ...(isFullScreen ? { paddingTop: insets.top, paddingBottom: insets.bottom } : {}),
               transform:
                 position === 'top' || position === 'bottom'
                   ? [{ translateY: translateAnim.current }]
