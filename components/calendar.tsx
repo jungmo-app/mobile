@@ -13,6 +13,7 @@ interface CalendarProps {
   showAdjacentDays?: boolean;
   selected?: boolean;
   onSelect?: (day: Date) => void;
+  updateTime?: boolean;
   className?: string;
   style?: StyleProp<ViewStyle>;
 }
@@ -32,6 +33,7 @@ export default function Calendar({
   selected,
   className,
   style,
+  updateTime = true,
 }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -82,6 +84,9 @@ export default function Calendar({
   }, [date]);
 
   useEffect(() => {
+    if (!updateTime) {
+      return;
+    }
     const now = new Date();
     const nextMidnight = new Date(now);
     nextMidnight.setHours(24, 0, 0, 0);
@@ -89,7 +94,7 @@ export default function Calendar({
 
     const timer = setTimeout(() => setCurrentDate(new Date()), timeout);
     return () => clearTimeout(timer);
-  }, []);
+  }, [updateTime]);
 
   return (
     <View className={cn('px-4', className)} style={style}>

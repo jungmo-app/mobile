@@ -106,11 +106,11 @@ const PopoverContent = ({ children, className, position = 'bottom' }: PopvoerCon
       const adjustedY = Platform.OS === 'ios' ? y - insets.top : y;
 
       const positionX = Math.round(x + triggerWidth / 2 - width / 2);
-      const positionY = Math.round(position === 'bottom' ? adjustedY + triggerHeight + 4 : adjustedY - height - 4);
+      const positionY = Math.round(position === 'bottom' ? adjustedY + triggerHeight + 8 : adjustedY - height - 8);
 
       setLayout(prev => {
-        const finalX = positionX + width < viewWidth ? positionX : viewWidth - width - 4;
-        const finalY = positionY + height < viewHeight ? positionY : viewHeight - height - 4;
+        const finalX = positionX + width < viewWidth ? positionX : viewWidth - width - 8;
+        const finalY = positionY + height < viewHeight ? positionY : viewHeight - height - 8;
 
         if (prev.x !== finalX || prev.y !== finalY) {
           return { x: finalX, y: finalY };

@@ -7,6 +7,7 @@ const axiosConfig = {
   baseURL: process.env.EXPO_PUBLIC_API_BASE_URL,
   timeout: 50000,
   withCredentials: true,
+  maxBodyLength: Infinity,
   headers: {
     'Content-Type': 'application/json',
   },

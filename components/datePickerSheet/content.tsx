@@ -48,6 +48,13 @@ export default function Content({ value, onSelect }: ContentProps) {
     []
   );
 
+  const renderItem = useCallback(
+    ({ item }: { item: Date }) => (
+      <CalendarDate value={value} item={item} height={itemHeight} onSelect={handleSelect} />
+    ),
+    [value, itemHeight, handleSelect]
+  );
+
   return (
     <View className="flex-1" onLayout={handleLayout}>
       {isLoading && <Loading className="absolute left-0 top-0 z-[9999] size-full" />}
@@ -59,12 +66,10 @@ export default function Content({ value, onSelect }: ContentProps) {
         removeClippedSubviews={false}
         initialNumToRender={12}
         maxToRenderPerBatch={12}
-        windowSize={7}
+        windowSize={5}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <CalendarDate value={value} item={item} height={itemHeight} onSelect={handleSelect} />
-        )}
+        renderItem={renderItem}
         getItemLayout={(_, index) => ({
           length: itemHeight,
           offset: itemHeight * index,

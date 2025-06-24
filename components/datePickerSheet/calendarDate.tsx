@@ -23,6 +23,7 @@ const CalendarDate = memo(({ item, value, height, onSelect }: CalendarDateProps)
         selectedDate={value}
         date={item}
         style={{ height: height - 32 }}
+        updateTime={false}
         onSelect={onSelect}
       />
     </View>
