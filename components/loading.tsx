@@ -1,24 +1,24 @@
 import { cn } from '@/utils/style';
-import { forwardRef } from 'react';
-import { ActivityIndicator, ActivityIndicatorProps, Text, View } from 'react-native';
+import LottieView from 'lottie-react-native';
+import React from 'react';
+import { Text, View } from 'react-native';
 
-interface LoadingProps extends ActivityIndicatorProps {
+interface LoadingProps {
   message?: string;
+  className?: string;
 }
 
-const Loading = forwardRef<View, LoadingProps>(
-  ({ className, animating, color = 'blue', size = 'large', hidesWhenStopped, message, ...props }, ref) => (
-    <View
-      className={cn('flex flex-1 flex-col items-center justify-center gap-2 bg-white', className)}
-      ref={ref}
-      {...props}
-    >
-      <ActivityIndicator animating={animating} color={color} hidesWhenStopped={hidesWhenStopped} size={size} />
+export default function Loading({ message, className }: LoadingProps) {
+  return (
+    <View className={cn('flex flex-1 flex-col items-center justify-center bg-white', className)}>
+      <LottieView
+        autoPlay
+        loop
+        speed={0.85}
+        source={require('@/assets/jsons/spinner.json')}
+        style={{ width: 150, height: 150 }}
+      />
       {message && <Text>{message}</Text>}
     </View>
-  )
-);
-
-Loading.displayName = 'Loading';
-
-export default Loading;
+  );
+}

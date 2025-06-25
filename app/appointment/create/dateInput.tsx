@@ -29,7 +29,11 @@ export default function DateInput() {
           <Label>날짜 및 시간</Label>
         </View>
         <View className="flex w-full items-center justify-between gap-4">
-          <DatePickerSheet value={new Date(getValues('startDate'))} onSelect={handleChangeDate} />
+          <DatePickerSheet
+            classNames="flex-1 w-full"
+            value={new Date(getValues('startDate'))}
+            onSelect={handleChangeDate}
+          />
           <TimePickerSheet value={getValues('startTime')} classNames="flex-1 w-full" onSelect={handleChangeTime} />
         </View>
       </View>

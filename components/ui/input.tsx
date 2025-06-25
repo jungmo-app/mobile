@@ -3,6 +3,7 @@ import React, { forwardRef, useState } from 'react';
 import {
   Dimensions,
   NativeSyntheticEvent,
+  Platform,
   TextInput,
   TextInputContentSizeChangeEventData,
   TextInputProps,
@@ -55,14 +56,15 @@ const Input = forwardRef<TextInput, InputProps>(
         ref={ref}
         multiline={multiline}
         style={[
-          multiline && isHeightChange && { height: inputHeight },
-          multiline && { textAlignVertical: 'top' },
+          multiline ? { height: inputHeight } : { paddingVertical: 12 },
+          Platform.OS === 'ios' && { lineHeight: 16 },
           props.style,
         ]}
         className={cn(
-          'h-10 w-full rounded-md border bg-background px-3 py-2 text-base dark:border-gray-600 dark:bg-[#020916]',
+          'w-full rounded-md border bg-background px-3 text-base dark:border-gray-600 dark:bg-[#020916]',
           error ? 'border-red-500' : 'border-gray-300',
           editable === false && 'select-none opacity-50',
+          !multiline && 'h-10 py-3',
           className
         )}
         onContentSizeChange={handleContentSizeChange}

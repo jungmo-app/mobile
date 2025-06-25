@@ -1,16 +1,9 @@
 import { cn } from '@/utils/style';
 import { X } from 'lucide-react-native';
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Animated,
-  Dimensions,
-  GestureResponderEvent,
-  InteractionManager,
-  Modal,
-  Pressable,
-  Text,
-  View,
-} from 'react-native';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { Dimensions, GestureResponderEvent, Modal, Pressable, Text, View } from 'react-native';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Loading from '../loading';
 
 type SheetContextType = {
@@ -106,81 +99,68 @@ const SheetContent = ({
   title,
   className,
 }: SheetContentProps) => {
+  const insets = useSafeAreaInsets();
   const { open, setOpen } = useContext(SheetContext);
-  const [isVisible, setIsVisible] = useState(open);
-  const [isAnimationEnd, setIsAnimationEnd] = useState<boolean>(false);
 
-  const translateAnim = useRef(new Animated.Value(0));
-  const opacityAnim = useRef(new Animated.Value(0));
-  const translateTo = 0;
+  const [isVisible, setIsVisible] = useState(open);
+  const [isAnimationEnd, setIsAnimationEnd] = useState(false);
+
+  const translateFrom = useMemo(() => {
+    if (typeof size === 'number') return size;
+    if (typeof size === 'string' && size.endsWith('%')) {
+      const pct = parseFloat(size) / 100;
+      const dim = ['top', 'bottom'].includes(position)
+        ? Dimensions.get('window').height
+        : Dimensions.get('window').width;
+      return dim * pct;
+    }
+    return 300;
+  }, [position, size]);
+
+  const translate = useSharedValue(translateFrom);
+  const opacity = useSharedValue(0);
+
+  const animStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [
+      ['top', 'bottom'].includes(position) ? { translateY: translate.value } : { translateX: translate.value },
+    ],
+  }));
+
+  const isFullScreen =
+    (typeof size === 'string' && size.trim() === '100%') ||
+    (typeof size === 'number' && size >= Dimensions.get('window').height);
 
   const dimensionStyle = useMemo(
     () => ({
-      [position === 'top' || position === 'bottom' ? 'height' : 'width']: size,
+      [['top', 'bottom'].includes(position) ? 'height' : 'width']: size,
     }),
     [position, size]
   );
 
   useEffect(() => {
-    let translateFrom = 0;
-
-    if (typeof size === 'number') {
-      translateFrom = size;
-    } else if (size.endsWith('%')) {
-      const percent = parseFloat(size) / 100;
-      const screenDimension =
-        position === 'top' || position === 'bottom' ? Dimensions.get('window').height : Dimensions.get('window').width;
-      translateFrom = screenDimension * percent;
-    } else {
-      translateFrom = 300;
-    }
-
     if (open) {
       setIsVisible(true);
-      requestAnimationFrame(() => {
-        Animated.parallel([
-          Animated.timing(translateAnim.current, {
-            toValue: translateTo,
-            duration: 250,
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacityAnim.current, {
-            toValue: 1,
-            duration: 250,
-            useNativeDriver: true,
-          }),
-        ]).start(() => {
-          InteractionManager.runAfterInteractions(() => {
-            setIsAnimationEnd(true);
-          });
-        });
+      opacity.value = withTiming(1, { duration: 250 });
+      translate.value = withTiming(0, { duration: 250 }, finished => {
+        if (finished) {
+          runOnJS(setIsAnimationEnd)(true);
+        }
       });
     } else {
-      requestAnimationFrame(() => {
-        Animated.parallel([
-          Animated.timing(translateAnim.current, {
-            toValue: translateFrom,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacityAnim.current, {
-            toValue: 0,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-        ]).start(() => {
-          setIsVisible(false);
-          setIsAnimationEnd(false);
-        });
+      opacity.value = withTiming(0, { duration: 200 });
+      translate.value = withTiming(translateFrom, { duration: 200 }, finished => {
+        if (finished) {
+          runOnJS(setIsVisible)(false);
+          runOnJS(setIsAnimationEnd)(false);
+        }
       });
     }
-  }, [open, position, size]);
-
-  if (!isVisible) return null;
+  }, [open, opacity, translate, translateFrom]);
 
   return (
-    <Modal transparent visible animationType="none" onRequestClose={() => setOpen(false)}>
-      <Animated.View className="flex-1 bg-black/50" style={{ opacity: opacityAnim.current }}>
+    <Modal transparent visible={isVisible} animationType="none" onRequestClose={() => setOpen(false)}>
+      <View className="flex-1 bg-black/50" style={animStyle}>
         <Pressable className="flex-1" onPress={() => setOpen(false)} />
         <Animated.View
           className={cn(
@@ -192,13 +172,9 @@ const SheetContent = ({
             className
           )}
           style={[
-            {
-              transform:
-                position === 'top' || position === 'bottom'
-                  ? [{ translateY: translateAnim.current }]
-                  : [{ translateX: translateAnim.current }],
-              ...dimensionStyle,
-            },
+            isFullScreen ? { paddingTop: insets.top, paddingBottom: insets.bottom } : {},
+            dimensionStyle,
+            animStyle,
           ]}
         >
           {isClose && (
@@ -216,11 +192,10 @@ const SheetContent = ({
           )}
           {isAnimationEnd || !isLoadingAnimtaion ? children : <Loading />}
         </Animated.View>
-      </Animated.View>
+      </View>
     </Modal>
   );
 };
-
 const SheetDescription = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <Text className={cn('hidden text-sm text-muted-foreground', className)}>{children}</Text>
 );

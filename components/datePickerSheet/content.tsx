@@ -35,7 +35,7 @@ export default function Content({ value, onSelect }: ContentProps) {
 
   const handleLayout = useCallback(() => {
     requestAnimationFrame(() => {
-      flatListRef.current?.scrollToOffset({ offset: RENDER_NUM * itemHeight + itemHeight / 2, animated: false });
+      flatListRef.current?.scrollToOffset({ offset: RENDER_NUM * itemHeight, animated: false });
     });
   }, [itemHeight]);
 
@@ -46,6 +46,13 @@ export default function Content({ value, onSelect }: ContentProps) {
       }
     },
     []
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: Date }) => (
+      <CalendarDate value={value} item={item} height={itemHeight} onSelect={handleSelect} />
+    ),
+    [value, itemHeight, handleSelect]
   );
 
   return (
@@ -59,12 +66,10 @@ export default function Content({ value, onSelect }: ContentProps) {
         removeClippedSubviews={false}
         initialNumToRender={12}
         maxToRenderPerBatch={12}
-        windowSize={7}
+        windowSize={5}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <CalendarDate value={value} item={item} height={itemHeight} onSelect={handleSelect} />
-        )}
+        renderItem={renderItem}
         getItemLayout={(_, index) => ({
           length: itemHeight,
           offset: itemHeight * index,

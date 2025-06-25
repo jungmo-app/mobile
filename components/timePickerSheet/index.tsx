@@ -32,10 +32,11 @@ export default function TimePickerSheet({ value, onSelect, classNames }: TimePic
       <SheetTrigger>
         <Button
           variant="outline"
-          className={cn('flex h-10 w-24 rounded-sm px-4 py-3 text-left font-normal', classNames)}
+          className={cn('flex h-12 w-24 rounded-sm px-4 py-3 text-left font-normal', classNames)}
           size="none"
           aria-label="현재 날짜"
           title={formatTime(selectedHour, selectedMinute)}
+          titleClassName="text-sm"
         />
       </SheetTrigger>
       <SheetContent position="bottom" size={300} title="시간 선택">
