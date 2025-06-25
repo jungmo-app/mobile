@@ -13,7 +13,7 @@ const CalendarDate = memo(({ item, value, height, onSelect }: CalendarDateProps)
   return (
     <View
       key={`${item.getFullYear()}.${item.getMonth() + 1}`}
-      className="flex flex-col gap-5 overflow-hidden pb-2 pt-6 text-lg font-semibold"
+      className="flex flex-col items-center gap-5 overflow-hidden pb-2 pt-6 text-lg font-semibold"
       style={{ height }}
     >
       <Text className="mb-2 ml-6 text-3xl font-bold">{`${item.getFullYear()}년 ${item.getMonth() + 1}월`}</Text>

@@ -13,7 +13,11 @@ export default function HeaderContent({ isEditable }: HeaderContentProps) {
   const { id } = useLocalSearchParams();
 
   const [isOpenMore, setIsOpenMore] = useState(false);
-  const { mutate: deleteAppointment, isPending } = useDeleteAppointment(Number(id));
+  const { mutate: deleteAppointment, isPending } = useDeleteAppointment(Number(id), {
+    onSuccess: () => {
+      setIsOpenMore(false);
+    },
+  });
 
   const handlePressDeleteButton = () => {
     deleteAppointment();

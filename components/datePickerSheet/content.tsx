@@ -35,7 +35,7 @@ export default function Content({ value, onSelect }: ContentProps) {
 
   const handleLayout = useCallback(() => {
     requestAnimationFrame(() => {
-      flatListRef.current?.scrollToOffset({ offset: RENDER_NUM * itemHeight + itemHeight / 2, animated: false });
+      flatListRef.current?.scrollToOffset({ offset: RENDER_NUM * itemHeight, animated: false });
     });
   }, [itemHeight]);
 
