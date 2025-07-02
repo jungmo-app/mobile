@@ -1,8 +1,8 @@
 import { apis } from '@/apis';
 import { SessionContext } from '@/context/SessionProvider';
-import { KakaoLoginPayload } from '@/types/auth';
 import { UserInfoResponse } from '@/types/user';
 import { ApiError } from '@/utils/api';
+import { login } from '@react-native-seoul/kakao-login';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useContext } from 'react';
@@ -16,8 +16,18 @@ export const useKakaoLogin = ({ onSuccess, onError }: KakaoLoginProps = {}) => {
   const queryClient = useQueryClient();
 
   const { openSession, closeSession } = useContext(SessionContext);
-  return useMutation<UserInfoResponse, ApiError, KakaoLoginPayload>({
-    mutationFn: apis.auth.kakao,
+  return useMutation<UserInfoResponse, ApiError>({
+    mutationFn: async () => {
+      try {
+        const result = await login();
+        return apis.auth.kakao({ token: result.accessToken });
+      } catch (error) {
+        if (error instanceof ApiError) {
+          throw error;
+        }
+        throw new ApiError(500, 'K001', '카카오 로그인 실패');
+      }
+    },
     onSuccess: async userData => {
       try {
         await openSession();
