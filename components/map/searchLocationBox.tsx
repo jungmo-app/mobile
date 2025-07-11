@@ -54,7 +54,7 @@ export default function SearchLocaitonBox({ onSubmit }: SearchLocaitonBoxProps) 
         )}
       />
       {suggestions && suggestions.length > 0 && isViewSuggestion && (
-        <View className="absolute inset-x-0 left-0 top-full z-[60] mx-2 translate-y-1 rounded-md bg-background py-2 shadow shadow-black">
+        <View className="absolute inset-x-0 left-0 top-full z-[60] mx-2 translate-y-1 rounded-md bg-background py-2 shadow shadow-shadow-50">
           {suggestions.slice(0, 6).map((item, index) => (
             <Pressable
               key={index}

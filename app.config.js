@@ -15,6 +15,14 @@ export default {
         googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_API_KEY,
       },
       infoPlist: {
+        CFBundleURLTypes: [
+          {
+            CFBundleURLSchemes: [
+              `kakao${process.env.EXPO_PUBLIC_KAKAO_NATIVE_KEY}`,
+            ],
+          },
+        ],
+        LSApplicationQueriesSchemes: ["kakaokompassauth", "kakaolink"],
         NSCameraUsageDescription: '사진 촬영을 위해 카메라 접근 권한이 필요합니다',
         NSPhotoLibraryUsageDescription: '사진 선택을 위해 갤러리 접근 권한이 필요합니다',
         NSLocationWhenInUseUsageDescription: '지도를 표시하고 현재 위치를 확인하려면 위치 권한이 필요합니다',
@@ -42,6 +50,13 @@ export default {
     plugins: [
       'expo-router',
       [
+        "@react-native-seoul/kakao-login",
+        {
+          kakaoAppKey: process.env.EXPO_PUBLIC_KAKAO_NATIVE_KEY,
+          kotlinVersion: "1.9.25",
+        },
+      ],
+      [
         'expo-splash-screen',
         {
           image: './assets/images/icon.png',
@@ -51,7 +66,15 @@ export default {
         },
       ],
       'expo-secure-store',
-      'expo-build-properties',
+      ['expo-build-properties',
+        {
+        android: {
+          extraMavenRepos: [
+            "https://devrepo.kakao.com/nexus/content/groups/public/",
+          ],
+        },
+      },
+      ]
     ],
     experiments: {
       typedRoutes: true,

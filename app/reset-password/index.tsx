@@ -25,7 +25,7 @@ export default function ResetPassword() {
   return (
     <View className="flex size-full flex-col bg-background">
       <Header routeUrl="/login" title="비밀번호 초기화" onClose={handleRoute} />
-      <View className="flex flex-1 flex-col gap-1 p-2">
+      <View className="flex flex-1 flex-col items-center gap-1 p-2">
         {isRequestSuccess ? <RequestInfo onRoute={handleRoute} /> : <EmailForm onSubmit={handleSubmit} />}
       </View>
     </View>

@@ -8,18 +8,18 @@ export interface File {
   type: string;
 }
 
-const validateImageSize = async (uri: string) => {
+const validateImageSize = async (uri: string, size?: number) => {
   const info = await FileSystem.getInfoAsync(uri);
   if (!info.exists || !info.size) {
     throw new Error('파일이 존재하지 않거나 정보를 가져올 수 없습니다.');
   }
-  console.log(info.size);
-  if (info.size > 5 * 1024 * 1024) {
-    throw new Error('이미지 크기는 5MB 이하만 허용됩니다.');
+
+  if (size && info.size > size * 1024 * 1024) {
+    throw new Error(`이미지 크기는 ${size}MB 이하만 허용됩니다.`);
   }
 };
 
-export const useImagePicker = (initialImage: string | null, num = 1) => {
+export const useImagePicker = (initialImage: string | null, num = 1, options?: { size?: number }) => {
   const [imageUris, setImageUris] = useState<(string | null)[]>([initialImage]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imageError, setImageError] = useState<string | null>(null);
@@ -61,7 +61,7 @@ export const useImagePicker = (initialImage: string | null, num = 1) => {
       if (result.canceled) return;
 
       try {
-        await Promise.all(result.assets.map(asset => validateImageSize(asset.uri)));
+        await Promise.all(result.assets.map(asset => validateImageSize(asset.uri, options?.size)));
       } catch {
         setImageError('이미지 크기는 5MB 이하만 업로드할 수 있습니다.');
         return;
@@ -98,7 +98,7 @@ export const useImagePicker = (initialImage: string | null, num = 1) => {
       try {
         await Promise.all(result.assets.map(asset => validateImageSize(asset.uri)));
       } catch {
-        setImageError('이미지 크기는 5MB 이하만 업로드할 수 있습니다.');
+        setImageError(`이미지 크기는 ${options?.size ?? 10}MB 이하만 업로드할 수 있습니다.`);
         return;
       }
 
