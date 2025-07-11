@@ -24,7 +24,9 @@ export default function InfoForm({ userData }: InfoFormProps) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isEditImage, setIsEditImage] = useState(false);
   const { imageFiles, imageUris, imageError, uploadImageFiles, uploadTakingPicture, imageReset } = useImagePicker(
-    userData?.profileImage ?? null
+    userData?.profileImage ?? null,
+    1,
+    { size: 10 }
   );
 
   const form = useForm<EditProfileFormValues>({
